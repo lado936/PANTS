@@ -2,9 +2,10 @@
 % Please edit documentation in R/p_smooth_ecdf.R
 \name{p_smooth_ecdf}
 \alias{p_smooth_ecdf}
-\title{Estimate p-value by smoothing density}
+\title{Estimate p-value from a smooth density}
 \usage{
-p_smooth_ecdf(eval.point, scores, lower.tail = TRUE)
+p_smooth_ecdf(eval.point, scores, lower.tail = TRUE, smooth.fam = c("kde",
+  "norm", "exp"))
 }
 \arguments{
 \item{eval.point}{A value where the cumulative distribution function should be evaluated}
@@ -12,7 +13,10 @@ p_smooth_ecdf(eval.point, scores, lower.tail = TRUE)
 \item{scores}{A vector of values from the distribution}
 
 \item{lower.tail}{Logical; if TRUE (default), probabilities are P[X ≤ x] otherwise, P[X > x].}
+
+\item{smooth.fam}{One of "kde" for kernel density estimation, "norm" for the normal distribution or "exp" for
+exponential distribution.}
 }
 \description{
-Smooth a vector using a kernel density estimator then estimate a p-value from that density
+Estimate p-value from a density smoothed with a non-parametric kernel density estimator or a known distribution
 }

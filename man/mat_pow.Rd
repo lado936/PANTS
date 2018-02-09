@@ -7,7 +7,7 @@
 mat_pow(x, pow)
 }
 \arguments{
-\item{x}{a sparse matrix}
+\item{x}{a matrix}
 
 \item{pow}{positive integer power to raise the matrix to}
 }
@@ -15,7 +15,7 @@ mat_pow(x, pow)
 a matrix
 }
 \description{
-Calculate power of a matrix
+Calculate matrix to an integer power
 }
 \details{
 This is a simple, recursive function to use integer powers when calculating p-step random walk kernels.
