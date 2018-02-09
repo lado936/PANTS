@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Jonathan Dreyfuss" />
+
+<meta name="date" content="2018-02-01" />
+
+<title>PANTS Vignette</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">PANTS Vignette</h1>
+<h4 class="author"><em>Jonathan Dreyfuss</em></h4>
+<h4 class="date"><em>2018-02-01</em></h4>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Welcome to the <code>PANTS</code> package for Pathway Analysis, and optionally integration, via NeTwork Smoothing. In this vignette, I’ll illustrate a case study of the package for integrating proteomics and metabolomics data to identify significant pathways.</p>
+</div>
+<div id="install" class="section level2">
+<h2>Install</h2>
+<p>See README.md for installation.</p>
+</div>
+<div id="load-package" class="section level2">
+<h2>Load package</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;ezlimma&quot;</span>)</code></pre></div>
+<pre><code>## Loading required package: limma</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;PANTS&quot;</span>)</code></pre></div>
+<pre><code>## Loading required package: igraph</code></pre>
+<pre><code>## Loading required package: Matrix</code></pre>
+</div>
+<div id="load-interaction-network" class="section level2">
+<h2>Load interaction network</h2>
+<p>We’ll use the Pathway Commons v9 network in Simple Interaction Format (SIF), which holds interactions in the format: physical_entity_id <relationship type> physical_entity_id. The 1st and 3rd columns represent the edges of the network, called an “edge list”. This dataset has been included in <code>PANTS</code>, so you can load it using:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;pc9&quot;</span>)</code></pre></div>
+</div>
+<div id="calculate-network-kernel" class="section level2">
+<h2>Calculate network kernel</h2>
+<p><code>PANTS</code> smooths statistics over the network using a network kernel. We can calculate the kernel from an edge list, such as <code>pc9</code> with:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ker &lt;-<span class="st"> </span><span class="kw">edgeList2kernel</span>(pc9[,<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)])</code></pre></div>
+</div>
+<div id="construct-predefined-pathways" class="section level2">
+<h2>Construct predefined pathways</h2>
+<p>We need to load predefined pathways that consist of genes and metabolites whose IDs are consistent with those of our interaction network. One source for these pathways is the Small Molecule Pathway Database (smpdb.ca). SMPDB offers one file for proteins and another for metabolites. If you read these in, you can construct pathways using the <code>SMPDB2Gmat</code> function. I’ve already done this and included the result with the package. You can load this data, and then enforce its rows to match the kernel with:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;gmat&quot;</span>)
+gmat &lt;-<span class="st"> </span><span class="kw">matchGmat2Ker</span>(gmat, ker)</code></pre></div>
+</div>
+<div id="get-data" class="section level2">
+<h2>Get data</h2>
+<p>To illustrate <code>PANTS</code>, we’ll simulate protein and metabolite abundance data on 10 samples, with 5 cases and 5 controls. The rows (features) of this data matrix need to overlap with the rows of <code>gmat</code>. Here we’ll sample features from <code>gmat</code>. We also need a vector of phenotypes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">42</span>)
+features &lt;-<span class="st"> </span><span class="kw">rownames</span>(gmat)[<span class="kw">sample</span>(<span class="dt">x=</span><span class="dv">1</span>:<span class="kw">nrow</span>(gmat), <span class="dt">size=</span><span class="dv">10</span>^<span class="dv">3</span>)]
+M &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rexp</span>(<span class="dt">n=</span><span class="dv">10</span>^<span class="dv">4</span>), <span class="dt">nrow=</span><span class="dv">10</span>^<span class="dv">3</span>, <span class="dt">ncol=</span><span class="dv">10</span>, <span class="dt">dimnames=</span><span class="kw">list</span>(features, <span class="kw">paste0</span>(<span class="st">&quot;s&quot;</span>, <span class="dv">1</span>:<span class="dv">10</span>)))
+pheno.v &lt;-<span class="st"> </span><span class="kw">setNames</span>(<span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;case&quot;</span>, <span class="st">&quot;ctrl&quot;</span>), <span class="dt">each=</span><span class="dv">5</span>), <span class="dt">nm=</span><span class="kw">colnames</span>(M))</code></pre></div>
+</div>
+<div id="pathway-analysis" class="section level2">
+<h2>Pathway analysis</h2>
+<p>We execute the main function, <code>pants</code>, by testing a contrast (or comparison) on this dataset, e.g. case vs. control. We limit the number of permutations to speed up the calculation. In general, if the <code>object</code> or <code>nperm</code> is large , this step will be slow.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">contr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">CASEvsCTRL=</span><span class="st">&quot;case-ctrl&quot;</span>)
+res.lst &lt;-<span class="st"> </span><span class="kw">pants</span>(<span class="dt">object=</span>M, <span class="dt">phenotypes.v=</span>pheno.v, <span class="dt">contrasts.v=</span>contr, <span class="dt">ker=</span>ker, <span class="dt">Gmat=</span>gmat, <span class="dt">nperm=</span><span class="dv">10</span>)
+pwy.stats &lt;-<span class="st"> </span>res.lst$pwy.stats</code></pre></div>
+</div>
+<div id="plot" class="section level2">
+<h2>Plot</h2>
+<p>Draw network diagram of driving nodes for the pathway “Tryptophan Metabolism”.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pval.v &lt;-<span class="st"> </span><span class="kw">setNames</span>(res.lst$feature.stats$pval, <span class="dt">nm=</span><span class="kw">rownames</span>(res.lst$feature.stats))
+<span class="kw">draw_pwy_net</span>(<span class="dt">edge.lst=</span>pc9[,<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)], <span class="dt">ker=</span>ker, <span class="dt">gmat=</span>gmat, <span class="dt">pwy=</span><span class="st">&quot;Tryptophan Metabolism&quot;</span>, <span class="dt">pval.v=</span>pval.v, <span class="dt">annot=</span><span class="ot">NA</span>, <span class="dt">ntop=</span><span class="dv">3</span>, <span class="dt">name.pdf=</span><span class="ot">NA</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" alt /><!-- --></p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

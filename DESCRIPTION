@@ -1,0 +1,18 @@
+Package: PANTS
+Type: Package
+Title: Pathway Analysis via NeTwork Smoothing
+Version: 0.0.1
+Author: Jonathan Dreyfuss
+Maintainer: Jonathan Dreyfuss <jdreyf@gmail.com>
+Description: Pathway Analysis (and optionally integration) via NeTwork Smoothing.
+Depends:
+	igraph,
+	Matrix
+License: MIT License
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
