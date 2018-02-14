@@ -9,7 +9,7 @@ neighbor_nms(graph, nodes)
 \arguments{
 \item{graph}{A graph object from package \code{igraph}}
 
-\item{nodes}{Nodes in the graph}
+\item{nodes}{Node names in the graph}
 }
 \description{
 Get node names of nodes' direct neighbors

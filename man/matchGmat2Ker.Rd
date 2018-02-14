@@ -15,6 +15,5 @@ matchGmat2Ker(Gmat, ker)
 sparse Gmat matrix (of class Matrix)
 }
 \description{
-Match pathway matrix (Gmat) features to kernel matrix features, so that we can multiply these matrices
-later.
+Expand pathway matrix (Gmat) features to match kernel matrix features, so that the two can be multiplied.
 }

@@ -13,7 +13,7 @@ SMPDB2Gmat <- function(smpdb.prot, smpdb.met, exclude.pwy.subj=NA, sc=FALSE){
   stopifnot(c('Pathway.Subject', 'Gene.Name') %in% colnames(smpdb.prot),
             c('Pathway.Type', 'ChEBI.ID') %in% colnames(smpdb.met))
 
-  if (!is.na(exclude.pwy.subj)){
+  if (!is.na(exclude.pwy.subj[1])){
     smpdb.prot <- smpdb.prot[!(smpdb.prot$Pathway.Subject %in% exclude.pwy.subj),]
     smpdb.met <- smpdb.met[!(smpdb.met$Pathway.Type %in% exclude.pwy.subj),]
   }

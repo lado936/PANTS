@@ -13,9 +13,14 @@
 #future work: can describe dimensions in description
 gr2kernel <- function(gr, a=2, p=1){
   #agrees w/ p-step random walk kernel in Gao et al.
-  L = graph.laplacian(graph=gr, normalized = TRUE)
-  n = ncol(L)
-  I = Diagonal(n)
+  # L = graph.laplacian(graph=gr, normalized = TRUE)
+  if (!igraph::is_simple(gr)){
+    warning('igraph::is_simple(gr) is FALSE, so applying igraph::simplify.')
+    gr <- igraph::simplify(gr)
+  }
+  
+  L = igraph::laplacian_matrix(graph=gr, normalized = TRUE, sparse=TRUE)
+  I = Matrix::Diagonal(n=ncol(L))
   R = mat_pow(a * I - L, p)
   dimnames(R) <- dimnames(L)
   return(R)

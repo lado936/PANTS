@@ -10,19 +10,18 @@
 #'in \code{phenotypes.v}. Their order defines the order they are passed to \code{score_fcn}.
 #'@param score_fcn A function that transforms the t-statistics from the contrasts.
 #'Set to \code{identity} so it is the trivial identity function returning its argument.
-#'Default is absolute value. Its input must be a vector of same length as number of elements in \code{contrasts.v}.
+#'Its input must be a vector of same length as number of elements in \code{contrasts.v}.
 #'Its output must be a scalar (i.e. a vector of length one).
 #'@return Vector of feature scores.
 
-score_features <- function(object, phenotypes.v, contrasts.v, ker, Gmat, score_fcn){
-  limma.cols <- c('P.Value', 'adj.P.Val', 't', 'logFC')
-  toptab <- limma_contrasts(object=object, grp=phenotypes.v, contrasts.v=contrasts.v, cols=limma.cols)
-  toptab.ss <- toptab[,paste0(names(contrasts.v), ".t")]
-  #need to coerce toptab.ss to matrix & name score.v in case it has only one column
-  score.v <- apply(as.matrix(toptab.ss), MARGIN=1, FUN=score_fcn)
+score_features <- function(object, phenotypes.v, contrasts.v, score_fcn=abs){
+  toptab <- limma_contrasts(object=object, grp=phenotypes.v, contrasts.v=contrasts.v, cols='t', add.means = FALSE)
+  toptab <- toptab[rownames(object),]
+  #need to coerce toptab to matrix & name score.v in case it has only one column
+  score.v <- apply(as.matrix(toptab), MARGIN=1, FUN=score_fcn)
   if (!is.null(dim(score.v))){
-    stop('Your score_fcn\'s output is of length ', ncol(toptab.ss), ' but it should be of length 1.')
+    stop('Your score_fcn\'s output is of length ', ncol(toptab), ' but it should be of length 1.')
   }
-  names(score.v) <- rownames(toptab)
+  #names(score.v) <- rownames(toptab)
   return(score.v)
 }

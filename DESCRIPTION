@@ -6,7 +6,7 @@ Author: Jonathan Dreyfuss
 Maintainer: Jonathan Dreyfuss <jdreyf@gmail.com>
 Description: Pathway Analysis (and optionally integration) via NeTwork Smoothing.
 Depends:
-	igraph,
+	igraph (>= 1.0.0),
 	Matrix
 License: MIT License
 Encoding: UTF-8

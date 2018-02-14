@@ -4,7 +4,7 @@
 \alias{score_features}
 \title{Score features using ezlimma and score_fcn}
 \usage{
-score_features(object, phenotypes.v, contrasts.v, ker, Gmat, score_fcn)
+score_features(object, phenotypes.v, contrasts.v, score_fcn = abs)
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
@@ -18,7 +18,7 @@ in \code{phenotypes.v}. Their order defines the order they are passed to \code{s
 
 \item{score_fcn}{A function that transforms the t-statistics from the contrasts.
 Set to \code{identity} so it is the trivial identity function returning its argument.
-Default is absolute value. Its input must be a vector of same length as number of elements in \code{contrasts.v}.
+Its input must be a vector of same length as number of elements in \code{contrasts.v}.
 Its output must be a scalar (i.e. a vector of length one).}
 }
 \value{

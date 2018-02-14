@@ -4,23 +4,23 @@
 \alias{draw_pwy_net}
 \title{Draw network diagram for a pathway}
 \usage{
-draw_pwy_net(edge.lst, ker, gmat, pwy, pval.v, annot = NA, ntop = 7,
+draw_pwy_net(gr, ker, Gmat, pwy, pval.v, annot = NA, ntop = 7,
   in.col = "lightblue", out.col = "red", name.pdf = paste0(gsub(":|/",
   "_", pwy), "_ntop", ntop))
 }
 \arguments{
-\item{edge.lst}{Edge list of global network.}
+\item{gr}{A graph of class 'igraph'}
 
 \item{ker}{Kernel matrix, can be sparse matrix from package \code{Matrix}.}
 
-\item{gmat}{Pathway membership matrix, can be sparse matrix from package \code{Matrix}.}
+\item{Gmat}{Pathway membership matrix, can be sparse matrix from package \code{Matrix}.}
 
-\item{pwy}{Pathway to plot. Must be a column name of \code{gmat}.}
+\item{pwy}{Pathway to plot. Must be a column name of \code{Gmat}.}
 
 \item{pval.v}{Namd vector of p-values of features. \code{names(pval.v)} should equal \code{rownames(net)}.}
 
 \item{annot}{Named vector of annotations for nodes. If \code{annot} is not \code{NA}, \code{names(annot)} should
-overlap with \code{rownames(gmat)}.}
+overlap with \code{rownames(Gmat)}.}
 
 \item{ntop}{Number of top most significant features to include. If one of these is an external node, then its
 internal neighbor nodes are also included. These nodes are then connected based on the network.}
@@ -31,6 +31,14 @@ internal neighbor nodes are also included. These nodes are then connected based 
 
 \item{name.pdf}{Name for PDF file to plot to. Can't contain characters ":" or "/" on Windows. Set to \code{NA}
 to suppress writing to file.}
+}
+\value{
+Invisibly, a list of 3 components: 
+\describe{
+  \item{gr}{the graph that gets plotted}
+  \item{vertex.color}{the vertex colors}
+  \item{vertex.size}{the vertex sizes}
+}
 }
 \description{
 Draw network diagram for a pathway with node size corresponding to significance and color to pathway membership.

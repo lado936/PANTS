@@ -5,7 +5,7 @@
 \title{Estimate p-value from a smooth density}
 \usage{
 p_smooth_ecdf(eval.point, scores, lower.tail = TRUE, smooth.fam = c("kde",
-  "norm", "exp"))
+  "norm"))
 }
 \arguments{
 \item{eval.point}{A value where the cumulative distribution function should be evaluated}
@@ -14,8 +14,7 @@ p_smooth_ecdf(eval.point, scores, lower.tail = TRUE, smooth.fam = c("kde",
 
 \item{lower.tail}{Logical; if TRUE (default), probabilities are P[X ≤ x] otherwise, P[X > x].}
 
-\item{smooth.fam}{One of "kde" for kernel density estimation, "norm" for the normal distribution or "exp" for
-exponential distribution.}
+\item{smooth.fam}{One of "kde" for kernel density estimation, "norm" for the normal distribution.}
 }
 \description{
 Estimate p-value from a density smoothed with a non-parametric kernel density estimator or a known distribution

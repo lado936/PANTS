@@ -7,7 +7,7 @@
 edgeList2kernel(edge.lst, a = 2, p = 1)
 }
 \arguments{
-\item{edge.lst}{graph object of class igraph}
+\item{edge.lst}{Edge-list}
 
 \item{a}{parameter of p-step random walk kernel, a>=2}
 

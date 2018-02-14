@@ -5,8 +5,8 @@
 \title{Pathway Analysis via NeTwork Smoothing}
 \usage{
 pants(object, phenotypes.v, contrasts.v, ker, Gmat, score_fcn = abs,
-  nperm = 10^4, smooth.null = NA, ret.null.mats = FALSE,
-  verbose = FALSE)
+  nperm = 10^4, smooth.pwy.null = NA, smooth.feat.null = NA,
+  ret.null.mats = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
@@ -29,10 +29,12 @@ Its output must be a scalar (i.e. a vector of length one).}
 
 \item{nperm}{Number of permutations to perform to evaluate significance of pathways.}
 
-\item{smooth.null}{One of "kde" for kernel density estimation, "norm" for the normal distribution, "exp" for
-exponential distribution, or NA for no smoothing of null feature and pathway statistics.}
+\item{smooth.pwy.null}{One of "kde" for kernel density estimation, "norm" for the normal distribution, or NA for 
+no smoothing of null pathway statistics.}
 
-\item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathways.}
+\item{smooth.feat.null}{One of "kde" for kernel density estimation, "norm" for the normal distribution, or NA for 
+no smoothing of null fature statistics.
+#'@param ret.null.mats If TRUE, return matrices with null distributions for features and pathways.}
 
 \item{verbose}{Logical indicating if the permutation number should be output every 100 permutations.}
 }
