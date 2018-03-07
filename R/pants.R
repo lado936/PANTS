@@ -38,7 +38,9 @@ pants <- function(object, phenotypes.v, contrasts.v, ker, Gmat, score_fcn=abs, n
   intersect.feats <- intersect(rownames(ker), rownames(object))
   #if features are in object but not kernel, & therefore not in Gmat b/c of exp_kernel(),
   #remove from object
-  message(nrow(object)-length(intersect.feats), " features removed from 'object', since not in 'kernel'.")
+  if (nrow(object)-length(intersect.feats) > 0){
+    message(nrow(object)-length(intersect.feats), " features removed from 'object', since not in 'kernel'.")
+  }
   object <- object[intersect.feats,]
   
   #reorder kernel st upper rows match object; this makes constructing score.match.mat easier

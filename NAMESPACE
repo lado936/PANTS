@@ -3,6 +3,7 @@
 export(SMPDB2Gmat)
 export(draw_pwy_net)
 export(edgeList2kernel)
+export(expand_kernel)
 export(gmt2Gmat)
 export(gr2kernel)
 export(matchGmat2Ker)

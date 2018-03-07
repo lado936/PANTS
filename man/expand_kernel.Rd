@@ -4,15 +4,14 @@
 \alias{expand_kernel}
 \title{Expand kernel to match features in object and pathway matrix}
 \usage{
-expand_kernel(ker, Gmat, object)
+expand_kernel(ker, Gmat, object.feat.nms)
 }
 \arguments{
 \item{ker}{sparse matrix (of class Matrix)}
 
 \item{Gmat}{sparse matrix (of class Matrix)}
 
-\item{object}{A matrix-like data object containing log-ratios or log-expression values for a
-series of samples, with rows corresponding to features and columns to samples.}
+\item{object.feat.nms}{feature names from object.}
 }
 \value{
 sparse kernel matrix (of class Matrix)

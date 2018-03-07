@@ -69,7 +69,7 @@ draw_pwy_net <- function(gr, ker, Gmat, pwy, pval.v, annot=NA, ntop=7, in.col='l
   sz.v <- 2+qchisq(p=pval.match[V(gr.ss)$name], df=4, lower.tail=FALSE)
 
   #sub chebi id's for names
-  if (!is.na(annot)){
+  if (!is.na(annot[1])){
     nms.int <- intersect(names(annot), V(gr.ss)$name)
     if (length(nms.int) > 0){
       V(gr.ss)$name[match(nms.int, V(gr.ss)$name)] <- annot[nms.int]
