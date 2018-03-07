@@ -17,6 +17,11 @@ SMPDB2Gmat <- function(smpdb.prot, smpdb.met, exclude.pwy.subj=NA, sc=FALSE){
     smpdb.prot <- smpdb.prot[!(smpdb.prot$Pathway.Subject %in% exclude.pwy.subj),]
     smpdb.met <- smpdb.met[!(smpdb.met$Pathway.Type %in% exclude.pwy.subj),]
   }
+  
+  #remove analytes w/ no ID
+  smpdb.prot <- smpdb.prot[smpdb.prot$Gene.Name!="",]
+  smpdb.met <- smpdb.met[!is.na(smpdb.met$ChEBI.ID),]
+  
   smpdb.prot$feat.name <- smpdb.prot$Gene.Name
   smpdb.met$feat.name <- paste0('CHEBI:', smpdb.met$ChEBI.ID)
 
