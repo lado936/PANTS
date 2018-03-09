@@ -8,20 +8,21 @@
 #'If the vector is named, the names must match the column names of \code{object}.
 #'@param contrasts.v A named vector of constrasts. The constrasts must refer to the phenotypes
 #'in \code{phenotypes.v}. Their order defines the order they are passed to \code{score_fcn}.
-#'@param score_fcn A function that transforms the t-statistics from the contrasts.
-#'Set to \code{identity} so it is the trivial identity function returning its argument.
-#'Its input must be a vector of same length as number of elements in \code{contrasts.v}.
-#'Its output must be a scalar (i.e. a vector of length one).
+#'@param score_fcn A function that transforms the t-statistics from the contrasts. \code{identity} is 
+#'the trivial identity function returning its argument. It must accept a vector of \code{length(contrasts.v)}, 
+#'and its output must be a scalar.
 #'@return Vector of feature scores.
+#'@export
 
-score_features <- function(object, phenotypes.v, contrasts.v, score_fcn=abs){
+score_features <- function(object, phenotypes.v, contrasts.v, score_fcn=identiy){
   toptab <- limma_contrasts(object=object, grp=phenotypes.v, contrasts.v=contrasts.v, cols='t', add.means = FALSE)
-  toptab <- toptab[rownames(object),]
+  toptab <- data.matrix(toptab[rownames(object),])
+  rownames(toptab) <- rownames(object)
   #need to coerce toptab to matrix & name score.v in case it has only one column
   score.v <- apply(as.matrix(toptab), MARGIN=1, FUN=score_fcn)
   if (!is.null(dim(score.v))){
-    stop('Your score_fcn\'s output is of length ', ncol(toptab), ' but it should be of length 1.')
+    stop('Your score_fcn\'s output is of length ', ncol(score.v), ' but it should be of length 1.')
   }
-  #names(score.v) <- rownames(toptab)
+  names(score.v) <- rownames(toptab)
   return(score.v)
 }

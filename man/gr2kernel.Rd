@@ -2,7 +2,7 @@
 % Please edit documentation in R/gr2kernel.R
 \name{gr2kernel}
 \alias{gr2kernel}
-\title{Transform an igraph graph into a Laplacian kernel}
+\title{Transform an igraph graph into a p-step random walk kernel}
 \usage{
 gr2kernel(gr, a = 2, p = 1)
 }
@@ -17,7 +17,7 @@ gr2kernel(gr, a = 2, p = 1)
 Laplacian kernel matrix
 }
 \description{
-Transforms an igraph input graph into a Laplacian kernel, using parameters \code{a} and \code{p}.
+Transforms an igraph input graph into a p-step random walk kernel, using parameters \code{a} and \code{p}.
 This is similar to \code{\link[netClass]{calc.diffusionKernelp}}, except that function takes
 slightly different input. The equation for the kernel is (a * I - L)^p.
 }

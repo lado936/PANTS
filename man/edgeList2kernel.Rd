@@ -2,7 +2,7 @@
 % Please edit documentation in R/edgeList2kernel.R
 \name{edgeList2kernel}
 \alias{edgeList2kernel}
-\title{Transform a data frame edge list into a Laplacian kernel}
+\title{Transform a data frame edge list into a p-step random walk kernel}
 \usage{
 edgeList2kernel(edge.lst, a = 2, p = 1)
 }
@@ -14,10 +14,10 @@ edgeList2kernel(edge.lst, a = 2, p = 1)
 \item{p}{parameter of p-step random walk kernel}
 }
 \value{
-Laplacian kernel matrix
+p-step random walk kernel matrix
 }
 \description{
-Transforms an edge list into a Laplacian kernel. The edge list can come from
+Transforms an edge list into a p-step random walk kernel. The edge list can come from
 columns 1 and 3 of a SIF (Simple Interaction Format) file, or can otherwise
 contain pairs of nodes connected in the graph. This function calls
 \code{\link{gr2kernel}} to calculate the kernel matrix.

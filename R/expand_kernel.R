@@ -4,14 +4,13 @@
 #' \code{\link{pants}}.
 #' 
 #' @param ker sparse matrix (of class Matrix)
-#' @param Gmat sparse matrix (of class Matrix)
 #' @param object.feat.nms feature names from object.
 #' @return sparse kernel matrix (of class Matrix)
 #' @export
 
-expand_kernel <- function(ker, Gmat, object.feat.nms){
+expand_kernel <- function(ker, object.feat.nms){
   #add features in both object & Gmat
-  new.ker.feats <- setdiff(intersect(object.feat.nms, rownames(Gmat)), rownames(ker))
+  new.ker.feats <- setdiff(object.feat.nms, rownames(ker))
   n.new.f <- length(new.ker.feats)
   if (n.new.f==0){ stop("No features need to be added to the kernel.") }
   add2ker <- Diagonal(n=n.new.f)

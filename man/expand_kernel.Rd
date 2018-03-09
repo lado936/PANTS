@@ -4,12 +4,10 @@
 \alias{expand_kernel}
 \title{Expand kernel to match features in object and pathway matrix}
 \usage{
-expand_kernel(ker, Gmat, object.feat.nms)
+expand_kernel(ker, object.feat.nms)
 }
 \arguments{
 \item{ker}{sparse matrix (of class Matrix)}
-
-\item{Gmat}{sparse matrix (of class Matrix)}
 
 \item{object.feat.nms}{feature names from object.}
 }

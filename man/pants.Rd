@@ -4,9 +4,10 @@
 \alias{pants}
 \title{Pathway Analysis via NeTwork Smoothing}
 \usage{
-pants(object, phenotypes.v, contrasts.v, ker, Gmat, score_fcn = abs,
+pants(object, phenotypes.v, contrasts.v, ker, Gmat, score_fcn = identity,
   nperm = 10^4, smooth.pwy.null = NA, smooth.feat.null = NA,
-  ret.null.mats = FALSE, verbose = FALSE)
+  ret.null.mats = FALSE, verbose = FALSE, alternative = c("two.sided",
+  "less", "greater"))
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
@@ -22,10 +23,9 @@ in \code{phenotypes.v}. Their order defines the order they are passed to \code{s
 
 \item{Gmat}{The feature by pathway inclusion matrix, indicating which features are in which pathways.}
 
-\item{score_fcn}{A function that transforms the t-statistics from the contrasts.
-Set to \code{identity} so it is the trivial identity function returning its argument.
-Default is absolute value. Its input must be a vector of same length as number of elements in \code{contrasts.v}.
-Its output must be a scalar (i.e. a vector of length one).}
+\item{score_fcn}{A function that transforms the t-statistics from the contrasts. \code{identity} is 
+the trivial identity function returning its argument. Its input must be a vector of same 
+length as number of elements in \code{contrasts.v}. Its output must be a scalar.}
 
 \item{nperm}{Number of permutations to perform to evaluate significance of pathways.}
 
@@ -33,10 +33,13 @@ Its output must be a scalar (i.e. a vector of length one).}
 no smoothing of null pathway statistics.}
 
 \item{smooth.feat.null}{One of "kde" for kernel density estimation, "norm" for the normal distribution, or NA for 
-no smoothing of null fature statistics.
-#'@param ret.null.mats If TRUE, return matrices with null distributions for features and pathways.}
+no smoothing of null fature statistics.}
+
+\item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathways.}
 
 \item{verbose}{Logical indicating if the permutation number should be output every 100 permutations.}
+
+\item{alternative}{A character string specifying the alternative hypothesis.}
 }
 \value{
 List of length two, with elements \code{pwy.stats} and \code{feature.stats}, each containing a data frame

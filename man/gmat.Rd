@@ -5,7 +5,7 @@
 \alias{gmat}
 \title{Pathway inclusion matrix (Gmat) constructed from SMPDB.}
 \format{A Matrix of features (proteins/metabolites) by Pathway names. Zero entries indicate the feature is not in the pathway,
-whereas any other entry indicates otherwise.}
+whereas non-zero entries indicates otherwise.}
 \usage{
 gmat
 }

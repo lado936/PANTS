@@ -4,7 +4,7 @@
 \alias{score_features}
 \title{Score features using ezlimma and score_fcn}
 \usage{
-score_features(object, phenotypes.v, contrasts.v, score_fcn = abs)
+score_features(object, phenotypes.v, contrasts.v, score_fcn = identiy)
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
@@ -16,10 +16,9 @@ If the vector is named, the names must match the column names of \code{object}.}
 \item{contrasts.v}{A named vector of constrasts. The constrasts must refer to the phenotypes
 in \code{phenotypes.v}. Their order defines the order they are passed to \code{score_fcn}.}
 
-\item{score_fcn}{A function that transforms the t-statistics from the contrasts.
-Set to \code{identity} so it is the trivial identity function returning its argument.
-Its input must be a vector of same length as number of elements in \code{contrasts.v}.
-Its output must be a scalar (i.e. a vector of length one).}
+\item{score_fcn}{A function that transforms the t-statistics from the contrasts. \code{identity} is 
+the trivial identity function returning its argument. It must accept a vector of \code{length(contrasts.v)}, 
+and its output must be a scalar.}
 }
 \value{
 Vector of feature scores.
