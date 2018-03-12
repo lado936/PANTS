@@ -27,17 +27,27 @@ We'll use the Pathway Commons v9 network in Simple Interaction Format (SIF), whi
 data("pc9")
 ```
 
-## Calculate network kernel
-`PANTS` smooths statistics over the network using a network kernel. We can calculate the kernel from an edge list, such as `pc9` with:
-```{r}
-ker <- edgeList2kernel(pc9[,c(1,3)])
+## Construct graph
+`PANTS` smooths statistics over the network using a network kernel derived from a graph. So we transform `pc9` into a graph:
+```{r gr}
+gr <- graph_from_edgelist(as.matrix(pc9[,c(1,3)]), directed = FALSE)
 ```
 
 ## Construct predefined pathways
 We need to load predefined pathways that consist of genes and metabolites whose IDs are consistent with those of our interaction network. One source for these pathways is the Small Molecule Pathway Database (smpdb.ca). SMPDB offers one file for proteins and another for metabolites. If you read these in, you can construct pathways using the `SMPDB2Gmat` function. I've already done this and included the result with the package. You can load this data, and then enforce its rows to match the kernel with:
-```{r}
+```{r gmat}
 data("gmat")
-gmat <- matchGmat2Ker(gmat, ker)
+```
+
+## Expand graph
+We expand the graph to include nodes in `gmat`.
+```{r eg}
+gr <- expand_graph(gr, gmat)
+```
+
+## Calculate kernel
+```{r ker}
+ker <- gr2kernel(gr)
 ```
 
 ## Get data
@@ -60,7 +70,7 @@ pwy.stats <- res.lst$pwy.stats
 ## Plot
 Draw network diagram of driving nodes for the pathway "Tryptophan Metabolism".
 ```{r}
-pval.v <- setNames(res.lst$feature.stats$pval, nm=rownames(res.lst$feature.stats))
-draw_pwy_net(edge.lst=pc9[,c(1,3)], ker=ker, gmat=gmat, pwy="Tryptophan Metabolism", pval.v=pval.v, annot=NA, ntop=3, name.pdf=NA)
+score.v <- setNames(res.lst$feature.stats$score, nm=rownames(res.lst$feature.stats))
+plot_pwy(gr=gr, ker=ker, Gmat=gmat, pwy="Tryptophan Metabolism", score.v=score.v, annot=NA, ntop=3, name.pdf=NA)
 ```
 

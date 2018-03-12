@@ -31,31 +31,14 @@
 #'@export
 
 pants <- function(object, phenotypes.v, contrasts.v, ker, Gmat, score_fcn=identity, nperm=10^4, smooth.pwy.null=NA, 
-                  smooth.feat.null=NA, ret.null.mats=FALSE, verbose=FALSE, 
+                  smooth.feat.null=NA, ret.null.mats=FALSE, verbose=TRUE, 
                   alternative=c("two.sided", "less", "greater")){
-  stopifnot(length(intersect(rownames(ker), rownames(object)))>0, colnames(ker)==rownames(Gmat),
+  stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)),
             colnames(object)==names(phenotypes.v))
   alternative <- match.arg(alternative)
-
-  intersect.feats <- intersect(rownames(ker), rownames(object))
-  #if features are in object but not kernel, remove from object
-  if (nrow(object)-length(intersect.feats) > 0){
-    message(nrow(object)-length(intersect.feats), " features removed from 'object', since not in 'kernel'.")
-  }
-  object <- object[intersect.feats,]
-  
-  #reorder kernel st upper rows match object; this makes constructing score.match.mat easier
-  non.int.f <- setdiff(rownames(ker), intersect.feats)
-  ker <- ker[c(intersect.feats, non.int.f), c(intersect.feats, non.int.f)]
-  #also need to reorder Gmat
-  Gmat <- Gmat[rownames(ker),]
   
   score.v <- score_features(object=object, phenotypes.v=phenotypes.v, 
                             contrasts.v=contrasts.v, score_fcn=score_fcn)
-  
-  ##scores matched to features in kernel (impute missing as zero)
-  score.match.v <- setNames(rep(0, nrow(ker)), nm=rownames(ker))
-  score.match.v[intersect.feats] <- score.v
   
   #feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
   score.mat <- Matrix(0, nrow=nrow(object), ncol=nperm, dimnames = list(rownames(object), paste0('perm', 1:nperm)))
@@ -63,29 +46,20 @@ pants <- function(object, phenotypes.v, contrasts.v, ker, Gmat, score_fcn=identi
     #must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
     pheno.tmp <- setNames(phenotypes.v[sample(1:length(phenotypes.v))], nm=NULL)
 
-    score.tmp <- score_features(object=object, phenotypes.v=pheno.tmp, contrasts.v=contrasts.v, score_fcn=score_fcn)
-    score.mat[, perm] <- score.tmp
+    score.mat[,perm] <- score_features(object=object, phenotypes.v=pheno.tmp, contrasts.v=contrasts.v, score_fcn=score_fcn)
     if (verbose){
       if (perm %% 100 == 0) cat("permutation", perm, "\n")
     }
   }
 
-  ##construct score.match.mat to match ker by imputing 0 as missing values, but this makes >200 pwys have pv=0
-  #need to use 0 to impute for NAs for sparsity, it's also ~25% of null score
-  #score.match.mat <- Matrix(0, nrow=nrow(ker), ncol=ncol(score.mat), dimnames=list(rownames(ker), colnames(score.mat)))
-  # score.match.mat <- sparseMatrix(dimnames=list(rownames(ker), colnames(score.mat)))
-  #score.match.mat[intersect.feats,] <- score.mat[intersect.feats,]
-  score.match.mat <- rbind(score.mat, Matrix(0, nrow=length(non.int.f), ncol=ncol(score.mat), 
-                                             dimnames=list(non.int.f, colnames(score.mat))))
-
-  stopifnot(rownames(score.mat)==names(score.tmp), rownames(score.mat)==names(score.v), 
-            rownames(score.mat)==intersect.feats, rownames(score.match.mat)==rownames(ker), 
-            rownames(ker)==rownames(Gmat))
+  mm <- match_mats(score.mat = cbind(v=score.v, score.mat), ker=ker, Gmat=Gmat)
+  score.mat <- mm$score.mat[,-1]; score.v <- mm$score.mat[,1]; ker <- mm$ker; Gmat <- mm$Gmat
+  rm(mm) #to save memory
   
   ##feature p-values (for plotting)
   #features in object & in kernel
-  feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(intersect.feats), ncol=2,
-dimnames=list(intersect.feats, c("pval", "FDR"))))
+  feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=2,
+dimnames=list(rownames(score.mat), c("pval", "FDR"))))
   if (!is.na(smooth.feat.null)){
     feature.stats[,"pval"] <- apply(cbind(score.v, score.mat), MARGIN=1, FUN=function(v){
       p_smooth_ecdf(eval.point=v[1], scores=v[-1], lower.tail=FALSE, smooth.fam=smooth.feat.null)
@@ -97,8 +71,8 @@ dimnames=list(intersect.feats, c("pval", "FDR"))))
   feature.stats[,"FDR"] <- p.adjust(feature.stats[,"pval"], method="BH")
 
   ##need to compare to pwys, sometimes runs out of memory
-  pwy.v <- (score.match.v %*% ker %*% Gmat)[1,]
-  pwy.mat <- as.matrix(Matrix::t(Matrix::crossprod(score.match.mat, ker) %*% Gmat))
+  pwy.v <- (score.v %*% ker %*% Gmat)[1,]
+  pwy.mat <- as.matrix(Matrix::t(Matrix::crossprod(score.mat, ker) %*% Gmat))
 
   if (!is.na(smooth.pwy.null)){
     pwy.pv <- apply(cbind(pwy.v, pwy.mat), MARGIN=1, FUN=function(v){

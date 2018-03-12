@@ -46,7 +46,7 @@ test_that("edgeList2kernel", {
 
 test_that("score_features", {
   sf <- score_features(object=M, phenotypes.v=pheno, contrasts.v="trt-ctrl", score_fcn=abs)
-  expect_equal(which.max(sf), 1)
+  expect_equal(which.max(sf), c(a=1))
 })
 
 test_that("gmt2Gmat", {

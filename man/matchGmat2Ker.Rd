@@ -17,3 +17,6 @@ sparse Gmat matrix (of class Matrix)
 \description{
 Expand pathway matrix (Gmat) features to match kernel matrix features, so that the two can be multiplied.
 }
+\details{
+Previously used this, but now \code{\link{pants}} does not require it.
+}

@@ -5,7 +5,7 @@
 #' @param Gmat sparse matrix (of class Matrix)
 #' @param ker sparse matrix (of class Matrix)
 #' @return sparse Gmat matrix (of class Matrix)
-#' @export
+#' @details Previously used this, but now \code{\link{pants}} does not require it.
 
 matchGmat2Ker <- function(Gmat, ker){
   setdiff.sym <- setdiff(rownames(ker), rownames(Gmat))
