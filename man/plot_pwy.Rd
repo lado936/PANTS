@@ -6,8 +6,7 @@
 \usage{
 plot_pwy(gr, ker, Gmat, pwy, score.v, annot = NA, ntop = 7,
   alternative = c("two.sided", "less", "greater"), name = paste0(gsub(":|/",
-  "_", pwy), "_ntop", ntop), color.pal = NULL, in.shape = "circle",
-  out.shape = "square")
+  "_", pwy), "_ntop", ntop), color.pal = NULL)
 }
 \arguments{
 \item{gr}{A graph of class \code{igraph} representing the interaction network.}
@@ -32,11 +31,8 @@ internal neighbor nodes are also included. These nodes are then connected based 
 \item{name}{Name for PDF file to plot to. Can't contain characters ":" or "/" on Windows. Set to \code{NA}
 to suppress writing to file.}
 
-\item{color.pal}{A color palette, as a vector.}
-
-\item{in.shape}{Shape for nodes in the pathway.}
-
-\item{out.shape}{Shape for nodes outside the pathway.}
+\item{color.pal}{A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
+a palette from \code{\link[RColorBrewer]{brewer.pal}} is chosen.}
 }
 \value{
 Invisibly, a list of 3 components: 
@@ -48,7 +44,4 @@ Invisibly, a list of 3 components:
 }
 \description{
 Plot network diagram for a pathway with node size corresponding to significance and color to pathway membership.
-}
-\details{
-\code{color.pal, in.shape, out.shape} must be accepted by \code{\link[igraph]{plot.igraph}}.
 }

@@ -77,7 +77,7 @@ plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=
 
   gr.pwy <- igraph::induced_subgraph(gr, vid=which(V(gr)$name %in% c(pwy.nodes.ss, pwy.neighbors.ss)))
   x <- score.v[V(gr.pwy)$name, 1]
-  color.v <- map2color(x=x, pal=color.pal, lim=lim)
+  color.v <- setNames(map2color(x=x, pal=color.pal, lim=lim), nm=names(x))
   shape.v <- c(out.shape, in.shape)[(V(gr.pwy)$name %in% pwy.nodes)+1]
   names(shape.v) <- V(gr.pwy)$name
 

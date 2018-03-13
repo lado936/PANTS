@@ -65,11 +65,11 @@ dimnames=list(rownames(score.mat), c("z", "pval", "FDR"))))
   pwy.mat <- as.matrix(Matrix::t(Matrix::crossprod(score.mat, ker) %*% Gmat))
 
   nfeats.per.pwy <- Matrix::colSums(Gmat!=0)
-  pwy.stats <- data.frame(score.avg=pwy.v/nfeats.per.pwy, z=NA, pval=NA)
+  pwy.stats <- data.frame(nfeatures=nfeats.per.pwy, feat.score.avg=pwy.v/nfeats.per.pwy, z=NA, pval=NA)
   rownames(pwy.stats) <- colnames(Gmat)
   pwy.stats[,c("z", "pval")] <- p_ecdf(eval.v=pwy.v, scores.mat=pwy.mat, alternative = alternative)
   pwy.stats$FDR <- p.adjust(pwy.stats$pval, method='BH')
-  pwy.stats <- pwy.stats[order(pwy.stats$pval, -pwy.stats$score.avg),]
+  pwy.stats <- pwy.stats[order(pwy.stats$pval, -pwy.stats$z),]
 
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)
   if (ret.null.mats){

@@ -2,7 +2,6 @@
 
 export(SMPDB2Gmat)
 export(clean_pwycommons_sif)
-export(draw_pwy_net)
 export(edgeList2graph)
 export(gmt2Gmat)
 export(graph2kernel)

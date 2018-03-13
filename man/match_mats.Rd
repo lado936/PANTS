@@ -4,7 +4,7 @@
 \alias{match_mats}
 \title{Expand kernel to match features in object and pathway matrix}
 \usage{
-match_mats(score.mat, ker, Gmat)
+match_mats(score.mat, ker, Gmat, score.impute = 0)
 }
 \arguments{
 \item{score.mat}{A matrix-like object with scores from original data and permutations with rows corresponding 
@@ -14,7 +14,7 @@ to features and columns to simulations.}
 
 \item{Gmat}{The feature by pathway inclusion matrix, indicating which features are in which pathways.}
 
-\item{impute.score}{Value to impute missing scores.}
+\item{score.impute}{Value to impute missing scores.}
 }
 \value{
 A list with elements \code{score.mat}, \code{ker}, and \code{Gmat}.
