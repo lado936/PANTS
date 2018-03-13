@@ -8,7 +8,6 @@
 #' @return Interaction network of class \code{igraph}.
 #' @details Nodes in \code{Gmat} but not \code{gr} are added as isolated nodes to \code{gr} so that their scores
 #' can be incorporated in \code{\link{pants}} and plotted in \code{\link{plot_pwy}}.
-#' @export
 
 expand_graph <- function(gr, Gmat){
   new.v <- setdiff(rownames(Gmat), V(gr)$name)

@@ -7,10 +7,14 @@
 #' to features and columns to simulations.
 #' @param ker sparse matrix (of class Matrix)
 #' @param Gmat The feature by pathway inclusion matrix, indicating which features are in which pathways.
-#' @param impute.score Value to impute missing scores.
+#' @param score.impute Value to impute missing scores.
+#' @details There must be some overlap between the rownames of \code{score.mat}, \code{ker}, & \code{Gmat}.
 #' @return A list with elements \code{score.mat}, \code{ker}, and \code{Gmat}.
 
-match_mats <- function(score.mat, ker, Gmat){
+match_mats <- function(score.mat, ker, Gmat, score.impute=0){
+  stopifnot(length(intersect(rownames(score.mat), rownames(ker))) > 0, 
+            length(intersect(rownames(score.mat), rownames(Gmat))) > 0)
+  
   all.feats <- unique(c(rownames(score.mat), rownames(ker), rownames(Gmat)))
   
   venn.mat <- cbind(all.feats %in% rownames(score.mat), all.feats %in% rownames(ker), all.feats %in% rownames(Gmat))
@@ -25,8 +29,9 @@ match_mats <- function(score.mat, ker, Gmat){
   new.sc.feats <- setdiff(keep.feats, sc.feats)
   keep.sc.feats <- intersect(sc.feats, keep.feats)
   new.sc.n <- length(new.sc.feats)
+  score.mat <- score.mat[keep.sc.feats,,drop=FALSE]
   if (new.sc.n > 0){
-    score.mat <- rbind(score.mat[keep.sc.feats,], Matrix(0, nrow=new.sc.n, ncol=ncol(score.mat)))
+    score.mat <- rbind(score.mat, Matrix(score.impute, nrow=new.sc.n, ncol=ncol(score.mat)))
     rownames(score.mat) <- c(keep.sc.feats, new.sc.feats)
   }
   
@@ -49,7 +54,7 @@ match_mats <- function(score.mat, ker, Gmat){
     Gmat <- rbind(Gmat, Matrix(0, nrow=new.g.n, ncol=ncol(Gmat)))
     rownames(Gmat) <- c(g.feats, new.g.feats)
   }
-  Gmat <- Gmat[rownames(score.mat),]
+  Gmat <- Gmat[rownames(score.mat),,drop=FALSE]
   
   ret <- list(score.mat=score.mat, ker=ker, Gmat=Gmat)
   return(ret)

@@ -15,10 +15,6 @@
 #'the trivial identity function returning its argument. Its input must be a vector of same 
 #'length as number of elements in \code{contrasts.v}. Its output must be a scalar.
 #'@param nperm Number of permutations to perform to evaluate significance of pathways.
-#'@param smooth.pwy.null One of "kde" for kernel density estimation, "norm" for the normal distribution, or NA for 
-#'no smoothing of null pathway statistics.
-#'@param smooth.feat.null One of "kde" for kernel density estimation, "norm" for the normal distribution, or NA for 
-#'no smoothing of null fature statistics.
 #'@param ret.null.mats If TRUE, return matrices with null distributions for features and pathways.
 #'@param verbose Logical indicating if the permutation number should be output every 100 permutations.
 #'@param alternative A character string specifying the alternative hypothesis.
@@ -58,33 +54,22 @@ pants <- function(object, phenotypes.v, contrasts.v, ker, Gmat, score_fcn=identi
   
   ##feature p-values (for plotting)
   #features in object & in kernel
-  feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=2,
-dimnames=list(rownames(score.mat), c("pval", "FDR"))))
-  if (!is.na(smooth.feat.null)){
-    feature.stats[,"pval"] <- apply(cbind(score.v, score.mat), MARGIN=1, FUN=function(v){
-      p_smooth_ecdf(eval.point=v[1], scores=v[-1], lower.tail=FALSE, smooth.fam=smooth.feat.null)
-    })
-  } else {
-    #need to coerce score.mat to matrix to prevent rowSums error
-    feature.stats[,"pval"] <- p_ecdf(eval=score.v, scores.mat = as.matrix(score.mat), alternative = alternative)
-  }
+  feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=3,
+dimnames=list(rownames(score.mat), c("z", "pval", "FDR"))))
+  #need to coerce score.mat to matrix to prevent rowSums error
+  feature.stats[,c("z", "pval")] <- p_ecdf(eval=score.v, scores.mat = as.matrix(score.mat), alternative = alternative)
   feature.stats[,"FDR"] <- p.adjust(feature.stats[,"pval"], method="BH")
 
   ##need to compare to pwys, sometimes runs out of memory
   pwy.v <- (score.v %*% ker %*% Gmat)[1,]
   pwy.mat <- as.matrix(Matrix::t(Matrix::crossprod(score.mat, ker) %*% Gmat))
 
-  if (!is.na(smooth.pwy.null)){
-    pwy.pv <- apply(cbind(pwy.v, pwy.mat), MARGIN=1, FUN=function(v){
-      p_smooth_ecdf(eval.point=v[1], scores=v[-1], lower.tail=FALSE, smooth.fam=smooth.pwy.null)
-    })
-  } else {
-    pwy.pv <- p_ecdf(eval.v=pwy.v, scores.mat=pwy.mat, alternative = alternative)
-  }
-  pwy.qv <- p.adjust(pwy.pv, method='BH')
   nfeats.per.pwy <- Matrix::colSums(Gmat!=0)
-  pwy.stats <- data.frame(score=pwy.v/nfeats.per.pwy, nfeatures=nfeats.per.pwy, pval=pwy.pv, FDR=pwy.qv)
-  pwy.stats <- pwy.stats[order(pwy.stats$pval, -pwy.stats$score),]
+  pwy.stats <- data.frame(score.avg=pwy.v/nfeats.per.pwy, z=NA, pval=NA)
+  rownames(pwy.stats) <- colnames(Gmat)
+  pwy.stats[,c("z", "pval")] <- p_ecdf(eval.v=pwy.v, scores.mat=pwy.mat, alternative = alternative)
+  pwy.stats$FDR <- p.adjust(pwy.stats$pval, method='BH')
+  pwy.stats <- pwy.stats[order(pwy.stats$pval, -pwy.stats$score.avg),]
 
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)
   if (ret.null.mats){

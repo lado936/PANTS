@@ -23,3 +23,6 @@ A list with elements \code{score.mat}, \code{ker}, and \code{Gmat}.
 Expand kernel to match features in both object and pathway matrix, so that maintain these features in 
 \code{\link{pants}}.
 }
+\details{
+There must be some overlap between the rownames of \code{score.mat}, \code{ker}, & \code{Gmat}.
+}

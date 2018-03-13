@@ -1,4 +1,4 @@
-#' Transform an igraph graph into a p-step random walk kernel
+#' Transform an \code{igraph} graph into a p-step random walk kernel
 #'
 #' Transforms an igraph input graph into a p-step random walk kernel, using parameters \code{a} and \code{p}.
 #' This is similar to \code{\link[netClass]{calc.diffusionKernelp}}, except that function takes
@@ -11,7 +11,7 @@
 #' @export
 
 #future work: can describe dimensions in description
-gr2kernel <- function(gr, a=2, p=1){
+graph2kernel <- function(gr, a=2, p=1){
   stopifnot(a >= 2, p > 0)
   #agrees w/ p-step random walk kernel in Gao et al.
   # L = graph.laplacian(graph=gr, normalized = TRUE)

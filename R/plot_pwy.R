@@ -6,14 +6,17 @@
 #'@param ker Kernel matrix, can be sparse matrix from package \code{Matrix}.
 #'@param Gmat Pathway membership matrix, can be sparse matrix from package \code{Matrix}.
 #'@param pwy Pathway to plot. Must be a column name of \code{Gmat}.
-#'@param score.v Namd vector of scores of features, where \code{names(score.v) == rownames(gr)}.
+#'@param score.v Namd vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select top nodes 
+#'and color them.
 #'@param annot Named vector of annotations for nodes. If \code{annot} is not \code{NA}, \code{names(annot)} should
 #'overlap with \code{rownames(Gmat)}.
 #'@param ntop Number of top most significant features to include. If one of these is an external node, then its
-#'internal neighbor nodes are also included. These nodes are then connected based on the network.
-#'@param name.pdf Name for PDF file to plot to. Can't contain characters ":" or "/" on Windows. Set to \code{NA}
+#'internal neighbor nodes are also included. These nodes are then connected based on the interaction network.
+#'@param alternative A character string specifying the alternative hypothesis.
+#'@param name Name for PDF file to plot to. Can't contain characters ":" or "/" on Windows. Set to \code{NA}
 #'to suppress writing to file.
-#'@param color.pal Color palette.
+#'@param color.pal A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
+#'a palette from \code{\link[RColorBrewer]{brewer.pal}} is chosen.
 #'@return Invisibly, a list of 3 components: 
 #' \describe{
 #'   \item{gr}{the graph that gets plotted}
@@ -22,78 +25,77 @@
 #' }
 #'@export
 
-plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, in.col='lightblue', out.col='red',
-                         name.pdf=paste0(gsub(":|/", "_", pwy), '_ntop', ntop), color.v=NULL){
+plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=c("two.sided", "less", "greater"), 
+                     name=paste0(gsub(":|/", "_", pwy), '_ntop', ntop), color.pal=NULL){
+  alternative <- match.arg(alternative)
+  in.shape <- "circle"
+  out.shape <- "square"
   
   if (!igraph::is_simple(gr)){
     warning('igraph::is_simple(gr) is FALSE, so applying igraph::simplify.')
     gr <- igraph::simplify(gr)
   }
-  if (is.null(color.v)){
-    if (any(score.v < 0)){
-      color.v <- RColorBrewer::brewer.pal(n=9, name='RdBu')[9:1]
-    } else {
-      color.v <- RColorBrewer::brewer.pal(n=9, name='Reds')
-    }
+  if (alternative=="two.sided"){
+    lim <- c(-max(abs(score.v)), max(abs(score.v)))
+    #use yellow in middle to distinguish NA's, which are grey
+    if (is.null(color.pal)) color.pal <- RColorBrewer::brewer.pal(n=9, name='RdYlBu')[9:1]
+  } else {
+    lim <- range(score.v)
+    if (is.null(color.pal)) color.pal <- RColorBrewer::brewer.pal(n=9, name='Reds')
   }
   
+  stopifnot(!is.null(names(score.v)), is.na(annot)|length(intersect(names(annot), rownames(Gmat))) > 0)
+  
+  sc.m <- as.matrix(data.frame(score.v))
+  rownames(sc.m) <- names(score.v)
+  mm <- match_mats(score.mat=sc.m, ker=ker, Gmat=Gmat, score.impute = NA)
+  score.v <- mm$score.mat[,1,drop=FALSE]; ker <- mm$ker; Gmat <- mm$Gmat
+  rm(mm) #to save memory
+  #expand graph to include all features, even if they're isolated
+  new.v <- setdiff(rownames(Gmat), V(gr)$name)
+  gr <- igraph::add_vertices(graph=gr, nv=length(new.v), name=new.v)
+  
   pwy.nodes <- rownames(Gmat)[Gmat[,pwy]>0]
-
-  score.nona <- score.v
-  score.nona[is.na(score.v)] <- median(score.v, na.rm = TRUE)
-  # score.match <- setNames(rep(NA, nrow(ker)), nm=rownames(ker))
-  # score.match[names(score.v)] <- score.v
-  score.match <- score.nona[rownames(ker)]
-
-  stopifnot(names(score.v)==rownames(gr), rownames(Gmat) %in% colnames(ker),
-            names(score.v) %in% rownames(ker), is.na(annot)|length(intersect(names(annot), rownames(Gmat))) > 0)
-
   pwy.neighbors <- setdiff(neighbor_nms(gr, pwy.nodes), pwy.nodes)
 
   #get kernel weight sums per node
-  ker.v0 <- ker %*% Gmat[,pwy]
-  #want mean of ker weights to be 1 to standardize threshold, but want to keep weights non-neg,
-  #so divide by mean (instead of subtracting mean)
-  ker.v <- setNames(as.numeric(ker.v0 / mean(ker.v0[,1])), nm=rownames(Gmat))
-  #names(ker.v) <- rownames(Gmat)
-
+  coeff.sc <- (ker %*% Gmat[,pwy])[,1]
+  
   #estimate impact of nodes on pwy score
-  #limit estimation of impact.v to nodes that have data
-  impact.v <- setNames(rep(0, nrow(ker)), nm=rownames(ker))
-  impact.v[names(score.v)] <- ker.v[names(score.v)] * score.v
+  #this includes estimation of impact.v to NA nodes, which are properly handled by order() below
+  impact.v <- setNames((coeff.sc * score.v)[,1], nm=rownames(score.v))
 
   #get top n nodes by abs(impact.v)
-  top.nodes <- names(impact.v)[order(abs(impact.v), decreasing = TRUE)][1:ntop]
-
+  top.nodes <- names(impact.v)[switch(alternative, greater=order(-impact.v),
+                      less=order(impact.v), two.sided=order(-abs(impact.v)))][1:ntop]
+                      
   #get neighbors
   pwy.neighbors.ss <- intersect(pwy.neighbors, top.nodes)
   #get pwy nodes with large stats OR pwy nodes connected to neighbors with large stats
   pwy.nodes.ss <- union(intersect(pwy.nodes, top.nodes),
                         intersect(pwy.nodes, neighbor_nms(gr, pwy.neighbors.ss)))
 
-  gr.ss <- igraph::induced_subgraph(gr, vid=which(V(gr)$name %in% c(pwy.nodes.ss, pwy.neighbors.ss)))
-
-  shape.v <- c(out.sh, in.sh)[(V(gr.ss)$name %in% pwy.nodes)+1]
-  names(shape.v) <- V(gr.ss)$name
-  #arbitrary monotonic transformation
-  
-    score.match[V(gr.ss)$name]
+  gr.pwy <- igraph::induced_subgraph(gr, vid=which(V(gr)$name %in% c(pwy.nodes.ss, pwy.neighbors.ss)))
+  x <- score.v[V(gr.pwy)$name, 1]
+  color.v <- map2color(x=x, pal=color.pal, lim=lim)
+  shape.v <- c(out.shape, in.shape)[(V(gr.pwy)$name %in% pwy.nodes)+1]
+  names(shape.v) <- V(gr.pwy)$name
 
   #sub chebi id's for names
   if (!is.na(annot[1])){
-    nms.int <- intersect(names(annot), V(gr.ss)$name)
+    nms.int <- intersect(names(annot), V(gr.pwy)$name)
     if (length(nms.int) > 0){
-      V(gr.ss)$name[match(nms.int, V(gr.ss)$name)] <- annot[nms.int]
+      V(gr.pwy)$name[match(nms.int, V(gr.pwy)$name)] <- annot[nms.int]
     }
-  }
+  }#end if
 
   #need to gsub disallowed characters
-  if (!is.na(name.pdf)) pdf(paste0(name.pdf, '.pdf'))
-  
-  plot(gr.ss, vertex.color=color.v, vertex.size=sz.v)
-  
-  if (!is.na(name.pdf)) dev.off()
+  if (!is.na(name)) pdf(paste0(name, '.pdf'))
+  plot(gr.pwy, vertex.color=color.v, vertex.shape=shape.v)
+  legend_colorbar(col=color.pal, lev=lim)
+  legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=1:0, bty="n")
+  if (!is.na(name)) dev.off()
 
-  ret <- list(gr=gr.ss, vertex.color=color.v, vertex.size=sz.v)
+  ret <- list(gr=gr.pwy, vertex.color=color.v, vertex.shape=shape.v, score=x)
   return(invisible(ret))
 }

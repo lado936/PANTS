@@ -6,7 +6,7 @@
 \usage{
 pants(object, phenotypes.v, contrasts.v, ker, Gmat, score_fcn = identity,
   nperm = 10^4, smooth.pwy.null = NA, smooth.feat.null = NA,
-  ret.null.mats = FALSE, verbose = FALSE, alternative = c("two.sided",
+  ret.null.mats = FALSE, verbose = TRUE, alternative = c("two.sided",
   "less", "greater"))
 }
 \arguments{
@@ -28,12 +28,6 @@ the trivial identity function returning its argument. Its input must be a vector
 length as number of elements in \code{contrasts.v}. Its output must be a scalar.}
 
 \item{nperm}{Number of permutations to perform to evaluate significance of pathways.}
-
-\item{smooth.pwy.null}{One of "kde" for kernel density estimation, "norm" for the normal distribution, or NA for 
-no smoothing of null pathway statistics.}
-
-\item{smooth.feat.null}{One of "kde" for kernel density estimation, "norm" for the normal distribution, or NA for 
-no smoothing of null fature statistics.}
 
 \item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathways.}
 

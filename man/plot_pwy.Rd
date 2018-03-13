@@ -5,8 +5,9 @@
 \title{Plot network diagram for a pathway}
 \usage{
 plot_pwy(gr, ker, Gmat, pwy, score.v, annot = NA, ntop = 7,
-  in.col = "lightblue", out.col = "red", name.pdf = paste0(gsub(":|/",
-  "_", pwy), "_ntop", ntop), color.v = NULL)
+  alternative = c("two.sided", "less", "greater"), name = paste0(gsub(":|/",
+  "_", pwy), "_ntop", ntop), color.pal = NULL, in.shape = "circle",
+  out.shape = "square")
 }
 \arguments{
 \item{gr}{A graph of class \code{igraph} representing the interaction network.}
@@ -17,18 +18,25 @@ plot_pwy(gr, ker, Gmat, pwy, score.v, annot = NA, ntop = 7,
 
 \item{pwy}{Pathway to plot. Must be a column name of \code{Gmat}.}
 
-\item{score.v}{Namd vector of scores of features, where \code{names(score.v) == rownames(gr)}.}
+\item{score.v}{Namd vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select top nodes 
+and color them.}
 
 \item{annot}{Named vector of annotations for nodes. If \code{annot} is not \code{NA}, \code{names(annot)} should
 overlap with \code{rownames(Gmat)}.}
 
 \item{ntop}{Number of top most significant features to include. If one of these is an external node, then its
-internal neighbor nodes are also included. These nodes are then connected based on the network.}
+internal neighbor nodes are also included. These nodes are then connected based on the interaction network.}
 
-\item{name.pdf}{Name for PDF file to plot to. Can't contain characters ":" or "/" on Windows. Set to \code{NA}
+\item{alternative}{A character string specifying the alternative hypothesis.}
+
+\item{name}{Name for PDF file to plot to. Can't contain characters ":" or "/" on Windows. Set to \code{NA}
 to suppress writing to file.}
 
-\item{color.pal}{Color palette.}
+\item{color.pal}{A color palette, as a vector.}
+
+\item{in.shape}{Shape for nodes in the pathway.}
+
+\item{out.shape}{Shape for nodes outside the pathway.}
 }
 \value{
 Invisibly, a list of 3 components: 
@@ -40,4 +48,7 @@ Invisibly, a list of 3 components:
 }
 \description{
 Plot network diagram for a pathway with node size corresponding to significance and color to pathway membership.
+}
+\details{
+\code{color.pal, in.shape, out.shape} must be accepted by \code{\link[igraph]{plot.igraph}}.
 }
