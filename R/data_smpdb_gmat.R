@@ -5,4 +5,4 @@
 #'
 #' @format A Matrix of features (proteins/metabolites) by Pathway names. Zero entries indicate the feature is not in the pathway,
 #' whereas non-zero entries indicates otherwise.
-"gmat"
+"smpdb_gmat"

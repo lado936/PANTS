@@ -17,6 +17,6 @@ clean_pwycommons_sif <- function(pc.sif, rm.ids="CHEBI:15377"){
     length(grep(paste(paste0("^", rm.ids, "$"), collapse="|"), v)) >0
   }))
   pc.sif <- pc.sif[-rm.rows,]
-  pc.sif <- pc.sif[-duplicated(pc.sif[,c(1,3)]),]
+  pc.sif <- pc.sif[-which(duplicated(pc.sif[,c(1,3)])),]
   return(pc.sif)
 }

@@ -16,7 +16,7 @@ Welcome to the `PANTS` package for Pathway Analysis, and optionally integration,
 See README.md for installation.
 
 ## Load package
-```{r lib}
+```{r lib, message=FALSE}
 library("ezlimma")
 library("PANTS")
 ```
@@ -28,33 +28,27 @@ data("pc9")
 ```
 
 ## Construct graph
-`PANTS` smooths statistics over the network using a network kernel derived from a graph. So we transform `pc9` into a graph:
+`PANTS` smooths statistics over the network using a network kernel derived from a graph. So we transform `pc9` into a simplified graph:
 ```{r gr}
-gr <- graph_from_edgelist(as.matrix(pc9[,c(1,3)]), directed = FALSE)
+gr <- igraph::simplify(igraph::graph_from_edgelist(pc9, directed = FALSE))
 ```
 
 ## Construct predefined pathways
 We need to load predefined pathways that consist of genes and metabolites whose IDs are consistent with those of our interaction network. One source for these pathways is the Small Molecule Pathway Database (smpdb.ca). SMPDB offers one file for proteins and another for metabolites. If you read these in, you can construct pathways using the `SMPDB2Gmat` function. I've already done this and included the result with the package. You can load this data, and then enforce its rows to match the kernel with:
 ```{r gmat}
-data("gmat")
-```
-
-## Expand graph
-We expand the graph to include nodes in `gmat`.
-```{r eg}
-gr <- expand_graph(gr, gmat)
+data("smpdb_gmat")
 ```
 
 ## Calculate kernel
 ```{r ker}
-ker <- gr2kernel(gr)
+ker <- graph2kernel(gr)
 ```
 
 ## Get data
 To illustrate `PANTS`, we'll simulate protein and metabolite abundance data on 10 samples, with 5 cases and 5 controls. The rows (features) of this data matrix need to overlap with the rows of `gmat`. We'll sample features from `gmat` instead of using all the features to save computation time. We also need a vector of phenotypes.
 ```{r sim}
 set.seed(42)
-features <- rownames(gmat)[sample(x=1:nrow(gmat), size=10^3)]
+features <- rownames(smpdb_gmat)[sample(x=1:nrow(smpdb_gmat), size=10^3)]
 M <- matrix(rexp(n=10^4), nrow=10^3, ncol=10, dimnames=list(features, paste0("s", 1:10)))
 pheno.v <- setNames(rep(c("case", "ctrl"), each=5), nm=colnames(M))
 ```
@@ -63,14 +57,13 @@ pheno.v <- setNames(rep(c("case", "ctrl"), each=5), nm=colnames(M))
 We execute the main function, `pants`, by testing a contrast (or comparison) on this dataset, e.g. case vs. control. We limit the number of permutations to speed up the calculation. In general, if the `object` or `nperm` is large, this step will be slow.
 ```{r pants}
 contr <- c(CASEvsCTRL="case-ctrl")
-res.lst <- pants(object=M, phenotypes.v=pheno.v, contrasts.v=contr, ker=ker, Gmat=gmat, nperm=10)
+res.lst <- pants(object=M, phenotypes.v=pheno.v, contrasts.v=contr, ker=ker, Gmat=smpdb_gmat, nperm=50)
 pwy.stats <- res.lst$pwy.stats
 ```
 
 ## Plot
-Draw network diagram of driving nodes for the pathway "Tryptophan Metabolism".
-```{r}
+Draw network diagram of driving nodes for the pathway "Angiotensin Metabolism".
+```{r plot}
 score.v <- setNames(res.lst$feature.stats$score, nm=rownames(res.lst$feature.stats))
-plot_pwy(gr=gr, ker=ker, Gmat=gmat, pwy="Tryptophan Metabolism", score.v=score.v, annot=NA, ntop=3, name.pdf=NA)
+plot_pwy(gr=gr, ker=ker, Gmat=smpdb_gmat, pwy="Angiotensin Metabolism", score.v=score.v, annot=NA, ntop=3, name=NA)
 ```
-

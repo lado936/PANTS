@@ -28,6 +28,12 @@
 plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=c("two.sided", "less", "greater"), 
                      name=paste0(gsub(":|/", "_", pwy), '_ntop', ntop), color.pal=NULL){
   alternative <- match.arg(alternative)
+  if (is.null(color.pal)){
+    if (!requireNamespace("RColorBrewer", quietly = TRUE)){
+      stop("Package 'RColorBrewer' needed since 'is.null(color.pal)'. Please install it.", call. = FALSE)
+    }
+  }
+  
   in.shape <- "circle"
   out.shape <- "square"
   
@@ -93,7 +99,7 @@ plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=
   if (!is.na(name)) pdf(paste0(name, '.pdf'))
   plot(gr.pwy, vertex.color=color.v, vertex.shape=shape.v)
   legend_colorbar(col=color.pal, lev=lim)
-  legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=1:0, bty="n")
+  if (any(shape.v==out.shape)) legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=1:0, bty="n")
   if (!is.na(name)) dev.off()
 
   ret <- list(gr=gr.pwy, vertex.color=color.v, vertex.shape=shape.v, score=x)

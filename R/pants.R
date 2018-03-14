@@ -69,7 +69,7 @@ dimnames=list(rownames(score.mat), c("z", "pval", "FDR"))))
   rownames(pwy.stats) <- colnames(Gmat)
   pwy.stats[,c("z", "pval")] <- p_ecdf(eval.v=pwy.v, scores.mat=pwy.mat, alternative = alternative)
   pwy.stats$FDR <- p.adjust(pwy.stats$pval, method='BH')
-  pwy.stats <- pwy.stats[order(pwy.stats$pval, -pwy.stats$z),]
+  pwy.stats <- pwy.stats[order(pwy.stats$pval, -abs(pwy.stats$feat.score.avg)),]
 
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)
   if (ret.null.mats){

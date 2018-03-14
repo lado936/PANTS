@@ -3,8 +3,8 @@
 \docType{data}
 \name{pc9}
 \alias{pc9}
-\title{Pathway Commons v9 in Simple Interaction Format (SIF)}
-\format{A data frame with >1.5 million rows and 3 variables, representing: physical_entity_id <relationship type> physical_entity_id.}
+\title{Pathway Commons v9 as an edge-list}
+\format{A matrix with >1 million rows and 2 columns, representing: physical_entity_id1 & physical_entity_id2.}
 \source{
 \url{http://www.pathwaycommons.org/archives/PC2/v9/PathwayCommons9.All.hgnc.sif.gz}
 }
@@ -12,9 +12,10 @@
 pc9
 }
 \description{
-Pathway Commons v9 in SIF. SIF is described at \url{http://www.pathwaycommons.org/pc/sif_interaction_rules.do}.
-Genes are represented by gene symbol (hgnc) and metabolites by CHEBI ID. All of the data provided by Pathway
-Commons is free. In particular, Pathway Commons distributes pathway information with the intellectual property
-restrictions of the source database; only databases that are freely available for academics are included.
+Pathway Commons v9 was downloaded as a SIF file. SIF is described at \url{http://www.pathwaycommons.org/pc/sif_interaction_rules.do}.
+It was then converted to an edge-list using \code{\link{clean_pwycommons_sif}}. Genes are represented by gene 
+symbol (hgnc) and metabolites by CHEBI ID. All of the data provided by Pathway Commons is free. In particular, 
+Pathway Commons distributes pathway information with the intellectual property restrictions of the source database; 
+only databases that are freely available for academics were included in the SIF file.
 }
 \keyword{datasets}
