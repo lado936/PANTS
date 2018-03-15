@@ -1,29 +1,43 @@
-library("PANTS")
 library("ezlimma")
-context("utils")
+library("PANTS")
+library("testthat")
+context("pants")
 
 #sq w/ all nodes connected except a <-> c; a <-> d repeated, as in sif
 el <- rbind(t(combn(letters[1:4], 2))[-2,], c("a", "d"))
-gr <- graph_from_edgelist(el, directed = FALSE)
+gr <- igraph::graph_from_edgelist(el, directed = FALSE)
 
 set.seed(0)
-M <- matrix(rnorm(n=60), ncol=6, dimnames=list(letters[1:10], paste0("s", 1:6)))
+M <- matrix(rnorm(n=90), ncol=9, dimnames=list(letters[1:10], paste0("s", 1:9)))
 M["a", 1:3] <- M["a", 1:3]+5
-pheno <- rep(c("trt", "ctrl"), each=3)
+pheno <- rep(c("trt1", "trt2", "ctrl"), each=3)
 
-gr <- edgeList2graph(el)
+gr <- edgelist2graph(el)
 kk <- graph2kernel(gr)
 gmt <- list(pwy1=list(name="pwy1", description="pwy1", genes=c("a", "b", "c")),
             pwy2=list(name="pwy2", description="pwy2", genes=c("b", "c", "d")))
 G <- gmt2Gmat(gmt)
 
-mm <- match_mats(score.mat=M, ker=kk, Gmat=G)
-M <- mm$score.mat; kk=mm$ker; G <- mm$Gmat
+# mm <- match_mats(score.mat=M, ker=kk, Gmat=G)
+# M <- mm$score.mat; kk=mm$ker; G <- mm$Gmat
 
-res <- pants(object=M, phenotypes.v=pheno, contrasts.v="trt-ctrl", ker=kk, Gmat=G, nperm=10, ret.null.mats = T)
+contrasts.v <- c(trt1="trt1-ctrl", trt2="trt2-ctrl")
+res <- pants(object=M, phenotypes.v=pheno, contrasts.v=contrasts.v[1], ker=kk, Gmat=G, nperm=10)
 score.v <- setNames(res$feature.stats$score, nm=rownames(res$feature.stats))
 
 ##tests
+test_that("clean pwycommons SIF", {
+  sif <- cbind(c(letters[c(2,1,2,2,3)], ""), "interacts-with", letters[c(1,3,1,3,1,1)])
+  el.o <- t(apply(sif[,c(1,3)], 1, FUN=sort))
+  el2 <- sif2edgelist(sif)
+  expect_equal(el2, el.o[c(1,2,4,6),])
+  el3 <- sif2edgelist(sif[c(1,2,4,6),])
+  expect_equal(el3, el.o[c(1,2,4,6),])
+  
+  el4 <- sif2edgelist(sif, rm.ids = c("", "c", "water"))
+  expect_equal(el4, el2[1,,drop=FALSE])
+})
+
 test_that("mat_pow on dense matrix", {
   #from https://www.mathworks.com/help/matlab/ref/mpower.html
   x <- matrix(1:4, nrow=2, byrow = TRUE)
@@ -35,7 +49,7 @@ test_that("mat_pow on sparse matrix", {
   expect_equal(mat_pow(x, 2), Matrix(c(7,10,15,22), nrow=2, byrow = TRUE))
 })
 
-test_that("edgeList2kernel", {
+test_that("edgelist -> kernel", {
   expect_equal(kk[2,2], 1)
   expect_true(isSymmetric(as.matrix(kk)))
   #B & D are equivalent
@@ -48,7 +62,7 @@ test_that("edgeList2kernel", {
 })
 
 test_that("score_features", {
-  sf <- score_features(object=M, phenotypes.v=pheno, contrasts.v="trt-ctrl", score_fcn=abs)
+  sf <- score_features(object=M, phenotypes.v=pheno, contrasts.v="trt1-ctrl", score_fcn=abs)
   expect_equal(which.max(sf), c(a=1))
 })
 
@@ -60,11 +74,17 @@ test_that("gmt2Gmat", {
 })
 
 test_that("match_mats", {
-  expect_equal(rownames(G), colnames(kk))
+  expect_gt(length(intersect(rownames(G), colnames(kk))), 0)
   expect_equal(sum(G), 6)
 })
 
 test_that("pants", {
+  #contr of length 2
+  expect_error(pants(object=M, phenotypes.v=pheno, contrasts.v=contrasts.v, ker=kk, Gmat=G, nperm=10))
+  ff <- function(v) v[2]-v[1]
+  res2 <- pants(object=M, phenotypes.v=pheno, contrasts.v=contrasts.v, ker=kk, Gmat=G, nperm=10, score_fcn = ff)
+  expect_equal(nrow(res2$pwy.stats), 2)
+  
   expect_gt(res$pwy.stats["pwy1", 2], res$pwy.stats["pwy2", 2])
   expect_equal(res$pwy.stats["pwy1", 1], 3)
   expect_equal(res$pwy.stats["pwy2", 1], 3)

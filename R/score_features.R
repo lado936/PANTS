@@ -21,7 +21,7 @@ score_features <- function(object, phenotypes.v, contrasts.v, score_fcn=identiy)
   #need to coerce toptab to matrix & name score.v in case it has only one column
   score.v <- apply(as.matrix(toptab), MARGIN=1, FUN=score_fcn)
   if (!is.null(dim(score.v))){
-    stop('Your score_fcn\'s output is of length ', ncol(score.v), ' but it should be of length 1.')
+    stop('Your score_fcn\'s output is of length ', nrow(score.v), ' but it should be of length 1.')
   }
   names(score.v) <- rownames(toptab)
   return(score.v)
