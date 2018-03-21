@@ -3,13 +3,14 @@
 #' Expand kernel to match features in both object and pathway matrix, so that maintain these features in 
 #' \code{\link{pants}}.
 #' 
-#' @param score.mat A matrix-like object with scores from original data and permutations with rows corresponding 
+#' @param score.mat A matrix-like object with scores from original data and possibly permutations with rows corresponding 
 #' to features and columns to simulations.
 #' @param ker sparse matrix (of class Matrix)
 #' @param Gmat The feature by pathway inclusion matrix, indicating which features are in which pathways.
 #' @param score.impute Value to impute missing scores.
 #' @details There must be some overlap between the rownames of \code{score.mat}, \code{ker}, & \code{Gmat}.
 #' @return A list with elements \code{score.mat}, \code{ker}, and \code{Gmat}.
+#' @export
 
 match_mats <- function(score.mat, ker, Gmat, score.impute=0){
   stopifnot(length(intersect(rownames(score.mat), rownames(ker))) > 0, 

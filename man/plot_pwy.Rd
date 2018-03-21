@@ -20,8 +20,8 @@ plot_pwy(gr, ker, Gmat, pwy, score.v, annot = NA, ntop = 7,
 \item{score.v}{Namd vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select top nodes 
 and color them.}
 
-\item{annot}{Named vector of annotations for nodes. If \code{annot} is not \code{NA}, \code{names(annot)} should
-overlap with \code{rownames(Gmat)}.}
+\item{annot}{Named vector of annotations for nodes. If \code{annot} is not \code{NA}, \code{names(annot)} should 
+have some overlap with \code{rownames(Gmat)}.}
 
 \item{ntop}{Number of top most significant features to include. If one of these is an external node, then its
 internal neighbor nodes are also included. These nodes are then connected based on the interaction network.}

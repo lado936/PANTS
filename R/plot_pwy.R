@@ -8,8 +8,8 @@
 #'@param pwy Pathway to plot. Must be a column name of \code{Gmat}.
 #'@param score.v Namd vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select top nodes 
 #'and color them.
-#'@param annot Named vector of annotations for nodes. If \code{annot} is not \code{NA}, \code{names(annot)} should
-#'overlap with \code{rownames(Gmat)}.
+#'@param annot Named vector of annotations for nodes. If \code{annot} is not \code{NA}, \code{names(annot)} should 
+#'have some overlap with \code{rownames(Gmat)}.
 #'@param ntop Number of top most significant features to include. If one of these is an external node, then its
 #'internal neighbor nodes are also included. These nodes are then connected based on the interaction network.
 #'@param alternative A character string specifying the alternative hypothesis.

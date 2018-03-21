@@ -7,7 +7,7 @@
 match_mats(score.mat, ker, Gmat, score.impute = 0)
 }
 \arguments{
-\item{score.mat}{A matrix-like object with scores from original data and permutations with rows corresponding 
+\item{score.mat}{A matrix-like object with scores from original data and possibly permutations with rows corresponding 
 to features and columns to simulations.}
 
 \item{ker}{sparse matrix (of class Matrix)}

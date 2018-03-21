@@ -18,5 +18,7 @@ A numeric Matrix of features (proteins and/or metabolites) as rows and pathways 
 }
 \description{
 Transform SMPDB protein and/or metabolite pathway data frames, read in as CSV files from http://smpdb.ca/downloads,
-into a pathway matrix that \code{PANTS} can use to compute pathway scores.
+into a pathway matrix that matches Pathway Commons, using Gene.Name to identify proteins and ChEBI IDs for metabolites.
+Format of SMPDB downloads has changed, so now it has numerous semi-redundant fatty acid pathways, so this will need to
+be modified if want to stay up to date with SMPDB.
 }
