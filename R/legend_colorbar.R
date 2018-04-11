@@ -5,6 +5,7 @@
 #' @param lev Levels corresponding to colors
 #' @details Modified from \url{https://aurelienmadouasse.wordpress.com/2012/01/13/legend-for-a-continuous-color-scale-in-r/}.
 
+#an alternative is imageplot() from {fields}, which includes legends
 legend_colorbar <- function(col, lev){
   opar <- par
   n <- length(col)

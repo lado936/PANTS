@@ -27,6 +27,12 @@
 
 plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=c("two.sided", "less", "greater"), 
                      name=paste0(gsub(":|/", "_", pwy), '_ntop', ntop), color.pal=NULL){
+  
+  stopifnot(pwy %in% colnames(Gmat))
+  if (!is.na(annot) && length(intersect(names(annot), rownames(Gmat))) == 0){
+    stop("'annot' must be NA or 'names(annot)' must overlap with 'rownames(Gmat)'.")
+  }
+  
   alternative <- match.arg(alternative)
   if (is.null(color.pal)){
     if (!requireNamespace("RColorBrewer", quietly = TRUE)){
@@ -49,8 +55,6 @@ plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=
     lim <- range(score.v)
     if (is.null(color.pal)) color.pal <- RColorBrewer::brewer.pal(n=9, name='Reds')
   }
-  
-  stopifnot(!is.null(names(score.v)), is.na(annot)|length(intersect(names(annot), rownames(Gmat))) > 0)
   
   sc.m <- as.matrix(data.frame(score.v))
   rownames(sc.m) <- names(score.v)

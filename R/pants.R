@@ -5,10 +5,10 @@
 #'
 #'@param object A matrix-like data object containing log-ratios or log-expression values for a
 #'series of samples, with rows corresponding to features and columns to samples.
-#'@param phenotypes.v A vector of phenotypes of strings the same length as number of samples in \code{object}.
+#'@param phenotype.v A vector of phenotypes of strings the same length as number of samples in \code{object}.
 #'If the vector is named, the names must match the column names of \code{object}.
 #'@param contrasts.v A named vector of constrasts. The constrasts must refer to the phenotypes
-#'in \code{phenotypes.v}. Their order defines the order they are passed to \code{score_fcn}.
+#'in \code{phenotype.v}. Their order defines the order they are passed to \code{score_fcn}.
 #'@param ker The Laplacian kernel matrix.
 #'@param Gmat The feature by pathway inclusion matrix, indicating which features are in which pathways.
 #'@param score_fcn A function that transforms the t-statistics from the contrasts. \code{identity} is 
@@ -25,23 +25,22 @@
 #'of statistics.
 #'@export
 
-pants <- function(object, phenotypes.v, contrasts.v, ker, Gmat, score_fcn=identity, nperm=10^4, smooth.pwy.null=NA, 
-                  smooth.feat.null=NA, ret.null.mats=FALSE, verbose=TRUE, 
+pants <- function(object, phenotype.v, contrasts.v, ker, Gmat, score_fcn=identity, nperm=10^4, ret.null.mats=FALSE, verbose=TRUE, 
                   alternative=c("two.sided", "less", "greater")){
   stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)),
-            colnames(object)==names(phenotypes.v))
+            colnames(object)==names(phenotype.v))
   alternative <- match.arg(alternative)
   
-  score.v <- score_features(object=object, phenotypes.v=phenotypes.v, 
+  score.v <- score_features(object=object, phenotype.v=phenotype.v, 
                             contrasts.v=contrasts.v, score_fcn=score_fcn)
   
   #feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
   score.mat <- Matrix(0, nrow=nrow(object), ncol=nperm, dimnames = list(rownames(object), paste0('perm', 1:nperm)))
   for (perm in 1:nperm){
     #must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
-    pheno.tmp <- setNames(phenotypes.v[sample(1:length(phenotypes.v))], nm=NULL)
+    pheno.tmp <- setNames(phenotype.v[sample(1:length(phenotype.v))], nm=NULL)
 
-    score.mat[,perm] <- score_features(object=object, phenotypes.v=pheno.tmp, contrasts.v=contrasts.v, score_fcn=score_fcn)
+    score.mat[,perm] <- score_features(object=object, phenotype.v=pheno.tmp, contrasts.v=contrasts.v, score_fcn=score_fcn)
     if (verbose){
       if (perm %% 500 == 0) cat("permutation", perm, "\n")
     }

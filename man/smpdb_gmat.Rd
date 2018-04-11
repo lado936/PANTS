@@ -10,7 +10,9 @@ whereas non-zero entries indicates otherwise.}
 smpdb_gmat
 }
 \description{
-To construct this, I read in 'smpdb_metabolites.csv' and 'smpdb_proteins.csv' from the Small Molecule Pathway
-Database (SMPDB), then SMPDB2Gmat(smpdb.prot=smpdb.prot, smpdb.met=smpdb.met, exclude.pwy.subj='Drug Metabolism').
+Pathway inclusion matrix (Gmat) constructed from http://smpdb.ca/downloads. These downloads are from 2014-2016. 
+New downloads from early 2018 have very different pathways, with many nearly identical fatty acid biosynthesis 
+pathways, so this object has not been updated with them. Code to reproduce this dataset from these downloads is at
+https://github.com/jdreyf/PANTS/blob/master/data-raw/smpdb_gmat.R.
 }
 \keyword{datasets}
