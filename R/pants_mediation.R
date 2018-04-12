@@ -54,7 +54,7 @@ pants_mediation <- function(object, exposure.v, phenotype.v, ker, Gmat, nperm=10
   feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=3,
                                                       dimnames=list(rownames(score.mat), c("z", "pval", "FDR"))))
   #need to coerce score.mat to matrix to prevent rowSums error
-  feature.stats[,c("z", "pval")] <- p_ecdf(eval=score.v, scores.mat = as.matrix(score.mat), alternative = "greater")
+  feature.stats[,c("z", "pval")] <- p_ecdf(eval=score.v, score.mat = as.matrix(score.mat), alternative = "greater")
   feature.stats[,"FDR"] <- p.adjust(feature.stats[,"pval"], method="BH")
   
   ##need to compare to pwys, sometimes runs out of memory

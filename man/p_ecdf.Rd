@@ -4,13 +4,13 @@
 \alias{p_ecdf}
 \title{Estimate p-value from simulations}
 \usage{
-p_ecdf(eval.v, scores.mat, alternative = c("two.sided", "less", "greater"))
+p_ecdf(eval.v, score.mat, alternative = c("two.sided", "less", "greater"))
 }
 \arguments{
 \item{eval.v}{A vector of values where the cumulative distribution function should be evaluated}
 
-\item{scores.mat}{A matrix of values from the distribution, where each column is a different simulation, 
-and \code{rownames(scores.mat)} corresponds to \code{names(eval.v)}.}
+\item{score.mat}{A matrix of values from the distribution, where each column is a different simulation, 
+and \code{rownames(score.mat)} corresponds to \code{names(eval.v)}.}
 
 \item{alternative}{A character string specifying the alternative hypothesis}
 }

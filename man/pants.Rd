@@ -4,20 +4,19 @@
 \alias{pants}
 \title{Pathway Analysis via NeTwork Smoothing}
 \usage{
-pants(object, phenotypes.v, contrasts.v, ker, Gmat, score_fcn = identity,
-  nperm = 10^4, smooth.pwy.null = NA, smooth.feat.null = NA,
-  ret.null.mats = FALSE, verbose = TRUE, alternative = c("two.sided",
-  "less", "greater"))
+pants(object, phenotype.v, contrasts.v, ker, Gmat, score_fcn = identity,
+  nperm = 10^4, ret.null.mats = FALSE, verbose = TRUE,
+  alternative = c("two.sided", "less", "greater"))
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
 series of samples, with rows corresponding to features and columns to samples.}
 
-\item{phenotypes.v}{A vector of phenotypes of strings the same length as number of samples in \code{object}.
+\item{phenotype.v}{A vector of phenotypes of strings the same length as number of samples in \code{object}.
 If the vector is named, the names must match the column names of \code{object}.}
 
 \item{contrasts.v}{A named vector of constrasts. The constrasts must refer to the phenotypes
-in \code{phenotypes.v}. Their order defines the order they are passed to \code{score_fcn}.}
+in \code{phenotype.v}. Their order defines the order they are passed to \code{score_fcn}.}
 
 \item{ker}{The Laplacian kernel matrix.}
 

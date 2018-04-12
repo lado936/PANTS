@@ -55,7 +55,7 @@ pants <- function(object, phenotype.v, contrasts.v, ker, Gmat, score_fcn=identit
   feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=3,
 dimnames=list(rownames(score.mat), c("z", "pval", "FDR"))))
   #need to coerce score.mat to matrix to prevent rowSums error
-  feature.stats[,c("z", "pval")] <- p_ecdf(eval=score.v, scores.mat = as.matrix(score.mat), alternative = alternative)
+  feature.stats[,c("z", "pval")] <- p_ecdf(eval=score.v, score.mat = as.matrix(score.mat), alternative = alternative)
   feature.stats[,"FDR"] <- p.adjust(feature.stats[,"pval"], method="BH")
 
   ##need to compare to pwys, sometimes runs out of memory
