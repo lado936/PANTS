@@ -2,7 +2,7 @@
 % Please edit documentation in R/pants_mediation.R
 \name{pants_mediation}
 \alias{pants_mediation}
-\title{Pathway Analysis via NeTwork Smoothing using mediation}
+\title{Pathway Analysis via Network Smoothing using mediation}
 \usage{
 pants_mediation(object, exposure.v, phenotype.v, ker, Gmat, nperm = 10^4,
   ret.null.mats = FALSE, verbose = TRUE)

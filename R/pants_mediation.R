@@ -1,4 +1,4 @@
-#' Pathway Analysis via NeTwork Smoothing using mediation
+#' Pathway Analysis via Network Smoothing using mediation
 #' 
 #' PANTS algorithm for mediation pathway analysis (and optionally integration) via network smoothing
 #' 
@@ -25,7 +25,7 @@ pants_mediation <- function(object, exposure.v, phenotype.v, ker, Gmat, nperm=10
             ncol(object)==length(phenotype.v), ncol(object)==length(exposure.v), colnames(object)==names(phenotype.v), 
             colnames(object)==names(exposure.v))
   
-  lmed <- limma_mediation(E=exposure.v, M=object, Y=phenotype.v)
+  lmed <- hitman(E=exposure.v, M=object, Y=phenotype.v)
   #transform to one-sided z-score
   score.v <- qnorm(p=lmed[rownames(object), "comb.p"], lower.tail = FALSE)
   
@@ -37,7 +37,7 @@ pants_mediation <- function(object, exposure.v, phenotype.v, ker, Gmat, nperm=10
     #to avoid names error in stopifnot
     colnames(object.tmp) <- colnames(object)
     
-    lmed.tmp <- limma_mediation(E=exposure.v, M=object.tmp, Y=phenotype.v)
+    lmed.tmp <- hitman(E=exposure.v, M=object.tmp, Y=phenotype.v)
     score.mat[,perm] <- qnorm(p=lmed.tmp[rownames(object), "comb.p"], lower.tail = FALSE)
     if (verbose){
       if (perm %% 500 == 0) cat("permutation", perm, "\n")
