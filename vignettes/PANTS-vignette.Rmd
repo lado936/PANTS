@@ -57,13 +57,13 @@ pheno.v <- setNames(rep(c("case", "ctrl"), each=5), nm=colnames(M))
 We execute the main function, `pants`, by testing a contrast (or comparison) on this dataset, e.g. case vs. control. We limit the number of permutations to speed up the calculation. In general, if the `object` or `nperm` is large, this step will be slow.
 ```{r pants}
 contr <- c(CASEvsCTRL="case-ctrl")
-res.lst <- pants(object=M, phenotypes.v=pheno.v, contrasts.v=contr, ker=ker, Gmat=smpdb_gmat, nperm=50)
+res.lst <- pants(object=M, phenotype.v=pheno.v, contrasts.v=contr, ker=ker, Gmat=smpdb_gmat, nperm=50)
 pwy.stats <- res.lst$pwy.stats
 ```
 
 ## Plot
-Draw network diagram of driving nodes for the pathway "Angiotensin Metabolism".
+Draw network diagram of driving nodes for the pathway "Beta-Alanine Metabolism".
 ```{r plot}
-score.v <- setNames(res.lst$feature.stats$score, nm=rownames(res.lst$feature.stats))
-plot_pwy(gr=gr, ker=ker, Gmat=smpdb_gmat, pwy="Angiotensin Metabolism", score.v=score.v, annot=NA, ntop=3, name=NA)
+score.v <- stats::setNames(res.lst$feature.stats$score, nm=rownames(res.lst$feature.stats))
+plot_pwy(gr=gr, ker=ker, Gmat=smpdb_gmat, pwy="Beta-Alanine Metabolism", score.v=score.v, annot=NA, ntop=5, name=NA)
 ```

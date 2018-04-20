@@ -25,20 +25,20 @@ pants_mediation <- function(object, exposure.v, phenotype.v, ker, Gmat, nperm=10
             ncol(object)==length(phenotype.v), ncol(object)==length(exposure.v), colnames(object)==names(phenotype.v), 
             colnames(object)==names(exposure.v))
   
-  lmed <- hitman(E=exposure.v, M=object, Y=phenotype.v)
+  lmed <- ezlimma::hitman(E=exposure.v, M=object, Y=phenotype.v)
   #transform to one-sided z-score
-  score.v <- qnorm(p=lmed[rownames(object), "comb.p"], lower.tail = FALSE)
+  score.v <- stats::qnorm(p=lmed[rownames(object), "comb.p"], lower.tail = FALSE)
   
   #feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
-  score.mat <- Matrix(0, nrow=nrow(object), ncol=nperm, dimnames = list(rownames(object), paste0('perm', 1:nperm)))
+  score.mat <- Matrix::Matrix(0, nrow=nrow(object), ncol=nperm, dimnames = list(rownames(object), paste0('perm', 1:nperm)))
   for (perm in 1:nperm){
     #must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
     object.tmp <- object[,sample(1:ncol(object))]
     #to avoid names error in stopifnot
     colnames(object.tmp) <- colnames(object)
     
-    lmed.tmp <- hitman(E=exposure.v, M=object.tmp, Y=phenotype.v)
-    score.mat[,perm] <- qnorm(p=lmed.tmp[rownames(object), "comb.p"], lower.tail = FALSE)
+    lmed.tmp <- ezlimma::hitman(E=exposure.v, M=object.tmp, Y=phenotype.v)
+    score.mat[,perm] <- stats::qnorm(p=lmed.tmp[rownames(object), "comb.p"], lower.tail = FALSE)
     if (verbose){
       if (perm %% 500 == 0) cat("permutation", perm, "\n")
     }
@@ -54,8 +54,8 @@ pants_mediation <- function(object, exposure.v, phenotype.v, ker, Gmat, nperm=10
   feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=3,
                                                       dimnames=list(rownames(score.mat), c("z", "pval", "FDR"))))
   #need to coerce score.mat to matrix to prevent rowSums error
-  feature.stats[,c("z", "pval")] <- p_ecdf(eval=score.v, score.mat = as.matrix(score.mat), alternative = "greater")
-  feature.stats[,"FDR"] <- p.adjust(feature.stats[,"pval"], method="BH")
+  feature.stats[,c("z", "pval")] <- p_ecdf(eval.v=score.v, score.mat = as.matrix(score.mat), alternative = "greater")
+  feature.stats[,"FDR"] <- stats::p.adjust(feature.stats[,"pval"], method="BH")
   
   ##need to compare to pwys, sometimes runs out of memory
   pwy.v <- (score.v %*% ker %*% Gmat)[1,]
@@ -64,8 +64,8 @@ pants_mediation <- function(object, exposure.v, phenotype.v, ker, Gmat, nperm=10
   nfeats.per.pwy <- Matrix::colSums(Gmat!=0)
   pwy.stats <- data.frame(nfeatures=nfeats.per.pwy, feat.score.avg=pwy.v/nfeats.per.pwy, z=NA, pval=NA)
   rownames(pwy.stats) <- colnames(Gmat)
-  pwy.stats[,c("z", "pval")] <- p_ecdf(eval.v=pwy.v, scores.mat=pwy.mat, alternative = "greater")
-  pwy.stats$FDR <- p.adjust(pwy.stats$pval, method='BH')
+  pwy.stats[,c("z", "pval")] <- p_ecdf(eval.v=pwy.v, score.mat=pwy.mat, alternative = "greater")
+  pwy.stats$FDR <- stats::p.adjust(pwy.stats$pval, method='BH')
   pwy.stats <- pwy.stats[order(pwy.stats$pval, -abs(pwy.stats$feat.score.avg)),]
   
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)

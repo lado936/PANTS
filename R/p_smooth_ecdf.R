@@ -11,12 +11,12 @@ p_smooth_ecdf <- function(eval.point, scores, lower.tail=TRUE, smooth.fam=c("kde
   smooth.fam <- match.arg(smooth.fam)
   if (smooth.fam=="norm"){
     mu <- mean(scores)
-    s <- sd(scores)
-    pv <- pnorm(q=eval.point, mean = mu, sd = s, lower.tail = lower.tail)
+    s <- stats::sd(scores)
+    pv <- stats::pnorm(q=eval.point, mean = mu, sd = s, lower.tail = lower.tail)
   }#end norm
   if (smooth.fam=="kde"){
     #set 'bw' according to recommendation in ?density
-    sc.dens <- density(x=scores, bw="SJ")
+    sc.dens <- stats::density(x=scores, bw="SJ")
     if (lower.tail){
       pv <- sum(sc.dens$y[sc.dens$x <= eval.point])/sum(sc.dens$y)
     } else {

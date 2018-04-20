@@ -32,7 +32,7 @@ match_mats <- function(score.mat, ker, Gmat, score.impute=0){
   new.sc.n <- length(new.sc.feats)
   score.mat <- score.mat[keep.sc.feats,,drop=FALSE]
   if (new.sc.n > 0){
-    score.mat <- rbind(score.mat, Matrix(score.impute, nrow=new.sc.n, ncol=ncol(score.mat)))
+    score.mat <- rbind(score.mat, Matrix::Matrix(score.impute, nrow=new.sc.n, ncol=ncol(score.mat)))
     rownames(score.mat) <- c(keep.sc.feats, new.sc.feats)
   }
   
@@ -41,8 +41,8 @@ match_mats <- function(score.mat, ker, Gmat, score.impute=0){
   new.ker.feats <- setdiff(keep.feats, ker.feats)
   new.ker.n <- length(new.ker.feats)
   if (new.ker.n > 0){
-    ker <- rbind(cbind(ker, Matrix(data=0, nrow=nrow(ker), ncol=new.ker.n)),
-                  cbind(Matrix(data=0, nrow=new.ker.n, ncol=ncol(ker)), Diagonal(n=new.ker.n)))
+    ker <- rbind(cbind(ker, Matrix::Matrix(data=0, nrow=nrow(ker), ncol=new.ker.n)),
+                  cbind(Matrix::Matrix(data=0, nrow=new.ker.n, ncol=ncol(ker)), Matrix::Diagonal(n=new.ker.n)))
     colnames(ker) <- rownames(ker) <- c(ker.feats, new.ker.feats)
   }
   ker <- ker[rownames(score.mat), rownames(score.mat)]
@@ -52,7 +52,7 @@ match_mats <- function(score.mat, ker, Gmat, score.impute=0){
   new.g.feats <- setdiff(keep.feats, g.feats)
   new.g.n <- length(new.g.feats)
   if (new.g.n > 0){
-    Gmat <- rbind(Gmat, Matrix(0, nrow=new.g.n, ncol=ncol(Gmat)))
+    Gmat <- rbind(Gmat, Matrix::Matrix(0, nrow=new.g.n, ncol=ncol(Gmat)))
     rownames(Gmat) <- c(g.feats, new.g.feats)
   }
   Gmat <- Gmat[rownames(score.mat),,drop=FALSE]

@@ -4,7 +4,7 @@
 \alias{SMPDB2Gmat}
 \title{Transform SMPDB protein and/or metabolite pathway data frames into a pathway matrix}
 \usage{
-SMPDB2Gmat(smpdb.prot, smpdb.met, exclude.pwy.subj = NA, sc = FALSE)
+SMPDB2Gmat(smpdb.prot, smpdb.met, exclude.pwy.subj = NA)
 }
 \arguments{
 \item{smpdb.prot}{data frame of proteins per pathway from SMPDB}

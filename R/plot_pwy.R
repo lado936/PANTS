@@ -62,7 +62,7 @@ plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=
   score.v <- mm$score.mat[,1,drop=FALSE]; ker <- mm$ker; Gmat <- mm$Gmat
   rm(mm) #to save memory
   #expand graph to include all features, even if they're isolated
-  new.v <- setdiff(rownames(Gmat), V(gr)$name)
+  new.v <- setdiff(rownames(Gmat), igraph::V(gr)$name)
   gr <- igraph::add_vertices(graph=gr, nv=length(new.v), name=new.v)
   
   pwy.nodes <- rownames(Gmat)[Gmat[,pwy]>0]
@@ -73,7 +73,7 @@ plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=
   
   #estimate impact of nodes on pwy score
   #this includes estimation of impact.v to NA nodes, which are properly handled by order() below
-  impact.v <- setNames((coeff.sc * score.v)[,1], nm=rownames(score.v))
+  impact.v <- stats::setNames((coeff.sc * score.v)[,1], nm=rownames(score.v))
 
   #get top n nodes by abs(impact.v)
   top.nodes <- names(impact.v)[switch(alternative, greater=order(-impact.v),
@@ -85,26 +85,26 @@ plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=
   pwy.nodes.ss <- union(intersect(pwy.nodes, top.nodes),
                         intersect(pwy.nodes, neighbor_nms(gr, pwy.neighbors.ss)))
 
-  gr.pwy <- igraph::induced_subgraph(gr, vid=which(V(gr)$name %in% c(pwy.nodes.ss, pwy.neighbors.ss)))
-  x <- score.v[V(gr.pwy)$name, 1]
-  color.v <- setNames(map2color(x=x, pal=color.pal, lim=lim), nm=names(x))
-  shape.v <- c(out.shape, in.shape)[(V(gr.pwy)$name %in% pwy.nodes)+1]
-  names(shape.v) <- V(gr.pwy)$name
+  gr.pwy <- igraph::induced_subgraph(gr, vid=which(igraph::V(gr)$name %in% c(pwy.nodes.ss, pwy.neighbors.ss)))
+  x <- score.v[igraph::V(gr.pwy)$name, 1]
+  color.v <- stats::setNames(map2color(x=x, pal=color.pal, limits=lim), nm=names(x))
+  shape.v <- c(out.shape, in.shape)[(igraph::V(gr.pwy)$name %in% pwy.nodes)+1]
+  names(shape.v) <- igraph::V(gr.pwy)$name
 
   #sub chebi id's for names
   if (!is.na(annot[1])){
-    nms.int <- intersect(names(annot), V(gr.pwy)$name)
+    nms.int <- intersect(names(annot), igraph::V(gr.pwy)$name)
     if (length(nms.int) > 0){
-      V(gr.pwy)$name[match(nms.int, V(gr.pwy)$name)] <- annot[nms.int]
+      igraph::V(gr.pwy)$name[match(nms.int, igraph::V(gr.pwy)$name)] <- annot[nms.int]
     }
   }#end if
 
   #need to gsub disallowed characters
-  if (!is.na(name)) pdf(paste0(name, '.pdf'))
-  plot(gr.pwy, vertex.color=color.v, vertex.shape=shape.v)
+  if (!is.na(name)) grDevices::pdf(paste0(name, '.pdf'))
+  graphics::plot(gr.pwy, vertex.color=color.v, vertex.shape=shape.v)
   legend_colorbar(col=color.pal, lev=lim)
-  if (any(shape.v==out.shape)) legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=1:0, bty="n")
-  if (!is.na(name)) dev.off()
+  if (any(shape.v==out.shape)) graphics::legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=1:0, bty="n")
+  if (!is.na(name)) grDevices::dev.off()
 
   ret <- list(gr=gr.pwy, vertex.color=color.v, vertex.shape=shape.v, score=x)
   return(invisible(ret))

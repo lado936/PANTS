@@ -1,7 +1,7 @@
 #' Transform an \code{igraph} graph into a p-step random walk kernel
 #'
 #' Transforms an igraph input graph into a p-step random walk kernel, using parameters \code{a} and \code{p}.
-#' This is similar to \code{\link[netClass]{calc.diffusionKernelp}}, except that function takes
+#' This is similar to \code{netClass::calc.diffusionKernelp}, except that function takes
 #' slightly different input. The equation for the kernel is (a * I - L)^p.
 #'
 #' @param gr graph object of class igraph

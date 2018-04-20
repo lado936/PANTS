@@ -6,5 +6,5 @@
 #' @param nodes Node names in the graph
 
 neighbor_nms <- function(graph, nodes){
-  return(V(graph)$name[unlist(igraph::ego(graph, order=1, match(nodes, V(graph)$name)))])
+  return(igraph::V(graph)$name[unlist(igraph::ego(graph, order=1, match(nodes, igraph::V(graph)$name)))])
 }

@@ -9,6 +9,6 @@
 #' @export
 
 edgelist2graph <- function(edge.lst){
-  net <- simplify(graph_from_edgelist(as.matrix(edge.lst), directed = FALSE))
+  net <- igraph::simplify(igraph::graph_from_edgelist(as.matrix(edge.lst), directed = FALSE))
   return(net)
 }

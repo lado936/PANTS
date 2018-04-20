@@ -10,7 +10,7 @@
 #' @param exclude.pwy.subj vector of subjects (or types) of pathways to exclude
 #' @return A numeric Matrix of features (proteins and/or metabolites) as rows and pathways as columns, indicating pathway membership
 
-SMPDB2Gmat <- function(smpdb.prot, smpdb.met, exclude.pwy.subj=NA, sc=FALSE){
+SMPDB2Gmat <- function(smpdb.prot, smpdb.met, exclude.pwy.subj=NA){
   stopifnot(c('Pathway.Subject', 'Gene.Name') %in% colnames(smpdb.prot),
             c('Pathway.Type', 'ChEBI.ID') %in% colnames(smpdb.met))
 
@@ -33,7 +33,7 @@ SMPDB2Gmat <- function(smpdb.prot, smpdb.met, exclude.pwy.subj=NA, sc=FALSE){
   all.feats <- sort(unique(smpdb.tab$feat.name))
   all.pwys <- sort(unique(smpdb.tab$Pathway.Name))
 
-  Gmat <- Matrix(0, nrow=length(all.feats), ncol=length(all.pwys), dimnames = list(all.feats, all.pwys))
+  Gmat <- Matrix::Matrix(0, nrow=length(all.feats), ncol=length(all.pwys), dimnames = list(all.feats, all.pwys))
   for (i in 1:nrow(smpdb.tab)){
     Gmat[smpdb.tab[i,2], smpdb.tab[i,1]] <- 1
   }
