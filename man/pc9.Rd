@@ -12,6 +12,10 @@
 pc9
 }
 \description{
-Pathway Commons v9 was downloaded as a SIF file. SIF is described at \url{http://www.pathwaycommons.org/pc/sif_interaction_rules.do}. It was then converted to an edge-list. Genes are represented by gene symbol (hgnc) and metabolites by CHEBI ID. All of the data provided by Pathway Commons is free. In particular, Pathway Commons distributes pathway information with the intellectual property restrictions of the source database; only databases that are freely available for academics were included in the SIF file.
+Pathway Commons v9 was downloaded as a SIF file. SIF is described at \url{http://www.pathwaycommons.org/pc/sif_interaction_rules.do}. 
+It was then converted to an edge-list. Genes are represented by gene symbol (hgnc) and metabolites by CHEBI ID. 
+All of the data provided by Pathway Commons is free. In particular, Pathway Commons distributes pathway 
+information with the intellectual property restrictions of the source database; only databases that are freely 
+available for academics were included in the SIF file.
 }
 \keyword{datasets}

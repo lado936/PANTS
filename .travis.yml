@@ -2,6 +2,10 @@
 
 language: r
 sudo: false
+warnings_are_errors: false
 cache: packages
 r_github_packages: jdreyf/ezlimma
 bioc_packages: limma
+output:
+     pdf_document:
+         latex_engine: xelatex
