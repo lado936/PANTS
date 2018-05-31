@@ -9,6 +9,7 @@
 #' @param smpdb.met data frame of metabolites per pathway from SMPDB
 #' @param exclude.pwy.subj vector of subjects (or types) of pathways to exclude
 #' @return A numeric Matrix of features (proteins and/or metabolites) as rows and pathways as columns, indicating pathway membership
+#' @importFrom Matrix Matrix
 
 SMPDB2Gmat <- function(smpdb.prot, smpdb.met, exclude.pwy.subj=NA){
   stopifnot(c('Pathway.Subject', 'Gene.Name') %in% colnames(smpdb.prot),

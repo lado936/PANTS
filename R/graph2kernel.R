@@ -9,6 +9,8 @@
 #' @param p parameter of p-step random walk kernel
 #' @return Laplacian kernel matrix
 #' @export
+#' @importFrom igraph is_simple laplacian_matrix
+#' @importFrom Matrix Diagonal
 
 #future work: can describe dimensions in description
 graph2kernel <- function(gr, a=2, p=1){

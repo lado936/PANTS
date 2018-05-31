@@ -11,6 +11,7 @@
 #' @details There must be some overlap between the rownames of \code{score.mat}, \code{ker}, & \code{Gmat}.
 #' @return A list with elements \code{score.mat}, \code{ker}, and \code{Gmat}.
 #' @export
+#' @importFrom Matrix Diagonal Matrix
 
 match_mats <- function(score.mat, ker, Gmat, score.impute=0){
   stopifnot(length(intersect(rownames(score.mat), rownames(ker))) > 0, 

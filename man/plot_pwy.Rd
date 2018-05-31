@@ -36,11 +36,11 @@ a palette from \code{\link[RColorBrewer]{brewer.pal}} is chosen.}
 }
 \value{
 Invisibly, a list of 3 components: 
-\describe{
-  \item{gr}{the graph that gets plotted}
-  \item{vertex.color}{the vertex colors}
-  \item{vertex.size}{the vertex sizes}
-}
+ \describe{
+   \item{gr}{the graph that gets plotted}
+   \item{vertex.color}{the vertex colors}
+   \item{vertex.size}{the vertex sizes}
+ }
 }
 \description{
 Plot network diagram for a pathway with node size corresponding to significance and color to pathway membership.

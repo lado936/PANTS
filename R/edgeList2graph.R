@@ -7,6 +7,7 @@
 #' @param edge.lst Edge-list
 #' @return An \code{igraph} graph
 #' @export
+#' @importFrom igraph graph_from_edgelist simplify
 
 edgelist2graph <- function(edge.lst){
   net <- igraph::simplify(igraph::graph_from_edgelist(as.matrix(edge.lst), directed = FALSE))

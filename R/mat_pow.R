@@ -13,5 +13,5 @@ mat_pow = function(x, pow){
   if (pow %% 1 != 0) stop("pow must be an integer.")
   if (pow==1) return(x)
   if (pow==2) return(x %*% x)
-  if (pow>2) return(x %*% mat_pow(x, pow-1))
+  if (pow > 2) return(x %*% mat_pow(x, pow-1))
 }

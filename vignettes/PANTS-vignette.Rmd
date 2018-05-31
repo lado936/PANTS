@@ -57,7 +57,7 @@ pheno.v <- setNames(rep(c("case", "ctrl"), each=5), nm=colnames(M))
 We execute the main function, `pants`, by testing a contrast (or comparison) on this dataset, e.g. case vs. control. We limit the number of permutations to speed up the calculation. In general, if the `object` or `nperm` is large, this step will be slow.
 ```{r pants}
 contr <- c(CASEvsCTRL="case-ctrl")
-res.lst <- pants(object=M, phenotype.v=pheno.v, contrasts.v=contr, ker=ker, Gmat=smpdb_gmat, nperm=50)
+res.lst <- pants(object=M, phenotype.v=pheno.v, contrast.v=contr, ker=ker, Gmat=smpdb_gmat, nperm=50)
 pwy.stats <- res.lst$pwy.stats
 ```
 

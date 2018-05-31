@@ -19,6 +19,11 @@
 #' @return List of length at least two, with elements \code{pwy.stats} and \code{feature.stats}, each containing a data frame
 #' of statistics.
 #' @export
+#' @import stats
+#' @importFrom ezlimma hitman
+#' @importFrom Matrix colSums Matrix
+#' @importClassesFrom Matrix dgCMatrix
+#' @importMethodsFrom Matrix crossprod t
 
 pants_mediation <- function(object, exposure.v, phenotype.v, ker, Gmat, nperm=10^4, ret.null.mats=FALSE, verbose=TRUE){
   stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)), 

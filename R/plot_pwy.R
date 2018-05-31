@@ -1,29 +1,33 @@
-#'Plot network diagram for a pathway
-#'
-#'Plot network diagram for a pathway with node size corresponding to significance and color to pathway membership.
-#'
-#'@param gr A graph of class \code{igraph} representing the interaction network.
-#'@param ker Kernel matrix, can be sparse matrix from package \code{Matrix}.
-#'@param Gmat Pathway membership matrix, can be sparse matrix from package \code{Matrix}.
-#'@param pwy Pathway to plot. Must be a column name of \code{Gmat}.
-#'@param score.v Namd vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select top nodes 
-#'and color them.
-#'@param annot Named vector of annotations for nodes. If \code{annot} is not \code{NA}, \code{names(annot)} should 
-#'have some overlap with \code{rownames(Gmat)}.
-#'@param ntop Number of top most significant features to include. If one of these is an external node, then its
-#'internal neighbor nodes are also included. These nodes are then connected based on the interaction network.
-#'@param alternative A character string specifying the alternative hypothesis.
-#'@param name Name for PDF file to plot to. Can't contain characters ":" or "/" on Windows. Set to \code{NA}
-#'to suppress writing to file.
-#'@param color.pal A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
-#'a palette from \code{\link[RColorBrewer]{brewer.pal}} is chosen.
-#'@return Invisibly, a list of 3 components: 
-#' \describe{
-#'   \item{gr}{the graph that gets plotted}
-#'   \item{vertex.color}{the vertex colors}
-#'   \item{vertex.size}{the vertex sizes}
-#' }
-#'@export
+#' Plot network diagram for a pathway
+#' 
+#' Plot network diagram for a pathway with node size corresponding to significance and color to pathway membership.
+#' 
+#' @param gr A graph of class \code{igraph} representing the interaction network.
+#' @param ker Kernel matrix, can be sparse matrix from package \code{Matrix}.
+#' @param Gmat Pathway membership matrix, can be sparse matrix from package \code{Matrix}.
+#' @param pwy Pathway to plot. Must be a column name of \code{Gmat}.
+#' @param score.v Namd vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select top nodes 
+#' and color them.
+#' @param annot Named vector of annotations for nodes. If \code{annot} is not \code{NA}, \code{names(annot)} should 
+#' have some overlap with \code{rownames(Gmat)}.
+#' @param ntop Number of top most significant features to include. If one of these is an external node, then its
+#' internal neighbor nodes are also included. These nodes are then connected based on the interaction network.
+#' @param alternative A character string specifying the alternative hypothesis.
+#' @param name Name for PDF file to plot to. Can't contain characters ":" or "/" on Windows. Set to \code{NA}
+#' to suppress writing to file.
+#' @param color.pal A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
+#' a palette from \code{\link[RColorBrewer]{brewer.pal}} is chosen.
+#' @return Invisibly, a list of 3 components: 
+#'  \describe{
+#'    \item{gr}{the graph that gets plotted}
+#'    \item{vertex.color}{the vertex colors}
+#'    \item{vertex.size}{the vertex sizes}
+#'  }
+#' @export
+#' @import graphics
+#' @import grDevices
+#' @import stats
+#' @importFrom igraph add_vertices induced_subgraph is_simple V
 
 plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=c("two.sided", "less", "greater"), 
                      name=paste0(gsub(":|/", "_", pwy), '_ntop', ntop), color.pal=NULL){
