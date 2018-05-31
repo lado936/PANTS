@@ -52,21 +52,21 @@ pants_mediation <- function(object, exposure.v, phenotype.v, ker, Gmat, nperm=10
   ##feature p-values (for plotting)
   #features in object & in kernel
   feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=3,
-                                                      dimnames=list(rownames(score.mat), c("z", "pval", "FDR"))))
+                                                      dimnames=list(rownames(score.mat), c("z", "p", "FDR"))))
   #need to coerce score.mat to matrix to prevent rowSums error
-  feature.stats[,c("z", "pval")] <- p_ecdf(eval.v=score.v, score.mat = as.matrix(score.mat), alternative = "greater")
-  feature.stats[,"FDR"] <- stats::p.adjust(feature.stats[,"pval"], method="BH")
+  feature.stats[,c("z", "p")] <- p_ecdf(eval.v=score.v, score.mat = as.matrix(score.mat), alternative = "greater")
+  feature.stats[,"FDR"] <- stats::p.adjust(feature.stats[,"p"], method="BH")
   
   ##need to compare to pwys, sometimes runs out of memory
   pwy.v <- (score.v %*% ker %*% Gmat)[1,]
   pwy.mat <- as.matrix(Matrix::t(Matrix::crossprod(score.mat, ker) %*% Gmat))
   
   nfeats.per.pwy <- Matrix::colSums(Gmat!=0)
-  pwy.stats <- data.frame(nfeatures=nfeats.per.pwy, feat.score.avg=pwy.v/nfeats.per.pwy, z=NA, pval=NA)
+  pwy.stats <- data.frame(nfeatures=nfeats.per.pwy, feat.score.avg=pwy.v/nfeats.per.pwy, z=NA, p=NA)
   rownames(pwy.stats) <- colnames(Gmat)
-  pwy.stats[,c("z", "pval")] <- p_ecdf(eval.v=pwy.v, score.mat=pwy.mat, alternative = "greater")
-  pwy.stats$FDR <- stats::p.adjust(pwy.stats$pval, method='BH')
-  pwy.stats <- pwy.stats[order(pwy.stats$pval, -abs(pwy.stats$feat.score.avg)),]
+  pwy.stats[,c("z", "p")] <- p_ecdf(eval.v=pwy.v, score.mat=pwy.mat, alternative = "greater")
+  pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method='BH')
+  pwy.stats <- pwy.stats[order(pwy.stats$p, -abs(pwy.stats$feat.score.avg)),]
   
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)
   if (ret.null.mats){

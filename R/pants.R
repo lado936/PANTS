@@ -7,13 +7,13 @@
 #' series of samples, with rows corresponding to features and columns to samples.
 #' @param phenotype.v A vector of phenotypes of strings the same length as number of samples in \code{object}.
 #' If the vector is named, the names must match the column names of \code{object}.
-#' @param contrasts.v A named vector of constrasts. The constrasts must refer to the phenotypes
+#' @param contrast.v A named vector of constrasts. The constrasts must refer to the phenotypes
 #' in \code{phenotype.v}. Their order defines the order they are passed to \code{score_fcn}.
 #' @param ker The Laplacian kernel matrix.
 #' @param Gmat The feature by pathway inclusion matrix, indicating which features are in which pathways.
 #' @param score_fcn A function that transforms the t-statistics from the contrasts. \code{identity} is 
 #' the trivial identity function returning its argument. Its input must be a vector of same 
-#' length as number of elements in \code{contrasts.v}. Its output must be a scalar.
+#' length as number of elements in \code{contrast.v}. Its output must be a scalar.
 #' @param nperm Number of permutations to perform to evaluate significance of pathways.
 #' @param ret.null.mats If TRUE, return matrices with null distributions for features and pathways.
 #' @param verbose Logical indicating if the permutation number should be output every 500 permutations.
@@ -25,13 +25,13 @@
 #' of statistics.
 #' @export
 
-pants <- function(object, phenotype.v, contrasts.v, ker, Gmat, score_fcn=identity, nperm=10^4, ret.null.mats=FALSE, verbose=TRUE, 
+pants <- function(object, phenotype.v, contrast.v, ker, Gmat, score_fcn=identity, nperm=10^4, ret.null.mats=FALSE, verbose=TRUE, 
                   alternative=c("two.sided", "less", "greater")){
   stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)),
             colnames(object)==names(phenotype.v))
   alternative <- match.arg(alternative)
   
-  score.v <- score_features(object=object, phenotype.v=phenotype.v, contrasts.v=contrasts.v, score_fcn=score_fcn)
+  score.v <- score_features(object=object, phenotype.v=phenotype.v, contrast.v=contrast.v, score_fcn=score_fcn)
   
   #feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
   score.mat <- Matrix::Matrix(0, nrow=nrow(object), ncol=nperm, dimnames = list(rownames(object), paste0('perm', 1:nperm)))
@@ -39,7 +39,7 @@ pants <- function(object, phenotype.v, contrasts.v, ker, Gmat, score_fcn=identit
     #must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
     pheno.tmp <- stats::setNames(phenotype.v[sample(1:length(phenotype.v))], nm=NULL)
 
-    score.mat[,perm] <- score_features(object=object, phenotype.v=pheno.tmp, contrasts.v=contrasts.v, score_fcn=score_fcn)
+    score.mat[,perm] <- score_features(object=object, phenotype.v=pheno.tmp, contrast.v=contrast.v, score_fcn=score_fcn)
     if (verbose){
       if (perm %% 500 == 0) cat("permutation", perm, "\n")
     }
@@ -51,21 +51,21 @@ pants <- function(object, phenotype.v, contrasts.v, ker, Gmat, score_fcn=identit
   
   ##feature p-values (for plotting)
   #features in object & in kernel
-  feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=3, dimnames=list(rownames(score.mat), c("z", "pval", "FDR"))))
+  feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=3, dimnames=list(rownames(score.mat), c("z", "p", "FDR"))))
   #need to coerce score.mat to matrix to prevent rowSums error
-  feature.stats[,c("z", "pval")] <- p_ecdf(eval.v=score.v, score.mat = as.matrix(score.mat), alternative = alternative)
-  feature.stats[,"FDR"] <- stats::p.adjust(feature.stats[,"pval"], method="BH")
+  feature.stats[,c("z", "p")] <- p_ecdf(eval.v=score.v, score.mat = as.matrix(score.mat), alternative = alternative)
+  feature.stats[,"FDR"] <- stats::p.adjust(feature.stats[,"p"], method="BH")
 
   ##need to compare to pwys, sometimes runs out of memory
   pwy.v <- (score.v %*% ker %*% Gmat)[1,]
   pwy.mat <- as.matrix(Matrix::t(Matrix::crossprod(score.mat, ker) %*% Gmat))
 
   nfeats.per.pwy <- Matrix::colSums(Gmat!=0)
-  pwy.stats <- data.frame(nfeatures=nfeats.per.pwy, feat.score.avg=pwy.v/nfeats.per.pwy, z=NA, pval=NA)
+  pwy.stats <- data.frame(nfeatures=nfeats.per.pwy, feat.score.avg=pwy.v/nfeats.per.pwy, z=NA, p=NA)
   rownames(pwy.stats) <- colnames(Gmat)
-  pwy.stats[,c("z", "pval")] <- p_ecdf(eval.v=pwy.v, score.mat=pwy.mat, alternative = alternative)
-  pwy.stats$FDR <- stats::p.adjust(pwy.stats$pval, method='BH')
-  pwy.stats <- pwy.stats[order(pwy.stats$pval, -abs(pwy.stats$feat.score.avg)),]
+  pwy.stats[,c("z", "p")] <- p_ecdf(eval.v=pwy.v, score.mat=pwy.mat, alternative = alternative)
+  pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method='BH')
+  pwy.stats <- pwy.stats[order(pwy.stats$p, -abs(pwy.stats$feat.score.avg)),]
 
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)
   if (ret.null.mats){

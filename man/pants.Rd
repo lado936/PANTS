@@ -4,7 +4,7 @@
 \alias{pants}
 \title{Pathway Analysis via NeTwork Smoothing}
 \usage{
-pants(object, phenotype.v, contrasts.v, ker, Gmat, score_fcn = identity,
+pants(object, phenotype.v, contrast.v, ker, Gmat, score_fcn = identity,
   nperm = 10^4, ret.null.mats = FALSE, verbose = TRUE,
   alternative = c("two.sided", "less", "greater"))
 }
@@ -15,7 +15,7 @@ series of samples, with rows corresponding to features and columns to samples.}
 \item{phenotype.v}{A vector of phenotypes of strings the same length as number of samples in \code{object}.
 If the vector is named, the names must match the column names of \code{object}.}
 
-\item{contrasts.v}{A named vector of constrasts. The constrasts must refer to the phenotypes
+\item{contrast.v}{A named vector of constrasts. The constrasts must refer to the phenotypes
 in \code{phenotype.v}. Their order defines the order they are passed to \code{score_fcn}.}
 
 \item{ker}{The Laplacian kernel matrix.}
@@ -24,7 +24,7 @@ in \code{phenotype.v}. Their order defines the order they are passed to \code{sc
 
 \item{score_fcn}{A function that transforms the t-statistics from the contrasts. \code{identity} is 
 the trivial identity function returning its argument. Its input must be a vector of same 
-length as number of elements in \code{contrasts.v}. Its output must be a scalar.}
+length as number of elements in \code{contrast.v}. Its output must be a scalar.}
 
 \item{nperm}{Number of permutations to perform to evaluate significance of pathways.}
 

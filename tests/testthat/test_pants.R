@@ -21,8 +21,8 @@ G <- gmt2Gmat(gmt)
 # mm <- match_mats(score.mat=M, ker=kk, Gmat=G)
 # M <- mm$score.mat; kk=mm$ker; G <- mm$Gmat
 
-contrasts.v <- c(trt1="trt1-ctrl", trt2="trt2-ctrl")
-res <- pants(object=M, phenotype.v=pheno, contrasts.v=contrasts.v[1], ker=kk, Gmat=G, nperm=10)
+contrast.v <- c(trt1="trt1-ctrl", trt2="trt2-ctrl")
+res <- pants(object=M, phenotype.v=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, nperm=10)
 score.v <- stats::setNames(res$feature.stats$score, nm=rownames(res$feature.stats))
 
 ##tests
@@ -62,7 +62,7 @@ test_that("edgelist -> kernel", {
 })
 
 test_that("score_features", {
-  sf <- score_features(object=M, phenotype.v=pheno, contrasts.v="trt1-ctrl", score_fcn=abs)
+  sf <- score_features(object=M, phenotype.v=pheno, contrast.v="trt1-ctrl", score_fcn=abs)
   expect_equal(which.max(sf), c(a=1))
 })
 
@@ -80,9 +80,9 @@ test_that("match_mats", {
 
 test_that("pants", {
   #contr of length 2
-  expect_error(pants(object=M, phenotypes.v=pheno, contrasts.v=contrasts.v, ker=kk, Gmat=G, nperm=10))
+  expect_error(pants(object=M, phenotypes.v=pheno, contrast.v=contrast.v, ker=kk, Gmat=G, nperm=10))
   ff <- function(v) v[2]-v[1]
-  res2 <- pants(object=M, phenotype.v=pheno, contrasts.v=contrasts.v, ker=kk, Gmat=G, nperm=10, score_fcn = ff)
+  res2 <- pants(object=M, phenotype.v=pheno, contrast.v=contrast.v, ker=kk, Gmat=G, nperm=10, score_fcn = ff)
   expect_equal(nrow(res2$pwy.stats), 2)
   
   expect_gt(res$pwy.stats["pwy1", 2], res$pwy.stats["pwy2", 2])
