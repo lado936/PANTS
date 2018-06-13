@@ -49,6 +49,13 @@ test_that("mat_pow on sparse matrix", {
   expect_equal(mat_pow(x, 2), Matrix(c(7,10,15,22), nrow=2, byrow = TRUE))
 })
 
+test_that('mat_pow > 2', {
+  mat <- matrix(1:9,nrow = 3)
+  mat3pow <- mat %*% mat
+  mat3pow <- mat3pow %*% mat
+  expect_equal(PANTS:::mat_pow(mat,3),mat3pow)
+})
+
 test_that("edgelist -> kernel", {
   expect_equal(kk[2,2], 1)
   expect_true(isSymmetric(as.matrix(kk)))
@@ -101,3 +108,4 @@ test_that("plot_pwy", {
   #test equivalence using gr2kernel
   expect_equal(graph2kernel(dpn$gr), graph2kernel(igraph::simplify(gr)))
 })
+
