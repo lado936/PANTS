@@ -51,9 +51,10 @@ test_that("mat_pow on sparse matrix", {
 
 test_that('mat_pow > 2', {
   mat <- matrix(1:9,nrow = 3)
-  mat3pow <- mat %*% mat
-  mat3pow <- mat3pow %*% mat
-  expect_equal(PANTS:::mat_pow(mat,3),mat3pow)
+  mat4pow <- mat %*% mat
+  mat4pow <- mat4pow %*% mat
+  mat4pow <- mat4pow %*% mat
+  expect_equal(PANTS:::mat_pow(mat,4),mat4pow)
 })
 
 test_that("edgelist -> kernel", {
