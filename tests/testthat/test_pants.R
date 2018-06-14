@@ -92,6 +92,7 @@ test_that("match_mats", {
   nperm <- 10
   score.v <- score_features(object= M2, phenotype.v= pheno2, contrast.v= contrast.v2, score_fcn= score_fcn )
   
+  ##The following code snippet is from PANTS
   #feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
   score.mat <- Matrix::Matrix(0, nrow=nrow(M2), ncol=nperm, dimnames = list(rownames(M2), paste0('perm', 1:nperm)))
   for (perm in 1:nperm){
@@ -101,11 +102,15 @@ test_that("match_mats", {
     score.mat[,perm] <- score_features(object=M2, phenotype.v=pheno.tmp, contrast.v=contrast.v2, score_fcn=score_fcn)
 
   }
-  
-  mm <- match_mats(score.mat = cbind(v=score.v, score.mat), ker=kk, Gmat=G)
+  score.mat2 <- cbind(v=score.v, score.mat)
+  mm <- match_mats(score.mat = score.mat2, ker=kk, Gmat=G)
+  ##End
   
   expect_equal(dimnames(mm$score.mat)[1],dimnames(mm$ker)[1])
   expect_equal(dimnames(mm$score.mat)[1],dimnames(mm$Gmat)[1])
+  expect_equal(mm$ker,kk[rownames(mm$ker),colnames(mm$ker)])
+  expect_equal(mm$score.mat,score.mat2[rownames(mm$score.mat),colnames(mm$score.mat)])
+  expect_equal(mm$Gmat,G[rownames(mm$Gmat),colnames(mm$Gmat)])
   
 })
 
