@@ -2,7 +2,7 @@ Package: PANTS
 Type: Package
 Title: Pathway Analysis via NeTwork Smoothing
 Version: 0.0.2
-Authors@R: person("Jonathan", "Dreyfuss", role = c("aut", "cre"), email = "jdreyf@bu.edu")
+Authors@R: c(person("Jonathan", "Dreyfuss", role = c("aut", "cre"), email = "jdreyf@bu.edu"), person("Grace", "Daher", role = "ctb"))
 Description: Pathway Analysis (and optionally integration) via Network Smoothing.
 Depends:
 	R (>= 3.0.0),
@@ -14,8 +14,9 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
-Suggests: knitr,
+Suggests: 
+	covr,
+	knitr,
     rmarkdown,
-    testthat,
-    covr
+    testthat
 VignetteBuilder: knitr

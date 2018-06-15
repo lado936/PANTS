@@ -20,9 +20,9 @@ test_that("bad x", {
 })
 
 test_that('mat_pow > 2', {
-  mat <- matrix(1:9,nrow = 3)
+  mat <- matrix(1:9, nrow = 3)
   mat4pow <- mat %*% mat
   mat4pow <- mat4pow %*% mat
   mat4pow <- mat4pow %*% mat
-  expect_equal(mat_pow(mat,4),mat4pow)
-  })
+  expect_equal(mat_pow(mat,4), mat4pow)
+})
