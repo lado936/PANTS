@@ -18,3 +18,11 @@ test_that("bad x", {
   expect_error(mat_pow(x, 2))
   expect_error(mat_pow(x=1:3, 2))
 })
+
+test_that('mat_pow > 2', {
+  mat <- matrix(1:9,nrow = 3)
+  mat4pow <- mat %*% mat
+  mat4pow <- mat4pow %*% mat
+  mat4pow <- mat4pow %*% mat
+  expect_equal(mat_pow(mat,4),mat4pow)
+  })

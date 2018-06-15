@@ -11,4 +11,6 @@ test_that("pants", {
   expect_equal(res$pwy.stats["pwy1", 1], 3)
   expect_equal(res$pwy.stats["pwy2", 1], 3)
   expect_gt(res$feature.stats["a", 1], max(res$feature.stats[setdiff(rownames(kk), "a"), 1]))
+
+
 })
