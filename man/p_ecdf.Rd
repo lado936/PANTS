@@ -15,7 +15,8 @@ and \code{rownames(score.mat)} corresponds to \code{names(eval.v)}.}
 \item{alternative}{A character string specifying the alternative hypothesis.}
 }
 \value{
-A matrix of z-scores & p-values with \code{nrow = length(eval.v)}.
+A matrix with two columns containing z-scores (larger is more significant) & p-values with 
+\code{nrow = length(eval.v)}.
 }
 \description{
 Estimate p-value by comparing a score to its simulations.

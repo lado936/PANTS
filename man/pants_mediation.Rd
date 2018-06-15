@@ -28,8 +28,30 @@ vector is named, the names must match the column names of \code{object}.}
 \item{verbose}{Logical indicating if the permutation number should be output every 500 permutations.}
 }
 \value{
-List of length at least two, with elements \code{pwy.stats} and \code{feature.stats}, each containing a data frame
-of statistics.
+List of at least two dataframes:
+\describe{
+   \item{pwy.stats}{A dataframe with columns 
+   \describe{
+   \item{nfeatures}{number of features in the pathway} 
+   \item{feat.score.avg}{sum of smoothed scores of the pathway's features / \code{nfeatures}}
+   \item{z}{pathway permutation z-score (larger is more significant)}
+   \item{p}{pathway permutation p-value} 
+   \item{FDR}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
+   }}
+   \item{feature.stats}{A dataframe with columns
+   \describe{
+   \item{score}{feature's score from \code{\link{score_features}}}
+   \item{z}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
+   (without smoothing)} 
+   \item{p}{feature's permutation p-value} 
+   \code{FDR}{feature's FDR from permutation \code{p}}
+   }}
+   And if \code{ret.null.mats} is TRUE:
+   \item{null.feature.mat}{Matrix with features as rows and permutations as columns, where each element represents
+   the score of that feature in that permutation}
+   \item{null.pwy.mat}{Matrix with pathways as rows and permutations as columns, where each element represents
+   the score of that pathway in that permutation}
+ }
 }
 \description{
 PANTS algorithm for mediation pathway analysis (and optionally integration) via network smoothing
