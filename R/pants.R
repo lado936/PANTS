@@ -29,8 +29,8 @@
 #' @importClassesFrom Matrix dgCMatrix
 #' @importMethodsFrom Matrix crossprod t
 
-pants <- function(object, phenotype.v, contrast.v, ker, Gmat, score_fcn=identity, nperm=10^4, ret.null.mats=FALSE, verbose=TRUE, 
-                  alternative=c("two.sided", "less", "greater")){
+pants <- function(object, phenotype.v, contrast.v, ker, Gmat, score_fcn=identity, nperm=10^4, ret.null.mats=FALSE, 
+                  verbose=TRUE, alternative=c("two.sided", "less", "greater")){
   stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)),
             colnames(object)==names(phenotype.v))
   alternative <- match.arg(alternative)
@@ -45,7 +45,7 @@ pants <- function(object, phenotype.v, contrast.v, ker, Gmat, score_fcn=identity
 
     score.mat[,perm] <- score_features(object=object, phenotype.v=pheno.tmp, contrast.v=contrast.v, score_fcn=score_fcn)
     if (verbose){
-      if (perm %% 500 == 0) cat("permutation", perm, "\n")
+      if (perm %% 500 == 0) message("permutation ", perm)
     }
   }
 

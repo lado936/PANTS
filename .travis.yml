@@ -6,6 +6,10 @@ warnings_are_errors: false
 cache: packages
 r_github_packages: jdreyf/ezlimma
 bioc_packages: limma
+before_install:
+  - Rscript -e 'update.packages(ask = FALSE)'
 output:
      pdf_document:
          latex_engine: xelatex
+after_success:
+- Rscript -e 'covr::codecov()'
