@@ -7,16 +7,17 @@
 mat_pow(x, pow)
 }
 \arguments{
-\item{x}{a matrix}
+\item{x}{a square matrix.}
 
-\item{pow}{positive integer power to raise the matrix to}
+\item{pow}{positive integer power to raise the matrix to.}
 }
 \value{
-a matrix
+a matrix.
 }
 \description{
-Calculate matrix to an integer power
+Calculate matrix to an integer power.
 }
 \details{
-This is a simple, recursive function to use integer powers when calculating p-step random walk kernels.
+This is a simple, recursive function to use integer powers when calculating p-step
+random walk kernels.
 }
