@@ -5,6 +5,7 @@ test_that("dense matrix", {
   x <- matrix(1:4, nrow=2, byrow = TRUE)
   expect_equal(mat_pow(x, 2), matrix(c(7,10,15,22), nrow=2, byrow = TRUE))
   expect_equal(mat_pow(x, 3), x %*% x %*% x)
+  expect_error(mat_pow(x, 1.5))
 })
 
 test_that("sparse matrix", {

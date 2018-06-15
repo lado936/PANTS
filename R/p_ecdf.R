@@ -1,13 +1,12 @@
 #' Estimate p-value from simulations
 #'
-#' Estimate p-value by comparing a score to its simulations
+#' Estimate p-value by comparing a score to its simulations.
 #'
-#' @param eval.v A vector of values where the cumulative distribution function should be evaluated
+#' @param eval.v A vector of values where the cumulative distribution function should be evaluated.
 #' @param score.mat A matrix of values from the distribution, where each column is a different simulation, 
 #' and \code{rownames(score.mat)} corresponds to \code{names(eval.v)}.
-#' @param alternative A character string specifying the alternative hypothesis
+#' @param alternative A character string specifying the alternative hypothesis.
 #' @return A matrix of z-scores & p-values with \code{nrow = length(eval.v)}.
-#' @import stats
 
 p_ecdf <- function(eval.v, score.mat, alternative=c("two.sided", "less", "greater")){
   stopifnot(length(eval.v)==nrow(score.mat), names(eval.v)==rownames(score.mat), ncol(score.mat) > 1)
