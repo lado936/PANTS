@@ -2,18 +2,16 @@
 % Please edit documentation in R/gmt2Gmat.R
 \name{gmt2Gmat}
 \alias{gmt2Gmat}
-\title{Transform list from GMT into pathway matrix}
+\title{Transform list from GMT into feature-by-pathway matrix}
 \usage{
-gmt2Gmat(gmt.lst, sc = FALSE)
+gmt2Gmat(gmt.lst)
 }
 \arguments{
 \item{gmt.lst}{List returned by \code{\link[ezlimma]{read_gmt}}.}
-
-\item{sc}{Logical indicating to scale output Matrix by columns or not.}
 }
 \value{
-A numeric Matrix of features (e.g. proteins) as rows and pathways as columns, indicating pathway membership
+A numeric Matrix of features (e.g. proteins) as rows and pathways as columns, indicating pathway membership.
 }
 \description{
-Transform list from reading in GMT using \code{ezlimma::read_gmt} into pathway matrix.
+Transform list from reading in GMT using \code{ezlimma::read_gmt} into feature-by-pathway matrix.
 }

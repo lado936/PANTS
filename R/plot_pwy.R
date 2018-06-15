@@ -24,11 +24,6 @@
 #'    \item{vertex.size}{the vertex sizes}
 #'  }
 #' @export
-#' @import graphics
-#' @import grDevices
-#' @import stats
-#' @importFrom igraph add_vertices induced_subgraph is_simple V
-#' @importFrom RColorBrewer brewer.pal
 
 plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=c("two.sided", "less", "greater"), 
                      name=paste0(gsub(":|/", "_", pwy), '_ntop', ntop), color.pal=NULL){

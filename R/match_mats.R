@@ -5,13 +5,12 @@
 #' 
 #' @param score.mat A matrix-like object with scores from original data and possibly permutations with rows corresponding 
 #' to features and columns to simulations.
-#' @param ker sparse matrix (of class Matrix)
-#' @param Gmat The feature by pathway inclusion matrix, indicating which features are in which pathways.
-#' @param score.impute Value to impute missing scores.
+#' @param ker sparse matrix (of class Matrix).
+#' @param Gmat Feature-by-pathway inclusion matrix, indicating which features are in which pathways.
+#' @param score.impute Value to impute missing scores. If zero, \code{score.mat} is sparser, saving computing time.
 #' @details There must be some overlap between the rownames of \code{score.mat}, \code{ker}, & \code{Gmat}.
-#' @return A list with elements \code{score.mat}, \code{ker}, and \code{Gmat}.
+#' @return A list with elements \code{score.mat}, \code{ker}, and \code{Gmat} after matching.
 #' @export
-#' @importFrom Matrix Diagonal Matrix
 
 match_mats <- function(score.mat, ker, Gmat, score.impute=0){
   stopifnot(length(intersect(rownames(score.mat), rownames(ker))) > 0, 

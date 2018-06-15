@@ -17,7 +17,6 @@ See README.md for installation.
 
 ## Load package
 ```{r lib, message=FALSE}
-library("ezlimma")
 library("PANTS")
 ```
 

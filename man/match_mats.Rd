@@ -10,14 +10,14 @@ match_mats(score.mat, ker, Gmat, score.impute = 0)
 \item{score.mat}{A matrix-like object with scores from original data and possibly permutations with rows corresponding 
 to features and columns to simulations.}
 
-\item{ker}{sparse matrix (of class Matrix)}
+\item{ker}{sparse matrix (of class Matrix).}
 
-\item{Gmat}{The feature by pathway inclusion matrix, indicating which features are in which pathways.}
+\item{Gmat}{Feature-by-pathway inclusion matrix, indicating which features are in which pathways.}
 
-\item{score.impute}{Value to impute missing scores.}
+\item{score.impute}{Value to impute missing scores. If zero, \code{score.mat} is sparser, saving computing time.}
 }
 \value{
-A list with elements \code{score.mat}, \code{ker}, and \code{Gmat}.
+A list with elements \code{score.mat}, \code{ker}, and \code{Gmat} after matching.
 }
 \description{
 Expand kernel to match features in both object and pathway matrix, so that maintain these features in 

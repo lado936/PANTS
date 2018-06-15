@@ -7,14 +7,14 @@
 graph2kernel(gr, a = 2, p = 1)
 }
 \arguments{
-\item{gr}{graph object of class igraph}
+\item{gr}{graph object of class \code{igraph}.}
 
-\item{a}{parameter of p-step random walk kernel}
+\item{a}{parameter of p-step random walk kernel.}
 
-\item{p}{parameter of p-step random walk kernel}
+\item{p}{parameter of p-step random walk kernel.}
 }
 \value{
-Laplacian kernel matrix
+Laplacian kernel matrix.
 }
 \description{
 Transforms an igraph input graph into a p-step random walk kernel, using parameters \code{a} and \code{p}.

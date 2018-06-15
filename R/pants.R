@@ -24,10 +24,6 @@
 #' @return List of length at least two, with elements \code{pwy.stats} and \code{feature.stats}, each containing a data frame
 #' of statistics.
 #' @export
-#' @import stats
-#' @importFrom Matrix colSums Matrix
-#' @importClassesFrom Matrix dgCMatrix
-#' @importMethodsFrom Matrix crossprod t
 
 pants <- function(object, phenotype.v, contrast.v, ker, Gmat, score_fcn=identity, nperm=10^4, ret.null.mats=FALSE, 
                   verbose=TRUE, alternative=c("two.sided", "less", "greater")){
