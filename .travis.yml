@@ -11,3 +11,5 @@ before_install:
 output:
      pdf_document:
          latex_engine: xelatex
+after_success:
+- Rscript -e 'covr::codecov()'
