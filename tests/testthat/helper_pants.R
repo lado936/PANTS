@@ -1,4 +1,5 @@
 library(testthat)
+library(vdiffr)
 
 #sq w/ all nodes connected except a <-> c; a <-> d repeated, as in sif
 el <- rbind(t(combn(letters[1:4], 2))[-2,], c("a", "d"))

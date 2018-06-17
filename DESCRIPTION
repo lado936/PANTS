@@ -18,5 +18,6 @@ Suggests:
 	covr,
 	knitr,
     rmarkdown,
-    testthat
+    testthat,
+	vdiffr
 VignetteBuilder: knitr
