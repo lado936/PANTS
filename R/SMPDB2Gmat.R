@@ -5,11 +5,11 @@
 #' Format of SMPDB downloads has changed, so now it has numerous semi-redundant fatty acid pathways, so this will need to
 #' be modified if want to stay up to date with SMPDB.
 #'
-#' @param smpdb.prot data frame of proteins per pathway from SMPDB
-#' @param smpdb.met data frame of metabolites per pathway from SMPDB
-#' @param exclude.pwy.subj vector of subjects (or types) of pathways to exclude
-#' @return A numeric Matrix of features (proteins and/or metabolites) as rows and pathways as columns, indicating pathway membership
-#' @importFrom Matrix Matrix
+#' @param smpdb.prot Data frame of proteins per pathway from SMPDB.
+#' @param smpdb.met Data frame of metabolites per pathway from SMPDB.
+#' @param exclude.pwy.subj Vector of subjects (or types) of pathways to exclude
+#' @return A numeric Matrix of features (proteins and/or metabolites) as rows and pathways as columns, indicating 
+#' pathway membership.
 
 SMPDB2Gmat <- function(smpdb.prot, smpdb.met, exclude.pwy.subj=NA){
   stopifnot(c('Pathway.Subject', 'Gene.Name') %in% colnames(smpdb.prot),

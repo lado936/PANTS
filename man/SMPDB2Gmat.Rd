@@ -7,14 +7,15 @@
 SMPDB2Gmat(smpdb.prot, smpdb.met, exclude.pwy.subj = NA)
 }
 \arguments{
-\item{smpdb.prot}{data frame of proteins per pathway from SMPDB}
+\item{smpdb.prot}{Data frame of proteins per pathway from SMPDB.}
 
-\item{smpdb.met}{data frame of metabolites per pathway from SMPDB}
+\item{smpdb.met}{Data frame of metabolites per pathway from SMPDB.}
 
-\item{exclude.pwy.subj}{vector of subjects (or types) of pathways to exclude}
+\item{exclude.pwy.subj}{Vector of subjects (or types) of pathways to exclude}
 }
 \value{
-A numeric Matrix of features (proteins and/or metabolites) as rows and pathways as columns, indicating pathway membership
+A numeric Matrix of features (proteins and/or metabolites) as rows and pathways as columns, indicating 
+pathway membership.
 }
 \description{
 Transform SMPDB protein and/or metabolite pathway data frames, read in as CSV files from http://smpdb.ca/downloads,

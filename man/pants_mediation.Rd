@@ -33,16 +33,19 @@ List of at least two dataframes:
    \item{pwy.stats}{A dataframe with columns 
    \describe{
    \item{nfeatures}{number of features in the pathway} 
-   \item{feat.score.avg}{sum of smoothed scores of the pathway's features / \code{nfeatures}}
+   \item{feat.score.avg}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
+   to scores in permutations.}
    \item{z}{pathway permutation z-score (larger is more significant)}
    \item{p}{pathway permutation p-value} 
    \item{FDR}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
    }}
    \item{feature.stats}{A dataframe with columns
    \describe{
-   \item{score}{feature's score from \code{\link{score_features}}}
+   \item{score}{feature's score, which is p-value from \code{\link[ezlimma]{hitman}} transformed into z-score 
+   (larger is more significant)}
    \item{z}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
-   (without smoothing)} 
+   without smoothing. This should be similar to \code{score} if the permutation null distribution matches the 
+   theoretical null distribution.} 
    \item{p}{feature's permutation p-value} 
    \code{FDR}{feature's FDR from permutation \code{p}}
    }}
@@ -54,7 +57,7 @@ List of at least two dataframes:
  }
 }
 \description{
-PANTS algorithm for mediation pathway analysis (and optionally integration) via network smoothing
+PANTS algorithm for mediation pathway analysis (and optionally integration) via network smoothing.
 }
 \details{
 Scores for features in the kernel but not in the data are assigned a z-score of zero by default for sparsity.

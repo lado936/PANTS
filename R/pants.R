@@ -26,14 +26,15 @@
 #'    \item{pwy.stats}{A dataframe with columns 
 #'    \describe{
 #'    \item{nfeatures}{number of features in the pathway} 
-#'    \item{feat.score.avg}{sum of smoothed scores of the pathway's features / \code{nfeatures}}
+#'    \item{feat.score.avg}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
+#'    to scores in permutations.}
 #'    \item{z}{pathway permutation z-score (larger is more significant)}
 #'    \item{p}{pathway permutation p-value} 
 #'    \item{FDR}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
 #'    }}
 #'    \item{feature.stats}{A dataframe with columns
 #'    \describe{
-#'    \item{score}{feature's score from \code{\link{score_features}}}
+#'    \item{score}{feature's score from applying \code{score_fcn} in \code{\link{score_features}}}
 #'    \item{z}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
 #'    (without smoothing)} 
 #'    \item{p}{feature's permutation p-value} 
