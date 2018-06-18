@@ -1,11 +1,10 @@
 context("plot_pwy")
 
-dpn <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA)
-
 test_that("returned object", {
   expect_error(plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, annot=NULL, name = NA))
   expect_error(plot_pwy(gr=gr2, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA))
   
+  dpn <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA)
   #vertex a is most significant or tied
   expect_gte(dpn$score["a"], max(dpn$score[-1]))
   #based on plot

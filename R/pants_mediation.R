@@ -95,8 +95,8 @@ pants_mediation <- function(object, exposure.v, phenotype.v, ker, Gmat, nperm=10
   
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)
   if (ret.null.mats){
-    res$null.feature.mat <- score.mat
-    res$null.pwy.mat <- pwy.mat
+    res$null.feature.mat <- as.matrix(score.mat)
+    res$null.pwy.mat <- as.matrix(pwy.mat)
   }
   return(res)
 }
