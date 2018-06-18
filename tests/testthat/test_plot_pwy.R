@@ -1,7 +1,11 @@
 context("plot_pwy")
 
+dpn <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA)
+
 test_that("returned object", {
-  dpn <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA)
+  expect_error(plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, annot=NULL, name = NA))
+  expect_error(plot_pwy(gr=gr2, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA))
+  
   #vertex a is most significant or tied
   expect_gte(dpn$score["a"], max(dpn$score[-1]))
   #based on plot
@@ -17,4 +21,12 @@ test_that("returned object", {
 test_that("vdiffr", {
   pp <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA)
   vdiffr::expect_doppelganger(title="pwy1", fig=pp)
+})
+
+test_that("alternative", {
+  dpn.l <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, alternative = "less", ntop=2)
+  vdiffr::expect_doppelganger(title="pwy1_less", fig=dpn.l)
+  
+  dpn.g <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, alternative = "greater", ntop=1)
+  vdiffr::expect_doppelganger(title="pwy1_greater", fig=dpn.g)
 })

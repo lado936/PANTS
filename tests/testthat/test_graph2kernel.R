@@ -16,7 +16,6 @@ test_that("edgelist -> kernel", {
 
 test_that("gr not simple", {
   #add redundant edge
-  gr2 <- igraph::add.edges(gr, edges=c("a", "b"))
   expect_message(kk2 <- graph2kernel(gr2))
   expect_equal(kk, kk2)
 })

@@ -9,7 +9,7 @@ plot_pwy(gr, ker, Gmat, pwy, score.v, annot = NA, ntop = 7,
   "_", pwy), "_ntop", ntop), color.pal = NULL)
 }
 \arguments{
-\item{gr}{A graph of class \code{igraph} representing the interaction network.}
+\item{gr}{A graph of class \code{igraph} representing the interaction network. \code{is_simple(gr)} must be TRUE.}
 
 \item{ker}{Kernel matrix, can be sparse matrix from package \code{Matrix}.}
 
@@ -17,7 +17,7 @@ plot_pwy(gr, ker, Gmat, pwy, score.v, annot = NA, ntop = 7,
 
 \item{pwy}{Pathway to plot. Must be a column name of \code{Gmat}.}
 
-\item{score.v}{Namd vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select top nodes 
+\item{score.v}{Named vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select top nodes 
 and color them.}
 
 \item{annot}{Named vector of annotations for nodes. If \code{annot} is not \code{NA}, \code{names(annot)} should 

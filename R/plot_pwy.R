@@ -2,11 +2,11 @@
 #' 
 #' Plot network diagram for a pathway with node size corresponding to significance and color to pathway membership.
 #' 
-#' @param gr A graph of class \code{igraph} representing the interaction network.
+#' @param gr A graph of class \code{igraph} representing the interaction network. \code{is_simple(gr)} must be TRUE.
 #' @param ker Kernel matrix, can be sparse matrix from package \code{Matrix}.
 #' @param Gmat Pathway membership matrix, can be sparse matrix from package \code{Matrix}.
 #' @param pwy Pathway to plot. Must be a column name of \code{Gmat}.
-#' @param score.v Namd vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select top nodes 
+#' @param score.v Named vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select top nodes 
 #' and color them.
 #' @param annot Named vector of annotations for nodes. If \code{annot} is not \code{NA}, \code{names(annot)} should 
 #' have some overlap with \code{rownames(Gmat)}.
@@ -28,7 +28,7 @@
 plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=c("two.sided", "less", "greater"), 
                      name=paste0(gsub(":|/", "_", pwy), '_ntop', ntop), color.pal=NULL){
   
-  stopifnot(pwy %in% colnames(Gmat))
+  stopifnot(pwy %in% colnames(Gmat), igraph::is_simple(gr))
   if (!is.na(annot) && length(intersect(names(annot), rownames(Gmat))) == 0){
     stop("'annot' must be NA or 'names(annot)' must overlap with 'rownames(Gmat)'.")
   }
@@ -43,10 +43,6 @@ plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=
   in.shape <- "circle"
   out.shape <- "square"
   
-  if (!igraph::is_simple(gr)){
-    warning('igraph::is_simple(gr) is FALSE, so applying igraph::simplify.')
-    gr <- igraph::simplify(gr)
-  }
   if (alternative=="two.sided"){
     lim <- c(-max(abs(score.v)), max(abs(score.v)))
     #use yellow in middle to distinguish NA's, which are grey
