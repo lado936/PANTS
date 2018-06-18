@@ -1,10 +1,11 @@
 context("plot_pwy")
 
+dpn <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA)
+
 test_that("returned object", {
   expect_error(plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, annot=NULL, name = NA))
   expect_error(plot_pwy(gr=gr2, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA))
   
-  dpn <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA)
   #vertex a is most significant or tied
   expect_gte(dpn$score["a"], max(dpn$score[-1]))
   #based on plot
@@ -17,15 +18,29 @@ test_that("returned object", {
   expect_equal(graph2kernel(dpn$gr), graph2kernel(igraph::simplify(gr)))
 })
 
-test_that("vdiffr", {
-  pp <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA)
-  vdiffr::expect_doppelganger(title="pwy1", fig=pp)
+test_that("alternative", {
+  dpn.f <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA)
+  expect_doppelganger(title="pwy1", dpn.f)
+  
+  dpn2 <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, alternative = "less")
+  expect_equal(dpn$score, dpn2$score)
+  
+  ppl <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, alternative = "less", ntop=2)
+  expect_equal(signif(ppl$score, 2), c(b=-1.1, c=0.43))
+  
+  #fig changes if seed changes
+  ppl.f <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, alternative = "less", 
+                               ntop=2, seed=1)
+  expect_doppelganger(title="pwy1-less", ppl.f)
+  
+  ppg <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, alternative = "greater", ntop=2)
+  expect_equal(ppg$score, score.v[c(1:2, 4, 3)])
 })
 
-test_that("alternative", {
-  dpn.l <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, alternative = "less", ntop=2)
-  vdiffr::expect_doppelganger(title="pwy1_less", fig=dpn.l)
+test_that("annot", {
+  annot <- setNames(LETTERS[1:3], nm=names(score.v)[1:3])
+  dpn.ann <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, annot = annot)
+  expect_doppelganger("pwy1-ann", dpn.ann)
   
-  dpn.g <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, alternative = "greater", ntop=1)
-  vdiffr::expect_doppelganger(title="pwy1_greater", fig=dpn.g)
+  expect_error(plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, annot = c(A="A")))
 })

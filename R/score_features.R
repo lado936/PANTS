@@ -13,7 +13,6 @@
 #' and its output must be a scalar.
 #' @return Vector of feature scores.
 #' @export
-#' @importFrom ezlimma limma_contrasts
 
 score_features <- function(object, phenotype.v, contrast.v, score_fcn=identity){
   toptab <- ezlimma::limma_contrasts(object=object, grp=phenotype.v, contrast.v=contrast.v, cols='t', add.means = FALSE)

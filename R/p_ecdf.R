@@ -33,5 +33,5 @@ p_ecdf <- function(eval.v, score.mat, alternative=c("two.sided", "less", "greate
     wm.v <- apply(cbind(less, gr), MARGIN=1, FUN=which.min)
     zv <- stats::qnorm(p=pv/2, lower.tail = wm.v-1)
   }
-  return(cbind(zv=zv, pv=pv))
+  return(cbind(z=zv, p=pv))
 }

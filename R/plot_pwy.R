@@ -8,8 +8,8 @@
 #' @param pwy Pathway to plot. Must be a column name of \code{Gmat}.
 #' @param score.v Named vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select top nodes 
 #' and color them.
-#' @param annot Named vector of annotations for nodes. If \code{annot} is not \code{NA}, \code{names(annot)} should 
-#' have some overlap with \code{rownames(Gmat)}.
+#' @param annot Named vector of annotations for nodes. If \code{annot} is given, \code{names(annot)} should 
+#' have some overlap with \code{rownames(Gmat)}
 #' @param ntop Number of top most significant features to include. If one of these is an external node, then its
 #' internal neighbor nodes are also included. These nodes are then connected based on the interaction network.
 #' @param alternative A character string specifying the alternative hypothesis.
@@ -17,16 +17,19 @@
 #' to suppress writing to file.
 #' @param color.pal A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
 #' a palette from \code{\link[RColorBrewer]{brewer.pal}} is chosen.
+#' @param seed Seed to set using \code{set.seed} for reproducibility. If not given, same inputs can lead to different
+#' layouts for the graph.
 #' @return Invisibly, a list of 3 components: 
 #'  \describe{
 #'    \item{gr}{the graph that gets plotted}
 #'    \item{vertex.color}{the vertex colors}
 #'    \item{vertex.size}{the vertex sizes}
-#'  }
+#'    \item{score}{scores of the vertices of the plotted graph}
+#' }
 #' @export
 
 plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=c("two.sided", "less", "greater"), 
-                     name=paste0(gsub(":|/", "_", pwy), '_ntop', ntop), color.pal=NULL){
+                     name=paste0(gsub(":|/", "_", pwy), '_ntop', ntop), color.pal=NULL, seed=0){
   
   stopifnot(pwy %in% colnames(Gmat), igraph::is_simple(gr))
   if (!is.na(annot) && length(intersect(names(annot), rownames(Gmat))) == 0){
@@ -97,6 +100,7 @@ plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=
 
   #need to gsub disallowed characters
   if (!is.na(name)) grDevices::pdf(paste0(name, '.pdf'))
+  set.seed(seed)
   graphics::plot(gr.pwy, vertex.color=color.v, vertex.shape=shape.v)
   legend_colorbar(col=color.pal, lev=lim)
   if (any(shape.v==out.shape)) graphics::legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=1:0, bty="n")
