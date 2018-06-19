@@ -4,9 +4,9 @@
 \alias{pants}
 \title{Pathway Analysis via NeTwork Smoothing}
 \usage{
-pants(object, phenotype.v, contrast.v, ker, Gmat, score_fcn = identity,
-  nperm = 10^4, ret.null.mats = FALSE, verbose = TRUE,
-  alternative = c("two.sided", "less", "greater"))
+pants(object, phenotype.v, contrast.v, Gmat, ker = NULL,
+  score_fcn = identity, nperm = 10^4, ret.null.mats = FALSE,
+  verbose = TRUE, alternative = c("two.sided", "less", "greater"))
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
@@ -18,9 +18,9 @@ If the vector is named, the names must match the column names of \code{object}.}
 \item{contrast.v}{A named vector of constrasts. The constrasts must refer to the phenotypes
 in \code{phenotype.v}. Their order defines the order they are passed to \code{score_fcn}.}
 
-\item{ker}{The Laplacian kernel matrix.}
-
 \item{Gmat}{The feature by pathway inclusion matrix, indicating which features are in which pathways.}
+
+\item{ker}{The Laplacian kernel matrix.}
 
 \item{score_fcn}{A function that transforms the t-statistics from the contrasts. \code{identity} is 
 the trivial identity function returning its argument. Its input must be a vector of same 

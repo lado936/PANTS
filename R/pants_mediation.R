@@ -8,8 +8,8 @@
 #' If the vector is named, the names must match the column names of \code{object}.
 #' @param phenotype.v A vector of numeric phenotypes the same length as number of samples in \code{object}. If the 
 #' vector is named, the names must match the column names of \code{object}.
-#' @param ker The Laplacian kernel matrix.
 #' @param Gmat The feature by pathway inclusion matrix, indicating which features are in which pathways.
+#' @param ker The Laplacian kernel matrix.
 #' @param nperm Number of permutations to perform to evaluate significance of pathways.
 #' @param ret.null.mats If TRUE, return matrices with null distributions for features and pathways.
 #' @param verbose Logical indicating if the permutation number should be output every 500 permutations.
@@ -45,7 +45,11 @@
 #'  }
 #' @export
 
-pants_mediation <- function(object, exposure.v, phenotype.v, ker, Gmat, nperm=10^4, ret.null.mats=FALSE, verbose=TRUE){
+pants_mediation <- function(object, exposure.v, phenotype.v, Gmat, ker=NULL, nperm=10^4, ret.null.mats=FALSE, verbose=TRUE){
+  if (is.null(ker)){
+    ker <- diag_kernel(object=object, Gmat=Gmat)
+  }
+  
   stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)), 
             ncol(object)==length(phenotype.v), ncol(object)==length(exposure.v), colnames(object)==names(phenotype.v), 
             colnames(object)==names(exposure.v))

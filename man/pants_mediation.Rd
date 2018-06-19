@@ -4,8 +4,8 @@
 \alias{pants_mediation}
 \title{Pathway Analysis via Network Smoothing using mediation}
 \usage{
-pants_mediation(object, exposure.v, phenotype.v, ker, Gmat, nperm = 10^4,
-  ret.null.mats = FALSE, verbose = TRUE)
+pants_mediation(object, exposure.v, phenotype.v, Gmat, ker = NULL,
+  nperm = 10^4, ret.null.mats = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
@@ -17,9 +17,9 @@ If the vector is named, the names must match the column names of \code{object}.}
 \item{phenotype.v}{A vector of numeric phenotypes the same length as number of samples in \code{object}. If the 
 vector is named, the names must match the column names of \code{object}.}
 
-\item{ker}{The Laplacian kernel matrix.}
-
 \item{Gmat}{The feature by pathway inclusion matrix, indicating which features are in which pathways.}
+
+\item{ker}{The Laplacian kernel matrix.}
 
 \item{nperm}{Number of permutations to perform to evaluate significance of pathways.}
 

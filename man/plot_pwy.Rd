@@ -28,17 +28,16 @@ internal neighbor nodes are also included. These nodes are then connected based 
 
 \item{alternative}{A character string specifying the alternative hypothesis.}
 
-\item{name}{Name for PDF file to plot to. Can't contain characters ":" or "/" on Windows. Set to \code{NA}
-to suppress writing to file.}
+\item{name}{Name for PDF file to plot. Extension ".pdf" is added to the name. Must be a valid fileneme. Set to 
+\code{NA} to suppress writing to file.}
 
 \item{color.pal}{A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
-a palette from \code{\link[RColorBrewer]{brewer.pal}} is chosen.}
+a palette from \code{\link[RColorBrewer]{brewer.pal}} appropriate to \code{alternative} is chosen.}
 
-\item{seed}{Seed to set using \code{set.seed} for reproducibility. If not given, same inputs can lead to different
-layouts for the graph.}
+\item{seed}{Seed to set using \code{set.seed} for reproducibility of the graph layout.}
 }
 \value{
-Invisibly, a list of 3 components: 
+Invisibly, a list with components: 
  \describe{
    \item{gr}{the graph that gets plotted}
    \item{vertex.color}{the vertex colors}

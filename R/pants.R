@@ -9,8 +9,8 @@
 #' If the vector is named, the names must match the column names of \code{object}.
 #' @param contrast.v A named vector of constrasts. The constrasts must refer to the phenotypes
 #' in \code{phenotype.v}. Their order defines the order they are passed to \code{score_fcn}.
-#' @param ker The Laplacian kernel matrix.
 #' @param Gmat The feature by pathway inclusion matrix, indicating which features are in which pathways.
+#' @param ker The Laplacian kernel matrix.
 #' @param score_fcn A function that transforms the t-statistics from the contrasts. \code{identity} is 
 #' the trivial identity function returning its argument. Its input must be a vector of same 
 #' length as number of elements in \code{contrast.v}. Its output must be a scalar.
@@ -48,8 +48,11 @@
 #'  }
 #' @export
 
-pants <- function(object, phenotype.v, contrast.v, ker, Gmat, score_fcn=identity, nperm=10^4, ret.null.mats=FALSE, 
+pants <- function(object, phenotype.v, contrast.v, Gmat, ker=NULL, score_fcn=identity, nperm=10^4, ret.null.mats=FALSE, 
                   verbose=TRUE, alternative=c("two.sided", "less", "greater")){
+  if (is.null(ker)){
+    ker <- diag_kernel(object=object, Gmat=Gmat)
+  }
   stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)),
             colnames(object)==names(phenotype.v))
   alternative <- match.arg(alternative)
