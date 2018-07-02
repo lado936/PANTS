@@ -6,7 +6,8 @@
 \usage{
 pants(object, phenotype.v, contrast.v, Gmat, ker = NULL,
   score_fcn = identity, nperm = 10^4, ret.null.mats = FALSE,
-  verbose = TRUE, alternative = c("two.sided", "less", "greater"))
+  verbose = TRUE, alternative = c("two.sided", "less", "greater"),
+  seed = 0)
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
@@ -33,6 +34,8 @@ length as number of elements in \code{contrast.v}. Its output must be a scalar.}
 \item{verbose}{Logical indicating if the permutation number should be output every 500 permutations.}
 
 \item{alternative}{A character string specifying the alternative hypothesis.}
+
+\item{seed}{Seed to set using \code{set.seed} for reproducibility.}
 }
 \value{
 List of at least two dataframes:

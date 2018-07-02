@@ -1,7 +1,6 @@
 context("pants_mediation")
 
 test_that("Only 1st feature mediates", {
-  set.seed(0)
   nperm <- 100
   res <- pants_mediation(object=M, exposure.v = pheno, phenotype.v = M["a",], ker=kk, Gmat=G, nperm=nperm, 
                          ret.null.mats=TRUE)

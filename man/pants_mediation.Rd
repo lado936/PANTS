@@ -5,7 +5,7 @@
 \title{Pathway Analysis via Network Smoothing using mediation}
 \usage{
 pants_mediation(object, exposure.v, phenotype.v, Gmat, ker = NULL,
-  nperm = 10^4, ret.null.mats = FALSE, verbose = TRUE)
+  nperm = 10^4, ret.null.mats = FALSE, verbose = TRUE, seed = 0)
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
@@ -26,6 +26,8 @@ vector is named, the names must match the column names of \code{object}.}
 \item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathways.}
 
 \item{verbose}{Logical indicating if the permutation number should be output every 500 permutations.}
+
+\item{seed}{Seed to set using \code{set.seed} for reproducibility.}
 }
 \value{
 List of at least two dataframes:
