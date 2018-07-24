@@ -13,10 +13,11 @@
 #' @param ntop Number of top most significant features to include. If one of these is an external node, then its
 #' internal neighbor nodes are also included. These nodes are then connected based on the interaction network.
 #' @param alternative A character string specifying the alternative hypothesis.
-#' @param name Name for PDF file to plot. Extension ".pdf" is added to the name. Must be a valid fileneme. Set to 
-#' \code{NA} to suppress writing to file.
+#' @param name Name for PDF file to plot. Extension ".pdf" is added to the name. Set to \code{NA} to suppress writing to
+#' file. If \code{NULL}, \code{name} is defined as \code{paste0(ezlimma::clean_filenames(pwy), '_ntop', ntop)}.
 #' @param color.pal A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
 #' a palette from \code{\link[RColorBrewer]{brewer.pal}} appropriate to \code{alternative} is chosen.
+#' @param plot Logical indicating if to plot the pathway.
 #' @param seed Seed to set using \code{set.seed} for reproducibility of the graph layout.
 #' @return Invisibly, a list with components: 
 #'  \describe{
@@ -24,13 +25,14 @@
 #'    \item{vertex.color}{the vertex colors}
 #'    \item{vertex.size}{the vertex sizes}
 #'    \item{score}{scores of the vertices of the plotted graph}
+#'    \item{top.nodes}{Names of ntop top nodes driving pathway}
 #' }
 #' @export
 
 plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=c("two.sided", "less", "greater"), 
-                     name=paste0(gsub(":|/", "_", pwy), '_ntop', ntop), color.pal=NULL, seed=0){
+                     name=NULL, color.pal=NULL, plot=TRUE, seed=0){
   
-  stopifnot(pwy %in% colnames(Gmat), igraph::is_simple(gr))
+  stopifnot(pwy %in% colnames(Gmat), igraph::is_simple(gr), is.logical(plot))
   if (!is.na(annot) && length(intersect(names(annot), rownames(Gmat))) == 0){
     stop("'annot' must be NA or 'names(annot)' must overlap with 'rownames(Gmat)'.")
   }
@@ -38,9 +40,11 @@ plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=
   alternative <- match.arg(alternative)
   if (is.null(color.pal)){
     if (!requireNamespace("RColorBrewer", quietly = TRUE)){
-      stop("Package 'RColorBrewer' needed since 'is.null(color.pal)'. Please install it.", call. = FALSE)
+      stop("Package 'RColorBrewer' needed since 'color.pal' is NULL. Please install it.", call. = FALSE)
     }
   }
+  
+  if (is.null(name)) name <- paste0(ezlimma::clean_filenames(pwy), '_ntop', ntop)
   
   in.shape <- "circle"
   out.shape <- "square"
@@ -97,14 +101,15 @@ plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot=NA, ntop=7, alternative=
     }
   }#end if
 
-  #need to gsub disallowed characters
-  if (!is.na(name)) grDevices::pdf(paste0(name, '.pdf'))
-  set.seed(seed)
-  graphics::plot(gr.pwy, vertex.color=color.v, vertex.shape=shape.v)
-  legend_colorbar(col=color.pal, lev=lim)
-  if (any(shape.v==out.shape)) graphics::legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=1:0, bty="n")
-  if (!is.na(name)) grDevices::dev.off()
-
-  ret <- list(gr=gr.pwy, vertex.color=color.v, vertex.shape=shape.v, score=x)
+  if (plot){
+    if (!is.na(name)) grDevices::pdf(paste0(name, '.pdf'))
+    set.seed(seed)
+    graphics::plot(gr.pwy, vertex.color=color.v, vertex.shape=shape.v)
+    legend_colorbar(col=color.pal, lev=lim)
+    if (any(shape.v==out.shape)) graphics::legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=1:0, bty="n")
+    if (!is.na(name)) grDevices::dev.off()
+  }
+  
+  ret <- list(gr=gr.pwy, vertex.color=color.v, vertex.shape=shape.v, score=x, top.nodes=top.nodes)
   return(invisible(ret))
 }
