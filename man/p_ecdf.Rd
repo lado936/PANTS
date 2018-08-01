@@ -4,8 +4,7 @@
 \alias{p_ecdf}
 \title{Estimate p-value from simulations}
 \usage{
-p_ecdf(eval.v, score.mat, alternative = c("two.sided", "less",
-  "greater"))
+p_ecdf(eval.v, score.mat, alternative = c("two.sided", "less", "greater"))
 }
 \arguments{
 \item{eval.v}{A vector of values where the cumulative distribution function should be evaluated.}
