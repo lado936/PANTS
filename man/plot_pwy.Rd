@@ -28,7 +28,7 @@ internal neighbor nodes are also included. These nodes are then connected based 
 
 \item{alternative}{A character string specifying the alternative hypothesis.}
 
-\item{name}{Name for PDF file to plot. Extension ".pdf" is added to the name. Set to \code{NA} to suppress writing to
+\item{name}{Name for PDF file to plot. Extension '.pdf' is added to the name. Set to \code{NA} to suppress writing to
 file. If \code{NULL}, \code{name} is defined as \code{paste0(ezlimma::clean_filenames(pwy), '_ntop', ntop)}.}
 
 \item{color.pal}{A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},

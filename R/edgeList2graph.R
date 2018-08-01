@@ -9,8 +9,8 @@
 #' @return An \code{igraph} graph.
 #' @export
 
-edgelist2graph <- function(edge.lst){
-  stopifnot(length(dim(edge.lst))==2, ncol(edge.lst)==2)
-  net <- igraph::simplify(igraph::graph_from_edgelist(as.matrix(edge.lst), directed = FALSE))
-  return(net)
+edgelist2graph <- function(edge.lst) {
+    stopifnot(length(dim(edge.lst)) == 2, ncol(edge.lst) == 2)
+    net <- igraph::simplify(igraph::graph_from_edgelist(as.matrix(edge.lst), directed = FALSE))
+    return(net)
 }
