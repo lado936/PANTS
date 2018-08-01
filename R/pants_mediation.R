@@ -46,68 +46,64 @@
 #'  }
 #' @export
 
-pants_mediation <- function(object, exposure.v, phenotype.v, Gmat, ker = NULL, nperm = 10^4, ret.null.mats = FALSE, 
-    verbose = TRUE, seed = 0) {
-    set.seed(seed)
-    if (is.null(ker)) {
-        ker <- diag_kernel(object = object, Gmat = Gmat)
+pants_mediation <- function(object, exposure.v, phenotype.v, Gmat, ker=NULL, nperm=10^4, ret.null.mats=FALSE, 
+                            verbose=TRUE, seed=0){
+  set.seed(seed)
+  if (is.null(ker)){
+    ker <- diag_kernel(object=object, Gmat=Gmat)
+  }
+  
+  stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)), 
+            ncol(object)==length(phenotype.v), ncol(object)==length(exposure.v), colnames(object)==names(phenotype.v), 
+            colnames(object)==names(exposure.v))
+  
+  lmed <- ezlimma::hitman(E=exposure.v, M=object, Y=phenotype.v)
+  #transform to one-sided z-score
+  score.v <- stats::qnorm(p=lmed[rownames(object), "comb.p"], lower.tail = FALSE)
+  
+  #feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
+  score.mat <- Matrix::Matrix(0, nrow=nrow(object), ncol=nperm, dimnames = list(rownames(object), paste0('perm', 1:nperm)))
+  for (perm in 1:nperm){
+    #must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
+    object.tmp <- object[,sample(1:ncol(object))]
+    #to avoid names error in stopifnot
+    colnames(object.tmp) <- colnames(object)
+    
+    lmed.tmp <- ezlimma::hitman(E=exposure.v, M=object.tmp, Y=phenotype.v)
+    score.mat[,perm] <- stats::qnorm(p=lmed.tmp[rownames(object), "comb.p"], lower.tail = FALSE)
+    if (verbose){
+      if (perm %% 500 == 0) cat("permutation", perm, "\n")
     }
-    
-    stopifnot(length(intersect(rownames(ker), rownames(object))) > 0, any(rownames(Gmat) %in% colnames(ker)), ncol(object) == 
-        length(phenotype.v), ncol(object) == length(exposure.v), colnames(object) == names(phenotype.v), colnames(object) == 
-        names(exposure.v))
-    
-    lmed <- ezlimma::hitman(E = exposure.v, M = object, Y = phenotype.v)
-    # transform to one-sided z-score
-    score.v <- stats::qnorm(p = lmed[rownames(object), "comb.p"], lower.tail = FALSE)
-    
-    # feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
-    score.mat <- Matrix::Matrix(0, nrow = nrow(object), ncol = nperm, dimnames = list(rownames(object), paste0("perm", 
-        1:nperm)))
-    for (perm in 1:nperm) {
-        # must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
-        object.tmp <- object[, sample(1:ncol(object))]
-        # to avoid names error in stopifnot
-        colnames(object.tmp) <- colnames(object)
-        
-        lmed.tmp <- ezlimma::hitman(E = exposure.v, M = object.tmp, Y = phenotype.v)
-        score.mat[, perm] <- stats::qnorm(p = lmed.tmp[rownames(object), "comb.p"], lower.tail = FALSE)
-        if (verbose) {
-            if (perm%%500 == 0) 
-                cat("permutation", perm, "\n")
-        }
-    }
-    
-    mm <- match_mats(score.mat = cbind(v = score.v, score.mat), ker = ker, Gmat = Gmat)
-    # 1st column contains non-permuted scores
-    score.mat <- mm$score.mat[, -1]
-    score.v <- mm$score.mat[, 1]
-    ker <- mm$ker
-    Gmat <- mm$Gmat
-    rm(mm)  #to save memory
-    
-    ## feature p-values (for plotting) features in object & in kernel
-    feature.stats <- data.frame(score = score.v, matrix(NA, nrow = length(score.v), ncol = 3, dimnames = list(rownames(score.mat), 
-        c("z", "p", "FDR"))))
-    # need to coerce score.mat to matrix to prevent rowSums error
-    feature.stats[, c("z", "p")] <- p_ecdf(eval.v = score.v, score.mat = as.matrix(score.mat), alternative = "greater")
-    feature.stats[, "FDR"] <- stats::p.adjust(feature.stats[, "p"], method = "BH")
-    
-    ## need to compare to pwys, sometimes runs out of memory
-    pwy.v <- (score.v %*% ker %*% Gmat)[1, ]
-    pwy.mat <- as.matrix(Matrix::t(Matrix::crossprod(score.mat, ker) %*% Gmat))
-    
-    nfeats.per.pwy <- Matrix::colSums(Gmat != 0)
-    pwy.stats <- data.frame(nfeatures = nfeats.per.pwy, feat.score.avg = pwy.v/nfeats.per.pwy, z = NA, p = NA)
-    rownames(pwy.stats) <- colnames(Gmat)
-    pwy.stats[, c("z", "p")] <- p_ecdf(eval.v = pwy.v, score.mat = pwy.mat, alternative = "greater")
-    pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method = "BH")
-    pwy.stats <- pwy.stats[order(pwy.stats$p, -abs(pwy.stats$feat.score.avg)), ]
-    
-    res <- list(pwy.stats = pwy.stats, feature.stats = feature.stats)
-    if (ret.null.mats) {
-        res$null.feature.mat <- as.matrix(score.mat)
-        res$null.pwy.mat <- as.matrix(pwy.mat)
-    }
-    return(res)
+  }
+  
+  mm <- match_mats(score.mat = cbind(v=score.v, score.mat), ker=ker, Gmat=Gmat)
+  #1st column contains non-permuted scores
+  score.mat <- mm$score.mat[,-1]; score.v <- mm$score.mat[,1]; ker <- mm$ker; Gmat <- mm$Gmat
+  rm(mm) #to save memory
+  
+  ##feature p-values (for plotting)
+  #features in object & in kernel
+  feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=3,
+                                                      dimnames=list(rownames(score.mat), c("z", "p", "FDR"))))
+  #need to coerce score.mat to matrix to prevent rowSums error
+  feature.stats[,c("z", "p")] <- p_ecdf(eval.v=score.v, score.mat = as.matrix(score.mat), alternative = "greater")
+  feature.stats[,"FDR"] <- stats::p.adjust(feature.stats[,"p"], method="BH")
+  
+  ##need to compare to pwys, sometimes runs out of memory
+  pwy.v <- (score.v %*% ker %*% Gmat)[1,]
+  pwy.mat <- as.matrix(Matrix::t(Matrix::crossprod(score.mat, ker) %*% Gmat))
+  
+  nfeats.per.pwy <- Matrix::colSums(Gmat!=0)
+  pwy.stats <- data.frame(nfeatures=nfeats.per.pwy, feat.score.avg=pwy.v/nfeats.per.pwy, z=NA, p=NA)
+  rownames(pwy.stats) <- colnames(Gmat)
+  pwy.stats[,c("z", "p")] <- p_ecdf(eval.v=pwy.v, score.mat=pwy.mat, alternative = "greater")
+  pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method='BH')
+  pwy.stats <- pwy.stats[order(pwy.stats$p, -abs(pwy.stats$feat.score.avg)),]
+  
+  res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)
+  if (ret.null.mats){
+    res$null.feature.mat <- as.matrix(score.mat)
+    res$null.pwy.mat <- as.matrix(pwy.mat)
+  }
+  return(res)
 }
