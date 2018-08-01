@@ -34,8 +34,6 @@ file. If \code{NULL}, \code{name} is defined as \code{paste0(ezlimma::clean_file
 \item{color.pal}{A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
 a palette from \code{\link[RColorBrewer]{brewer.pal}} appropriate to \code{alternative} is chosen.}
 
-\item{plot}{Logical indicating if to plot the pathway.}
-
 \item{seed}{Seed to set using \code{set.seed} for reproducibility of the graph layout.}
 }
 \value{
@@ -45,7 +43,7 @@ Invisibly, a list with components:
    \item{vertex.color}{the vertex colors}
    \item{vertex.size}{the vertex sizes}
    \item{score}{scores of the vertices of the plotted graph}
-   \item{top.nodes}{Names of ntop top nodes driving pathway}
+   \item{top.nodes}{ntop top nodes driving pathway}
 }
 }
 \description{

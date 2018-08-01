@@ -59,7 +59,7 @@ pants_mediation <- function(object, exposure.v, phenotype.v, Gmat, ker=NULL, npe
   
   lmed <- ezlimma::hitman(E=exposure.v, M=object, Y=phenotype.v)
   #transform to one-sided z-score
-  score.v <- stats::qnorm(p=lmed[rownames(object), "comb.p"], lower.tail = FALSE)
+  score.v <- stats::qnorm(p=lmed[rownames(object), "EMY.p"], lower.tail = FALSE)
   
   #feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
   score.mat <- Matrix::Matrix(0, nrow=nrow(object), ncol=nperm, dimnames = list(rownames(object), paste0('perm', 1:nperm)))
@@ -70,7 +70,7 @@ pants_mediation <- function(object, exposure.v, phenotype.v, Gmat, ker=NULL, npe
     colnames(object.tmp) <- colnames(object)
     
     lmed.tmp <- ezlimma::hitman(E=exposure.v, M=object.tmp, Y=phenotype.v)
-    score.mat[,perm] <- stats::qnorm(p=lmed.tmp[rownames(object), "comb.p"], lower.tail = FALSE)
+    score.mat[,perm] <- stats::qnorm(p=lmed.tmp[rownames(object), "EMY.p"], lower.tail = FALSE)
     if (verbose){
       if (perm %% 500 == 0) cat("permutation", perm, "\n")
     }
