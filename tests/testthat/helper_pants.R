@@ -17,8 +17,6 @@ gmt <- list(pwy1=list(name="pwy1", description="pwy1", genes=c("a", "b", "c")),
             pwy2=list(name="pwy2", description="pwy2", genes=c("b", "c", "d")))
 G <- gmt2Gmat(gmt)
 
-# pants calls match_mets in helper internally
-
 contrast.v <- c(trt1="trt1-ctrl", trt2="trt2-ctrl")
 res <- pants(object=M, phenotype.v=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, nperm=10)
 score.v <- stats::setNames(res$feature.stats$score, nm=rownames(res$feature.stats))
