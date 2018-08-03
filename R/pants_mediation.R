@@ -98,7 +98,7 @@ pants_mediation <- function(object, exposure.v, phenotype.v, Gmat, ker=NULL, npe
   rownames(pwy.stats) <- colnames(Gmat)
   pwy.stats[,c("z", "p")] <- p_ecdf(eval.v=pwy.v, score.mat=pwy.mat, alternative = "greater")
   pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method='BH')
-  pwy.stats <- pwy.stats[order(pwy.stats$p, -abs(pwy.stats$feat.score.avg)),]
+  pwy.stats <- pwy.stats[order(pwy.stats$p, -pwy.stats$feat.score.avg),]
   
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)
   if (ret.null.mats){
