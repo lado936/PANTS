@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ## Introduction
-Welcome to the `PANTS` package for Pathway Analysis, and optionally integration, via NeTwork Smoothing. In this vignette, I'll illustrate a case study of the package for integrating proteomics and metabolomics data to identify significant pathways.
+Welcome to the `PANTS` package for Pathway Analysis via Network Smoothing. In this vignette, I'll illustrate a case study of the package for integrating proteomics and metabolomics data to identify significant pathways.
 
 ## Install
 See README.md for installation.
@@ -44,7 +44,7 @@ ker <- graph2kernel(gr)
 ```
 
 ## Get data
-To illustrate `PANTS`, we'll simulate protein and metabolite abundance data on 10 samples, with 5 cases and 5 controls. The rows (features) of this data matrix need to overlap with the rows of `gmat`. We'll sample features from `gmat` instead of using all the features to save computation time. We also need a vector of phenotypes.
+To illustrate `PANTS`, we'll simulate protein and metabolite abundance data on 10 samples, with 5 cases and 5 controls. The rownames (feature names) of this data matrix need to overlap with the rownames of `gmat`. We'll sample features from `gmat` instead of using all the features to save computation time. We also need a vector of phenotypes.
 ```{r sim}
 set.seed(42)
 features <- rownames(smpdb_gmat)[sample(x=1:nrow(smpdb_gmat), size=10^3)]

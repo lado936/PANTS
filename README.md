@@ -1,5 +1,5 @@
 # PANTS
-`PANTS` is an R/Bioconductor package for Pathway Analysis with NeTwork Smoothing.
+`PANTS` is an R/Bioconductor package for Pathway Analysis with Network Smoothing.
 
 [![Build Status](https://travis-ci.org/jdreyf/PANTS.svg?branch=master)](https://travis-ci.org/jdreyf/PANTS)
 [![Coverage Status](https://img.shields.io/codecov/c/github/jdreyf/PANTS/master.svg)](https://codecov.io/github/jdreyf/PANTS?branch=master)
