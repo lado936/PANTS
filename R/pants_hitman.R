@@ -1,6 +1,6 @@
-#' Pathway Analysis via Network Smoothing using mediation
+#' Pathway Analysis via Network Smoothing using Hitman
 #' 
-#' PANTS algorithm for mediation pathway analysis (and optionally integration) via network smoothing.
+#' Pants algorithm for pathway mediation analysis with Hitman and network smoothing.
 #' 
 #' @param object A matrix-like data object containing log-ratios or log-expression values for a
 #' series of samples, with rows corresponding to features and columns to samples.
@@ -47,7 +47,7 @@
 #'  }
 #' @export
 
-pants_mediation <- function(object, exposure.v, phenotype.v, Gmat, ker=NULL, nperm=10^4, ret.null.mats=FALSE, 
+pants_hitman <- function(object, exposure.v, phenotype.v, Gmat, ker=NULL, nperm=10^4, ret.null.mats=FALSE, 
                             verbose=TRUE, min.size=0, seed=0){
   set.seed(seed)
   if (is.null(ker)){

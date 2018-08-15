@@ -2,7 +2,7 @@
 #' 
 #' Plot colorbar legend
 #' @param col Color palette vector
-#' @param lev Levels corresponding to colors
+#' @param lev Vector of levels corresponding to colors. The min and max of this vector is used to define numeric range.
 #' @details Modified from \url{https://aurelienmadouasse.wordpress.com/2012/01/13/legend-for-a-continuous-color-scale-in-r/}.
 
 #an alternative is imageplot() from {fields}, which includes legends, but {fields} has many dependencies

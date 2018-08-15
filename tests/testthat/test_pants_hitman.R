@@ -1,8 +1,8 @@
-context("pants_mediation")
+context("pants_hitman")
 
 test_that("kernel", {
   nperm <- 100
-  res <- pants_mediation(object=M, exposure.v = pheno, phenotype.v = M["a",], ker=kk, Gmat=G, nperm=nperm, 
+  res <- pants_hitman(object=M, exposure.v = pheno, phenotype.v = M["a",], ker=kk, Gmat=G, nperm=nperm, 
                          ret.null.mats=TRUE)
   pwy.stats <- res$pwy.stats
   f.stats <- res$feature.stats
@@ -27,7 +27,7 @@ test_that("kernel", {
 
 test_that("no kernel", {
   nperm <- 100
-  res <- pants_mediation(object=M, exposure.v = pheno, phenotype.v = M["a",], ker=NULL, Gmat=G, nperm=nperm)
+  res <- pants_hitman(object=M, exposure.v = pheno, phenotype.v = M["a",], ker=NULL, Gmat=G, nperm=nperm)
   pwy.stats <- res$pwy.stats
   f.stats <- res$feature.stats
   
@@ -41,10 +41,10 @@ test_that("no kernel", {
 })
 
 test_that("min.size", {
-  expect_error(pants_mediation(object=M, exposure.v = pheno, phenotype.v = M["a",], ker=NULL, Gmat=G, nperm=10, min.size=4))
-  res3 <- pants_mediation(object=M, exposure.v = pheno, phenotype.v = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.size=3)
+  expect_error(pants_hitman(object=M, exposure.v = pheno, phenotype.v = M["a",], ker=NULL, Gmat=G, nperm=10, min.size=4))
+  res3 <- pants_hitman(object=M, exposure.v = pheno, phenotype.v = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.size=3)
   expect_equal(nrow(res3$pwy.stats), 1)
-  res4 <- pants_mediation(object=M, exposure.v = pheno, phenotype.v = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.size=0)
+  res4 <- pants_hitman(object=M, exposure.v = pheno, phenotype.v = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.size=0)
   expect_equal(nrow(res4$pwy.stats), 2)
 })
   
