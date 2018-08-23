@@ -27,6 +27,6 @@ legend_colorbar <- function(col, lev){
   #add axis
   graphics::par(new = TRUE)
   graphics::plot(x=0, y=0, type = "n", ylim = c(min(lev), max(lev)), yaxt = "n", ylab = "", xaxt = "n", xlab = "", frame.plot = FALSE)
-  graphics::axis(side = 4, las = 2, tick = FALSE, line = 0)
+  graphics::axis(side = 4, las = 2, tick = FALSE, line = 0,at = round(axTicks(side = 4, axp = c(min(lev),max(lev),length(col) - 1)),1))
   par <- opar
 }
