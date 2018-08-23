@@ -9,7 +9,7 @@ legend_colorbar(col, lev)
 \arguments{
 \item{col}{Color palette vector}
 
-\item{lev}{Levels corresponding to colors}
+\item{lev}{Vector of levels corresponding to colors. The min and max of this vector is used to define numeric range.}
 }
 \description{
 Plot colorbar legend
