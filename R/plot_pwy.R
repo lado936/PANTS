@@ -103,6 +103,7 @@ plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot = NA, ntop = 7, alternat
   if (plot){
     if (!is.na(name)) grDevices::pdf(paste0(name, '.pdf'))
     set.seed(seed)
+    graphics::par(mar=c(5.1, 4.1, 4.1, 2.5))
     graphics::plot(gr.pwy, vertex.color=color.v, vertex.shape=shape.v)
     legend_colorbar(col=color.pal, lev=lim)
     if (any(shape.v==out.shape)) graphics::legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=1:0, bty="n")
