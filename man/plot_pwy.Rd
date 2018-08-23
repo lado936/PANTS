@@ -28,13 +28,11 @@ internal neighbor nodes are also included. These nodes are then connected based 
 
 \item{alternative}{A character string specifying the alternative hypothesis.}
 
-\item{name}{Name for PDF file to plot. Extension '.pdf' is added to the name. Set to \code{NA} to suppress writing to
+\item{name}{Name for PDF file to plot. Extension ".pdf" is added to the name. Set to \code{NA} to suppress writing to
 file. If \code{NULL}, \code{name} is defined as \code{paste0(ezlimma::clean_filenames(pwy), '_ntop', ntop)}.}
 
 \item{color.pal}{A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
 a palette from \code{\link[RColorBrewer]{brewer.pal}} appropriate to \code{alternative} is chosen.}
-
-\item{plot}{Logical indicating if to plot the pathway.}
 
 \item{seed}{Seed to set using \code{set.seed} for reproducibility of the graph layout.}
 }
@@ -45,7 +43,7 @@ Invisibly, a list with components:
    \item{vertex.color}{the vertex colors}
    \item{vertex.size}{the vertex sizes}
    \item{score}{scores of the vertices of the plotted graph}
-   \item{top.nodes}{Names of ntop top nodes driving pathway}
+   \item{top.nodes}{ntop top nodes driving pathway}
 }
 }
 \description{
