@@ -44,3 +44,8 @@ test_that("annot", {
   
   expect_error(plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, annot = c(A="A")))
 })
+
+test_that("negatives with decimals", {
+  dpn.f <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v/10, name = NA)
+  expect_doppelganger(title="pwy2", dpn.f)
+})

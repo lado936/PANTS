@@ -34,6 +34,8 @@ file. If \code{NULL}, \code{name} is defined as \code{paste0(ezlimma::clean_file
 \item{color.pal}{A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
 a palette from \code{\link[RColorBrewer]{brewer.pal}} appropriate to \code{alternative} is chosen.}
 
+\item{plot}{Should the pathway be plotted?}
+
 \item{seed}{Seed to set using \code{set.seed} for reproducibility of the graph layout.}
 }
 \value{
