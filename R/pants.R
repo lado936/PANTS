@@ -1,7 +1,6 @@
-#' Pathway Analysis via NeTwork Smoothing
+#' Pathway analysis via network smoothing
 #' 
-#' This is the main function of the \code{PANTS} package, which implements the PANTS algorithm
-#' of Pathway Analysis (and optionally integration) via Network Smoothing for group contrasts.
+#' This is the main function of the \code{PANTS} package, which implements the Pants algorithm for group contrasts.
 #' 
 #' @param object A matrix-like data object containing log-ratios or log-expression values for a
 #' series of samples, with rows corresponding to features and columns to samples.
@@ -40,7 +39,7 @@
 #'    \item{z}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
 #'    (without smoothing)} 
 #'    \item{p}{feature's permutation p-value} 
-#'    \code{FDR}{feature's FDR from permutation \code{p}}
+#'    \item{FDR}{feature's FDR from permutation \code{p}}
 #'    }}
 #'    And if \code{ret.null.mats} is TRUE:
 #'    \item{null.feature.mat}{Matrix with features as rows and permutations as columns, where each element represents

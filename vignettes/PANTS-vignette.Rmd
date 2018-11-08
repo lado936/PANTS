@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ## Introduction
-Welcome to the `PANTS` package for Pathway Analysis via Network Smoothing. In this vignette, I'll illustrate a case study of the package for integrating proteomics and metabolomics data to identify significant pathways.
+Welcome to the `PANTS` package for Pathway analysis via network smoothing. In this vignette, I'll illustrate a case study of the package for integrating proteomics and metabolomics data to identify significant pathways.
 
 ## Install
 See README.md for installation.
