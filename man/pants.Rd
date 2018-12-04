@@ -2,7 +2,7 @@
 % Please edit documentation in R/pants.R
 \name{pants}
 \alias{pants}
-\title{Pathway Analysis via NeTwork Smoothing}
+\title{Pathway analysis via network smoothing}
 \usage{
 pants(object, phenotype.v, contrast.v, Gmat, ker = NULL,
   score_fcn = identity, nperm = 10^4, ret.null.mats = FALSE,
@@ -67,8 +67,7 @@ List of at least two dataframes:
  }
 }
 \description{
-This is the main function of the \code{PANTS} package, which implements the PANTS algorithm
-of Pathway Analysis (and optionally integration) via Network Smoothing for group contrasts.
+This is the main function of the \code{PANTS} package, which implements the Pants algorithm for group contrasts.
 }
 \details{
 Scores for features in the kernel but not in the data are assigned a value of zero by default for sparsity.

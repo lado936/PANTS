@@ -21,7 +21,7 @@ library("PANTS")
 ```
 
 ## Load interaction network
-We'll use the Pathway Commons v9 network in Simple Interaction Format (SIF), which holds interactions in the format: physical_entity_id <relationship type> physical_entity_id. The 1st and 3rd columns represent the edges of the network, called an "edge list". This dataset has been included in `PANTS`, so you can load it using:
+We'll use the Pathway Commons v9 network in Simple Interaction Format (SIF), which holds interactions in the format: physical_entity_id <relationship type> physical_entity_id. The 1st and 3rd columns represent the edges of the network, an edgelist. This edgelist has been included in `PANTS`, so you can load it using:
 ```{r pc9}
 data("pc9")
 ```
@@ -33,10 +33,12 @@ gr <- igraph::simplify(igraph::graph_from_edgelist(pc9, directed = FALSE))
 ```
 
 ## Construct predefined pathways
-We need to load predefined pathways that consist of genes and metabolites whose IDs are consistent with those of our interaction network. One source for these pathways is the Small Molecule Pathway Database (smpdb.ca). SMPDB offers one file for proteins and another for metabolites. If you read these in, you can construct pathways using the `SMPDB2Gmat` function. I've already done this and included the result with the package. You can load this data, and then enforce its rows to match the kernel with:
+We need to load predefined pathways that consist of genes and metabolites whose IDs are consistent with those of our interaction network, and transform these into a matrix that `PANTS` accepts. One source for these pathways is the Small Molecule Pathway Database (smpdb.ca). SMPDB offers one file for proteins and another for metabolites. I've alread read these and constructed pathways and included the result with the package. You can load this data with:
 ```{r gmat}
 data("smpdb_gmat")
 ```
+
+You read in an arbitrary pathway file in GMT format with `ezlimma::read_gmt` and transform it with `PANTS::gmt2Gmat`.
 
 ## Calculate kernel
 ```{r ker}

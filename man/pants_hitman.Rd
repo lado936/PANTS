@@ -4,9 +4,9 @@
 \alias{pants_hitman}
 \title{Pathway Analysis via Network Smoothing using Hitman}
 \usage{
-pants_hitman(object, exposure.v, phenotype.v, Gmat, ker = NULL,
-  nperm = 10^4, ret.null.mats = FALSE, verbose = TRUE, min.size = 0,
-  seed = 0)
+pants_hitman(object, exposure.v, phenotype.v, Gmat, covariates = NULL,
+  ker = NULL, nperm = 10^4, ret.null.mats = FALSE, verbose = TRUE,
+  min.size = 0, seed = 0)
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
@@ -19,6 +19,8 @@ If the vector is named, the names must match the column names of \code{object}.}
 vector is named, the names must match the column names of \code{object}.}
 
 \item{Gmat}{Binary feature by pathway inclusion matrix, indicating which features are in which pathways.}
+
+\item{covariates}{Numeric vector or matrix of covariates.}
 
 \item{ker}{Laplacian kernel matrix.}
 
@@ -52,7 +54,7 @@ List of at least two dataframes:
    without smoothing. This should be similar to \code{score} if the permutation null distribution matches the 
    theoretical null distribution.} 
    \item{p}{feature's permutation p-value} 
-   \code{FDR}{feature's FDR from permutation \code{p}}
+   \item{FDR}{feature's FDR from permutation \code{p}}
    }}
    And if \code{ret.null.mats} is TRUE:
    \item{null.feature.mat}{Matrix with features as rows and permutations as columns, where each element represents
