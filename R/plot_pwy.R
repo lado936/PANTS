@@ -32,7 +32,7 @@
 plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot = NA, ntop = 7, alternative = c("two.sided", "less", "greater"), 
     name = NULL, color.pal = NULL, plot = TRUE, seed = 0) {
     
-  stopifnot(pwy %in% colnames(Gmat), igraph::is_simple(gr), is.logical(plot))
+  stopifnot(pwy %in% colnames(Gmat), igraph::is_simple(gr), is.logical(plot), is.finite(score.v))
   if (!is.na(annot) && length(intersect(names(annot), rownames(Gmat))) == 0) {
       stop("'annot' must be NA or 'names(annot)' must overlap with 'rownames(Gmat)'.")
   }

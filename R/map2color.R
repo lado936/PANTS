@@ -9,5 +9,7 @@
 
 map2color <- function(x, pal, limits=NULL){
   if (is.null(limits)) limits <- range(x)
-  pal[findInterval(x, seq(limits[1], limits[2], length.out=length(pal)+1), all.inside=TRUE)]
+  stopifnot(length(limits) >=2)
+  
+  pal[findInterval(x, seq(from=limits[1], to=limits[2], length.out=length(pal)+1), all.inside=TRUE)]
 }
