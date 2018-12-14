@@ -4,7 +4,7 @@
 \alias{pants_hitman}
 \title{Pathway Analysis via Network Smoothing using Hitman}
 \usage{
-pants_hitman(object, exposure.v, phenotype.v, Gmat, covariates = NULL,
+pants_hitman(object, exposure, phenotype.v, Gmat, covariates = NULL,
   ker = NULL, nperm = 10^4, ret.null.mats = FALSE, verbose = TRUE,
   min.size = 0, seed = 0)
 }
@@ -12,8 +12,7 @@ pants_hitman(object, exposure.v, phenotype.v, Gmat, covariates = NULL,
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
 series of samples, with rows corresponding to features and columns to samples.}
 
-\item{exposure.v}{A numeric or character vector of exposures the same length as number of samples in \code{object}.
-If the vector is named, the names must match the column names of \code{object}.}
+\item{exposure}{A numeric vector or matrix of exposures.}
 
 \item{phenotype.v}{A vector of numeric phenotypes the same length as number of samples in \code{object}. If the 
 vector is named, the names must match the column names of \code{object}.}

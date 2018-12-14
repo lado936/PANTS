@@ -1,9 +1,9 @@
 Package: PANTS
 Type: Package
-Title: Pathway Analysis via Network Smoothing
-Version: 0.0.2
+Title: Pathway analysis via network smoothing.
+Version: 0.0.3
 Authors@R: c(person("Jonathan", "Dreyfuss", role = c("aut", "cre"), email = "jdreyf@bu.edu"), person("Grace", "Daher", role = "ctb"))
-Description: Pathway Analysis via Network Smoothing.
+Description: Pathway analysis via network smoothing provides network-based multi-omic integrative pathway analysis.
 Depends:
 	R (>= 3.0.0),
 	ezlimma,

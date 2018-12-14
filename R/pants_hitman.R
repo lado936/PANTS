@@ -4,8 +4,7 @@
 #' 
 #' @param object A matrix-like data object containing log-ratios or log-expression values for a
 #' series of samples, with rows corresponding to features and columns to samples.
-#' @param exposure.v A numeric or character vector of exposures the same length as number of samples in \code{object}.
-#' If the vector is named, the names must match the column names of \code{object}.
+#' @param exposure A numeric vector or matrix of exposures.
 #' @param phenotype.v A vector of numeric phenotypes the same length as number of samples in \code{object}. If the 
 #' vector is named, the names must match the column names of \code{object}.
 #' @param Gmat Binary feature by pathway inclusion matrix, indicating which features are in which pathways.
@@ -48,7 +47,7 @@
 #'  }
 #' @export
 
-pants_hitman <- function(object, exposure.v, phenotype.v, Gmat, covariates=NULL, ker=NULL, nperm=10^4, ret.null.mats=FALSE, 
+pants_hitman <- function(object, exposure, phenotype.v, Gmat, covariates=NULL, ker=NULL, nperm=10^4, ret.null.mats=FALSE, 
                             verbose=TRUE, min.size=0, seed=0){
   set.seed(seed)
   if (is.null(ker)){
@@ -56,12 +55,17 @@ pants_hitman <- function(object, exposure.v, phenotype.v, Gmat, covariates=NULL,
   }
   
   stopifnot(length(intersect(rownames(ker), rownames(object))) > 0, any(rownames(Gmat) %in% colnames(ker)), 
-            ncol(object)==length(phenotype.v), ncol(object)==length(exposure.v), colnames(object)==names(phenotype.v), 
-            colnames(object)==names(exposure.v))
+            ncol(object)==length(phenotype.v), ncol(object)==nrow(as.matrix(exposure)), colnames(object)==names(phenotype.v))
+  
+  if (ncol(as.matrix(exposure))==1){
+    stopifnot(colnames(object)==names(exposure))
+  } else {
+    stopifnot(colnames(object)==rownames(exposure))
+  }
   
   zeallot::`%<-%`(c(Gmat, nfeats.per.pwy), subset_gmat(object=object, Gmat=Gmat, min.size=min.size))
   
-  lmed <- ezlimma::hitman(E=exposure.v, M=object, Y=phenotype.v, covariates=covariates)
+  lmed <- ezlimma::hitman(E=exposure, M=object, Y=phenotype.v, covariates=covariates)
   #transform to one-sided z-score
   score.v <- stats::qnorm(p=lmed[rownames(object), "EMY.p"], lower.tail = FALSE)
   
@@ -73,7 +77,7 @@ pants_hitman <- function(object, exposure.v, phenotype.v, Gmat, covariates=NULL,
     #to avoid names error in stopifnot
     colnames(object.tmp) <- colnames(object)
     
-    lmed.tmp <- ezlimma::hitman(E=exposure.v, M=object.tmp, Y=phenotype.v, covariates=covariates)
+    lmed.tmp <- ezlimma::hitman(E=exposure, M=object.tmp, Y=phenotype.v, covariates=covariates)
     score.mat[,perm] <- stats::qnorm(p=lmed.tmp[rownames(object), "EMY.p"], lower.tail = FALSE)
     if (verbose){
       if (perm %% 500 == 0) cat("permutation", perm, "\n")
