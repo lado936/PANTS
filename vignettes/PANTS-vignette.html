@@ -12,14 +12,14 @@
 
 <meta name="author" content="Jonathan Dreyfuss" />
 
-<meta name="date" content="2018-12-02" />
+<meta name="date" content="2019-01-03" />
 
 <title>PANTS Vignette</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
@@ -55,7 +55,29 @@ code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
 code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -70,13 +92,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">PANTS Vignette</h1>
 <h4 class="author"><em>Jonathan Dreyfuss</em></h4>
-<h4 class="date"><em>2018-12-02</em></h4>
+<h4 class="date"><em>2019-01-03</em></h4>
 
 
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Welcome to the <code>PANTS</code> package for Pathway analysis via network smoothing. In this vignette, I’ll illustrate a case study of the package for integrating proteomics and metabolomics data to identify significant pathways.</p>
+<p>Welcome to the <strong>PANTS</strong> package for Pathway analysis via network smoothing. In this vignette, I’ll illustrate a case study of the package for integrating proteomics and metabolomics data to identify significant pathways.</p>
 </div>
 <div id="install" class="section level2">
 <h2>Install</h2>
@@ -84,21 +106,23 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="load-package" class="section level2">
 <h2>Load package</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;PANTS&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ezlimma)
+<span class="kw">library</span>(PANTS)</code></pre></div>
+<pre><code>## Warning: package 'igraph' was built under R version 3.5.1</code></pre>
 </div>
 <div id="load-interaction-network" class="section level2">
 <h2>Load interaction network</h2>
-<p>We’ll use the Pathway Commons v9 network in Simple Interaction Format (SIF), which holds interactions in the format: physical_entity_id <relationship type> physical_entity_id. The 1st and 3rd columns represent the edges of the network, an edgelist. This edgelist has been included in <code>PANTS</code>, so you can load it using:</p>
+<p>We’ll use the Pathway Commons v9 network in Simple Interaction Format (SIF), which holds interactions in the format: physical_entity_id <relationship type> physical_entity_id. The 1st and 3rd columns represent the edges of the network, an edgelist. This edgelist has been included in <strong>PANTS</strong>, so you can load it using:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;pc9&quot;</span>)</code></pre></div>
 </div>
 <div id="construct-graph" class="section level2">
 <h2>Construct graph</h2>
-<p><code>PANTS</code> smooths statistics over the network using a network kernel derived from a graph. So we transform <code>pc9</code> into a simplified graph:</p>
+<p><strong>PANTS</strong> smooths statistics over the network using a network kernel derived from a graph. So we transform <code>pc9</code> into a simplified graph:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gr &lt;-<span class="st"> </span>igraph<span class="op">::</span><span class="kw">simplify</span>(igraph<span class="op">::</span><span class="kw">graph_from_edgelist</span>(pc9, <span class="dt">directed =</span> <span class="ot">FALSE</span>))</code></pre></div>
 </div>
 <div id="construct-predefined-pathways" class="section level2">
 <h2>Construct predefined pathways</h2>
-<p>We need to load predefined pathways that consist of genes and metabolites whose IDs are consistent with those of our interaction network, and transform these into a matrix that <code>PANTS</code> accepts. One source for these pathways is the Small Molecule Pathway Database (smpdb.ca). SMPDB offers one file for proteins and another for metabolites. I’ve alread read these and constructed pathways and included the result with the package. You can load this data with:</p>
+<p>We need to load predefined pathways that consist of genes and metabolites whose IDs are consistent with those of our interaction network, and transform these into a matrix that <strong>PANTS</strong> accepts. One source for these pathways is the Small Molecule Pathway Database (smpdb.ca). SMPDB offers one file for proteins and another for metabolites. I’ve alread read these and constructed pathways and included the result with the package. You can load this data with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;smpdb_gmat&quot;</span>)</code></pre></div>
 <p>You read in an arbitrary pathway file in GMT format with <code>ezlimma::read_gmt</code> and transform it with <code>PANTS::gmt2Gmat</code>.</p>
 </div>
@@ -108,7 +132,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="get-data" class="section level2">
 <h2>Get data</h2>
-<p>To illustrate <code>PANTS</code>, we’ll simulate protein and metabolite abundance data on 10 samples, with 5 cases and 5 controls. The rownames (feature names) of this data matrix need to overlap with the rownames of <code>gmat</code>. We’ll sample features from <code>gmat</code> instead of using all the features to save computation time. We also need a vector of phenotypes.</p>
+<p>To illustrate <strong>PANTS</strong>, we’ll simulate protein and metabolite abundance data on 10 samples, with 5 cases and 5 controls. The rownames (feature names) of this data matrix need to overlap with the rownames of <code>gmat</code>. We’ll sample features from <code>gmat</code> instead of using all the features to save computation time. We also need a vector of phenotypes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">42</span>)
 features &lt;-<span class="st"> </span><span class="kw">rownames</span>(smpdb_gmat)[<span class="kw">sample</span>(<span class="dt">x=</span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(smpdb_gmat), <span class="dt">size=</span><span class="dv">10</span><span class="op">^</span><span class="dv">3</span>)]
 M &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rexp</span>(<span class="dt">n=</span><span class="dv">10</span><span class="op">^</span><span class="dv">4</span>), <span class="dt">nrow=</span><span class="dv">10</span><span class="op">^</span><span class="dv">3</span>, <span class="dt">ncol=</span><span class="dv">10</span>, <span class="dt">dimnames=</span><span class="kw">list</span>(features, <span class="kw">paste0</span>(<span class="st">&quot;s&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)))
@@ -127,7 +151,7 @@ pwy.stats &lt;-<span class="st"> </span>res.lst<span class="op">$</span>pwy.stat
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score.v &lt;-<span class="st"> </span>stats<span class="op">::</span><span class="kw">setNames</span>(res.lst<span class="op">$</span>feature.stats<span class="op">$</span>score, <span class="dt">nm=</span><span class="kw">rownames</span>(res.lst<span class="op">$</span>feature.stats))
 annot &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;CHEBI:15846&quot;</span>=<span class="st">&quot;NAD+&quot;</span>)
 <span class="kw">plot_pwy</span>(<span class="dt">gr=</span>gr, <span class="dt">ker=</span>ker, <span class="dt">Gmat=</span>smpdb_gmat, <span class="dt">pwy=</span><span class="st">&quot;Beta-Alanine Metabolism&quot;</span>, <span class="dt">score.v=</span>score.v, <span class="dt">annot=</span>annot, <span class="dt">ntop=</span><span class="dv">5</span>, <span class="dt">name=</span><span class="ot">NA</span>)</code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 </div>
 
 
