@@ -98,7 +98,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Welcome to the <strong>PANTS</strong> package for Pathway analysis via network smoothing. In this vignette, I’ll illustrate a case study of the package for integrating proteomics and metabolomics data to identify significant pathways.</p>
+<p>Welcome to the <code>PANTS</code> package for Pathway analysis via network smoothing. In this vignette, I’ll illustrate a case study of the package for integrating proteomics and metabolomics data to identify significant pathways.</p>
 </div>
 <div id="install" class="section level2">
 <h2>Install</h2>
@@ -112,17 +112,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="load-interaction-network" class="section level2">
 <h2>Load interaction network</h2>
-<p>We’ll use the Pathway Commons v9 network in Simple Interaction Format (SIF), which holds interactions in the format: physical_entity_id <relationship type> physical_entity_id. The 1st and 3rd columns represent the edges of the network, an edgelist. This edgelist has been included in <strong>PANTS</strong>, so you can load it using:</p>
+<p>We’ll use the Pathway Commons v9 network in Simple Interaction Format (SIF), which holds interactions in the format: physical_entity_id <relationship type> physical_entity_id. The 1st and 3rd columns represent the edges of the network, an edgelist. This edgelist has been included in <code>PANTS</code>, so you can load it using:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;pc9&quot;</span>)</code></pre></div>
 </div>
 <div id="construct-graph" class="section level2">
 <h2>Construct graph</h2>
-<p><strong>PANTS</strong> smooths statistics over the network using a network kernel derived from a graph. So we transform <code>pc9</code> into a simplified graph:</p>
+<p><code>PANTS</code> smooths statistics over the network using a network kernel derived from a graph. So we transform <code>pc9</code> into a simplified graph:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gr &lt;-<span class="st"> </span>igraph<span class="op">::</span><span class="kw">simplify</span>(igraph<span class="op">::</span><span class="kw">graph_from_edgelist</span>(pc9, <span class="dt">directed =</span> <span class="ot">FALSE</span>))</code></pre></div>
 </div>
 <div id="construct-predefined-pathways" class="section level2">
 <h2>Construct predefined pathways</h2>
-<p>We need to load predefined pathways that consist of genes and metabolites whose IDs are consistent with those of our interaction network, and transform these into a matrix that <strong>PANTS</strong> accepts. One source for these pathways is the Small Molecule Pathway Database (smpdb.ca). SMPDB offers one file for proteins and another for metabolites. I’ve alread read these and constructed pathways and included the result with the package. You can load this data with:</p>
+<p>We need to load predefined pathways that consist of genes and metabolites whose IDs are consistent with those of our interaction network, and transform these into a matrix that <code>PANTS</code> accepts. One source for these pathways is the Small Molecule Pathway Database (smpdb.ca). SMPDB offers one file for proteins and another for metabolites. I’ve alread read these and constructed pathways and included the result with the package. You can load this data with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;smpdb_gmat&quot;</span>)</code></pre></div>
 <p>You read in an arbitrary pathway file in GMT format with <code>ezlimma::read_gmt</code> and transform it with <code>PANTS::gmt2Gmat</code>.</p>
 </div>
@@ -132,7 +132,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="get-data" class="section level2">
 <h2>Get data</h2>
-<p>To illustrate <strong>PANTS</strong>, we’ll simulate protein and metabolite abundance data on 10 samples, with 5 cases and 5 controls. The rownames (feature names) of this data matrix need to overlap with the rownames of <code>gmat</code>. We’ll sample features from <code>gmat</code> instead of using all the features to save computation time. We also need a vector of phenotypes.</p>
+<p>To illustrate <code>PANTS</code>, we’ll simulate protein and metabolite abundance data on 10 samples, with 5 cases and 5 controls. The rownames (feature names) of this data matrix need to overlap with the rownames of <code>gmat</code>. We’ll sample features from <code>gmat</code> instead of using all the features to save computation time. We also need a vector of phenotypes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">42</span>)
 features &lt;-<span class="st"> </span><span class="kw">rownames</span>(smpdb_gmat)[<span class="kw">sample</span>(<span class="dt">x=</span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(smpdb_gmat), <span class="dt">size=</span><span class="dv">10</span><span class="op">^</span><span class="dv">3</span>)]
 M &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rexp</span>(<span class="dt">n=</span><span class="dv">10</span><span class="op">^</span><span class="dv">4</span>), <span class="dt">nrow=</span><span class="dv">10</span><span class="op">^</span><span class="dv">3</span>, <span class="dt">ncol=</span><span class="dv">10</span>, <span class="dt">dimnames=</span><span class="kw">list</span>(features, <span class="kw">paste0</span>(<span class="st">&quot;s&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)))
