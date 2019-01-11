@@ -9,6 +9,7 @@ Depends:
 	ezlimma,
 	igraph (>= 1.0.0),
 	Matrix,
+	parallel,
 	RColorBrewer,
 	zeallot
 License: MIT + file LICENSE
