@@ -80,6 +80,7 @@ pants_hitman <- function(object, exposure, phenotype.v, Gmat, covariates=NULL, k
     lmed.tmp <- ezlimma::hitman(E=exposure, M=object.tmp, Y=phenotype.v, covariates=covariates)
     stats::qnorm(p=lmed.tmp[rownames(object), "EMY.p"], lower.tail = FALSE)
   })
+  dimnames(score.mat) <- list(rownames(object), paste0('perm', 1:nperm))
   
   mm <- match_mats(score.mat = cbind(v=score.v, score.mat), ker=ker, Gmat=Gmat)
   #1st column contains non-permuted scores
