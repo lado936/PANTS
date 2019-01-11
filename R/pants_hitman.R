@@ -47,8 +47,8 @@
 #'  }
 #' @export
 
-pants_hitman <- function(object, exposure, phenotype.v, Gmat, covariates=NULL, ker=NULL, nperm=10^4, ret.null.mats=FALSE, 
-                            verbose=TRUE, min.size=0, seed=0){
+pants_hitman <- function(object, exposure, phenotype.v, Gmat, covariates=NULL, ker=NULL, nperm=10^4-1, ret.null.mats=FALSE, 
+                            min.size=0, seed=0, mc = 1, name=NA, n.toptabs=Inf){
   set.seed(seed)
   if (is.null(ker)){
     ker <- diag_kernel(object=object, Gmat=Gmat)
@@ -69,20 +69,17 @@ pants_hitman <- function(object, exposure, phenotype.v, Gmat, covariates=NULL, k
   #transform to one-sided z-score
   score.v <- stats::qnorm(p=lmed[rownames(object), "EMY.p"], lower.tail = FALSE)
   
-  #feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
-  score.mat <- Matrix::Matrix(0, nrow=nrow(object), ncol=nperm, dimnames = list(rownames(object), paste0('perm', 1:nperm)))
-  for (perm in 1:nperm){
-    #must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
+  #feature scores in permutations
+  cl <- parallel::makeCluster(mc, type = "FORK")
+  score.mat <- parallel::parSapply(cl, seq_len(nperm), function(perm){
+    #must set permuted names to NULL st limma_contrasts doesn't complain that they clash with colnames(object)
     object.tmp <- object[,sample(1:ncol(object))]
     #to avoid names error in stopifnot
     colnames(object.tmp) <- colnames(object)
     
     lmed.tmp <- ezlimma::hitman(E=exposure, M=object.tmp, Y=phenotype.v, covariates=covariates)
-    score.mat[,perm] <- stats::qnorm(p=lmed.tmp[rownames(object), "EMY.p"], lower.tail = FALSE)
-    if (verbose){
-      if (perm %% 500 == 0) cat("permutation", perm, "\n")
-    }
-  }
+    stats::qnorm(p=lmed.tmp[rownames(object), "EMY.p"], lower.tail = FALSE)
+  })
   
   mm <- match_mats(score.mat = cbind(v=score.v, score.mat), ker=ker, Gmat=Gmat)
   #1st column contains non-permuted scores
@@ -107,6 +104,14 @@ pants_hitman <- function(object, exposure, phenotype.v, Gmat, covariates=NULL, k
   pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method='BH')
   pwy.stats <- pwy.stats[order(pwy.stats$p, -pwy.stats$feat.score.avg),]
   
+  #write xlsx file with links
+  if (!is.na(name)){
+    index <- lappy(colnames(Gmat), function(pwy) rownames(Gmat)[Gmat[,pwy] > 0])
+    names(index) <- colnames(Gmat)
+    ezlimma::write_linked_xlsx(name=name, fun="pants_hitman", res=pwy.stats, index=index, stats.tab=feature.stats, n.toptabs=n.toptabs)
+  }
+  
+  # return res
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)
   if (ret.null.mats){
     res$null.feature.mat <- as.matrix(score.mat)
