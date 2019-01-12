@@ -1,23 +1,27 @@
 Package: PANTS
 Type: Package
-Title: Pathway analysis via network smoothing.
+Title: Pathway analysis via network smoothing
 Version: 0.0.3
-Authors@R: c(person("Jonathan", "Dreyfuss", role = c("aut", "cre"), email = "jdreyf@bu.edu"), person("Grace", "Daher", role = "ctb"))
+Authors@R: c(person("Jonathan", "Dreyfuss", role = c("aut", "cre"), email = "jdreyf@bu.edu"),
+             person("Hui", "Pan", role = "ctb"),
+			 person("Grace", "Daher", role = "ctb"))
 Description: Pathway analysis via network smoothing provides network-based multi-omic integrative pathway analysis.
 Depends:
-	R (>= 3.0.0),
+	R (>= 3.0.0)
+Imports:
 	ezlimma,
 	igraph (>= 1.0.0),
+	knitr,
 	Matrix,
-	RColorBrewer,
+	parallel,
 	zeallot
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
-Suggests: 
+RoxygenNote: 6.1.1
+Suggests:
 	covr,
-	knitr,
+	RColorBrewer,
     rmarkdown,
     testthat,
 	vdiffr

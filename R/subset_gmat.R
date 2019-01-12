@@ -13,7 +13,7 @@ subset_gmat <- function(object, Gmat, min.size){
   if (length(feats.in.pwys) > 0){
     nfeats.per.pwy <- Matrix::colSums(Gmat[feats.in.pwys,,drop=FALSE] != 0)
   } else {
-    nfeats.per.pwy <- setNames(object=rep(0, ncol(Gmat)), nm=colnames(Gmat))
+    nfeats.per.pwy <- stats::setNames(object=rep(0, ncol(Gmat)), nm=colnames(Gmat))
   }
   
   if (min.size > 0){

@@ -1,21 +1,26 @@
 # PANTS
-R package for Pathway analysis via network smoothing.
+Pathway analysis via network smoothing R package.
 
 [![Build Status](https://travis-ci.org/jdreyf/PANTS.svg?branch=master)](https://travis-ci.org/jdreyf/PANTS)
 [![Coverage Status](https://img.shields.io/codecov/c/github/jdreyf/PANTS/master.svg)](https://codecov.io/github/jdreyf/PANTS?branch=master)
 
 ## Install
-Install `PANTS` from GitHub using `devtools` within R. You must install `devtools` if you haven't before. `PANTS` depends on `ezlimma` so you must also install this if you haven't before.
+Install `PANTS` from GitHub using `remotes` within R. You must install `remotes` if you haven't before. `PANTS` depends on `ezlimma`, which depends on `limma`, so you must also install these if you haven't before.
 ```
-install.packages("devtools") #if haven't already installed devtools
-library(devtools)
-devtools::install_github(repo="jdreyf/ezlimma")
-devtools::install_github(repo="jdreyf/PANTS", build_vignettes = TRUE)
+#if haven't already installed limma
+source("http://bioconductor.org/biocLite.R")
+biocLite("limma")
+
+install.packages("remotes") #if haven't already installed remotes
+library(remotes)
+remotes::install_github(repo="jdreyf/ezlimma", build_opts = c("--no-resave-data", "--no-manual"))
+remotes::install_github(repo="jdreyf/PANTS", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
 ## Usage
 The vignette presents a tutorial. To see the vignette:
 ```
+library(limma)
 library(ezlimma)
 library(PANTS)
 browseVignettes(package="PANTS")
