@@ -9,7 +9,7 @@
 legend_colorbar <- function(col, lev){
   opar <- par
   #usr: c(x1, x2, y1, y2) = user coordinates of the plotting region; maybe bx = box
-  bx <- setNames(graphics::par("usr"), nm=c("x1", "x2", "y1", "y2"))
+  bx <- stats::setNames(graphics::par("usr"), nm=c("x1", "x2", "y1", "y2"))
   #box.cx = c(x1, x2), where these are to right of plotting region
   # box.cx <- c(x1 = bx["x2"] + (bx["x2"] - bx["x1"]) / 1000, x2 = bx["x2"] + (bx["x2"] - bx["x1"]) / 1000 + (bx["x2"] - bx["x1"]) / 50)
   box.cx <- c(x1 = bx["x2"], x2 = bx["x2"] + (bx["x2"] - bx["x1"]) / 100)
@@ -32,7 +32,8 @@ legend_colorbar <- function(col, lev){
   #add axis
   graphics::par(new = TRUE)
   graphics::plot(x=0, y=0, type = "n", ylim = c(min(lev), max(lev)), yaxt = "n", ylab = "", xaxt = "n", xlab = "", frame.plot = FALSE)
-  graphics::axis(side = 4, las = 2, tick = FALSE, line = 0, at = round(axTicks(side = 4, axp = c(min(lev), max(lev), length(col) - 1)), 1),
+  graphics::axis(side = 4, las = 2, tick = FALSE, line = 0, at = 
+                   round(graphics::axTicks(side = 4, axp = c(min(lev), max(lev), length(col) - 1)), 1),
                  cex.axis=0.7)
   par <- opar
 }

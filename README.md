@@ -5,14 +5,16 @@ Pathway analysis via network smoothing R package.
 [![Coverage Status](https://img.shields.io/codecov/c/github/jdreyf/PANTS/master.svg)](https://codecov.io/github/jdreyf/PANTS?branch=master)
 
 ## Install
-Install `PANTS` from GitHub using `devtools` within R. You must install `devtools` if you haven't before. `PANTS` depends on `ezlimma`, which depends on `limma`, so you must also install these if you haven't before.
+Install `PANTS` from GitHub using `remotes` within R. You must install `remotes` if you haven't before. `PANTS` depends on `ezlimma`, which depends on `limma`, so you must also install these if you haven't before.
 ```
+#if haven't already installed limma
 source("http://bioconductor.org/biocLite.R")
-biocLite("limma") #if haven't already installed limma
-install.packages("devtools") #if haven't already installed devtools
-library(devtools)
-devtools::install_github(repo="jdreyf/ezlimma", build_vignettes = TRUE)
-devtools::install_github(repo="jdreyf/PANTS", build_vignettes = TRUE)
+biocLite("limma")
+
+install.packages("remotes") #if haven't already installed remotes
+library(remotes)
+remotes::install_github(repo="jdreyf/ezlimma", build_opts = c("--no-resave-data", "--no-manual"))
+remotes::install_github(repo="jdreyf/PANTS", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
 ## Usage

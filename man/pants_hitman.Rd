@@ -2,11 +2,12 @@
 % Please edit documentation in R/pants_hitman.R
 \name{pants_hitman}
 \alias{pants_hitman}
-\title{Pathway Analysis via Network Smoothing using Hitman}
+\title{Pathway Analysis via network smoothing using Hitman}
 \usage{
 pants_hitman(object, exposure, phenotype.v, Gmat, covariates = NULL,
-  ker = NULL, nperm = 10^4 - 1, ret.null.mats = FALSE, min.size = 0,
-  ncores = 1, seed = 0, name = NA, n.toptabs = Inf)
+  ker = NULL, nperm = 10^4 - 1, ret.null.mats = FALSE,
+  verbose = TRUE, min.size = 0, ncores = 1, name = NA,
+  n.toptabs = Inf, seed = 0)
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
@@ -27,14 +28,18 @@ vector is named, the names must match the column names of \code{object}.}
 
 \item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathways.}
 
+\item{verbose}{Logical indicating if the permutation number should be output every 500 permutations.}
+
 \item{min.size}{Pathways with fewer than \code{min.size} measured features in \code{object} are filtered out.}
 
 \item{ncores}{Number of cores to use for parallel computing. You can detect how many are available for your system
 using \code{\link[parallel]{detectCores}}.}
 
-\item{seed}{Seed to set using \code{set.seed} for reproducibility.}
+\item{name}{Name for the folder and Excel file that get written. Set to \code{NA} to avoid writing output.}
 
-\item{verbose}{Logical indicating if the permutation number should be output every 500 permutations.}
+\item{n.toptabs}{number of pathway toptables to write to CSV and link to from Excel.}
+
+\item{seed}{Seed to set using \code{set.seed} for reproducibility.}
 }
 \value{
 List of at least two dataframes:
@@ -43,7 +48,7 @@ List of at least two dataframes:
    \describe{
    \item{nfeatures}{number of features in the pathway} 
    \item{feat.score.avg}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
-   to scores in permutations.}
+   to scores in permutations. Only included if \code{ret.null.mats==TRUE}.}
    \item{z}{pathway permutation z-score (larger is more significant)}
    \item{p}{pathway permutation p-value} 
    \item{FDR}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
@@ -75,4 +80,8 @@ Scores for features and pathways are compared to null scores, which are generate
 
 For \code{\link[parallel]{makeCluster}}, the cluster \code{type} depends on the OS, which is tested in the body
 of the function using \code{.Platform$OS.type}.
+
+If \code{!is.na(name)}, an Excel file gets written out with links to toptable CSVs, containing the statistics of features in
+the pathway. If \code{ker} is used, pathways may be affected via smoothing by features outside the pathway. These can be seen
+with \code{\link[PANTS]{plot_pwy}}.
 }

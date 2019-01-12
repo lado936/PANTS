@@ -9,8 +9,8 @@ test_that("dense matrix", {
 })
 
 test_that("sparse matrix", {
-  x <- Matrix(1:4, nrow=2, byrow = TRUE)
-  expect_equal(mat_pow(x, 2), Matrix(c(7,10,15,22), nrow=2, byrow = TRUE))
+  x <- Matrix::Matrix(1:4, nrow=2, byrow = TRUE)
+  expect_equal(mat_pow(x, 2), Matrix::Matrix(c(7,10,15,22), nrow=2, byrow = TRUE))
 })
 
 test_that("bad x", {
