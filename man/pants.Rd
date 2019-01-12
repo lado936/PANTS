@@ -5,9 +5,9 @@
 \title{Pathway analysis via network smoothing}
 \usage{
 pants(object, phenotype.v, contrast.v, Gmat, ker = NULL,
-  score_fcn = identity, nperm = 10^4, ret.null.mats = FALSE,
-  verbose = TRUE, alternative = c("two.sided", "less", "greater"),
-  min.size = 0, ncores = 1, name = NA, n.toptabs = Inf, seed = 0)
+  score_fcn = identity, nperm = 10^4 - 1, ret.null.mats = FALSE,
+  alternative = c("two.sided", "less", "greater"), min.size = 0,
+  ncores = 1, name = NA, n.toptabs = Inf, seed = 0)
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
@@ -29,9 +29,7 @@ length as number of elements in \code{contrast.v}. Its output must be a scalar.}
 
 \item{nperm}{Number of permutations to perform to evaluate significance of pathways.}
 
-\item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathways.}
-
-\item{verbose}{Logical indicating if the permutation number should be output every 500 permutations.}
+\item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathwaysle}
 
 \item{alternative}{A character string specifying the alternative hypothesis.}
 
@@ -43,8 +41,6 @@ using \code{\link[parallel]{detectCores}}.}
 \item{name}{Name for the folder and Excel file that get written. Set to \code{NA} to avoid writing output.}
 
 \item{n.toptabs}{number of pathway toptables to write to CSV and link to from Excel.}
-
-\item{seed}{Seed to set using \code{set.seed} for reproducibility.}
 }
 \value{
 List of at least two dataframes:

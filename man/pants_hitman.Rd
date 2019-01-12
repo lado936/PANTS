@@ -6,8 +6,7 @@
 \usage{
 pants_hitman(object, exposure, phenotype.v, Gmat, covariates = NULL,
   ker = NULL, nperm = 10^4 - 1, ret.null.mats = FALSE,
-  verbose = TRUE, min.size = 0, ncores = 1, name = NA,
-  n.toptabs = Inf, seed = 0)
+  min.size = 0, ncores = 1, name = NA, n.toptabs = Inf, seed = 0)
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
@@ -27,8 +26,6 @@ vector is named, the names must match the column names of \code{object}.}
 \item{nperm}{Number of permutations to perform to evaluate significance of pathways.}
 
 \item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathways.}
-
-\item{verbose}{Logical indicating if the permutation number should be output every 500 permutations.}
 
 \item{min.size}{Pathways with fewer than \code{min.size} measured features in \code{object} are filtered out.}
 
