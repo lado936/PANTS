@@ -14,8 +14,7 @@
 #' the trivial identity function returning its argument. Its input must be a vector of same 
 #' length as number of elements in \code{contrast.v}. Its output must be a scalar.
 #' @param nperm Number of permutations to perform to evaluate significance of pathways.
-#' @param ret.null.mats If TRUE, return matrices with null distributions for features and pathways.
-#' @param verbose Logical indicating if the permutation number should be output every 500 permutations.
+#' @param ret.null.mats If TRUE, return matrices with null distributions for features and pathwaysle
 #' @param alternative A character string specifying the alternative hypothesis.
 #' @param min.size Pathways with fewer than \code{min.size} measured features in \code{object} are filtered out.
 #' @param ncores Number of cores to use for parallel computing. You can detect how many are available for your system
@@ -61,8 +60,8 @@
 #'  }
 #' @export
 
-pants <- function(object, phenotype.v, contrast.v, Gmat, ker=NULL, score_fcn=identity, nperm=10^4, ret.null.mats=FALSE, 
-                  verbose=TRUE, alternative=c("two.sided", "less", "greater"), min.size=0, ncores=1, name=NA, 
+pants <- function(object, phenotype.v, contrast.v, Gmat, ker=NULL, score_fcn=identity, nperm=10^4-1, ret.null.mats=FALSE, 
+                  alternative=c("two.sided", "less", "greater"), min.size=0, ncores=1, name=NA, 
                   n.toptabs=Inf, seed=0){
   if (is.null(ker)){
     ker <- diag_kernel(object=object, Gmat=Gmat)
@@ -79,10 +78,10 @@ pants <- function(object, phenotype.v, contrast.v, Gmat, ker=NULL, score_fcn=ide
   cl.type <- ifelse(.Platform$OS.type=='windows', "PSOCK", "FORK")
   cl <- parallel::makeCluster(spec=ncores, type=cl.type)
   set.seed(seed)
-  score.mat <- parallel::parSapply(cl, seq_len(nperm), function(perm){
-    if (verbose && perm %% 500 == 0) message("permutation ", perm)
+  perms <- lapply(seq_len(nperm), function(i) sample.int(length(phenotype.v)))
+  score.mat <- parallel::parSapply(cl, perms, function(perm){
     #must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
-    pheno.tmp <- stats::setNames(phenotype.v[sample(1:length(phenotype.v))], nm=NULL)
+    pheno.tmp <- stats::setNames(phenotype.v[perm], nm=NULL)
     score_features(object=object, phenotype.v=pheno.tmp, contrast.v=contrast.v, score_fcn=score_fcn)
   })
   dimnames(score.mat) <- list(rownames(object), paste0('perm', 1:nperm))
