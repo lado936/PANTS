@@ -41,8 +41,6 @@ using \code{\link[parallel]{detectCores}}.}
 \item{name}{Name for the folder and Excel file that get written. Set to \code{NA} to avoid writing output.}
 
 \item{n.toptabs}{number of pathway toptables to write to CSV and link to from Excel.}
-
-\item{seed}{Seed to set using \code{set.seed} for reproducibility.}
 }
 \value{
 List of at least two dataframes:
