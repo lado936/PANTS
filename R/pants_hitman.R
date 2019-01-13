@@ -8,9 +8,9 @@
 #' @param phenotype.v A vector of numeric phenotypes the same length as number of samples in \code{object}. If the 
 #' vector is named, the names must match the column names of \code{object}.
 #' @param Gmat Binary feature by pathway inclusion matrix, indicating which features are in which pathways.
-#' @param annot A data frame of feature annotation.
 #' @param covariates Numeric vector or matrix of covariates.
 #' @param ker Laplacian kernel matrix.
+#' @param annot A data frame of feature annotation.
 #' @param nperm Number of permutations to perform to evaluate significance of pathways.
 #' @param ret.null.mats If TRUE, return matrices with null distributions for features and pathways.
 #' @param min.size Pathways with fewer than \code{min.size} measured features in \code{object} are filtered out.
@@ -59,14 +59,15 @@
 #'  }
 #' @export
 
-pants_hitman <- function(object, exposure, phenotype.v, Gmat, annot, covariates=NULL, ker=NULL, nperm=10^4-1, ret.null.mats=FALSE, 
+pants_hitman <- function(object, exposure, phenotype.v, Gmat, covariates=NULL, ker=NULL, annot=NULL, nperm=10^4-1, ret.null.mats=FALSE, 
                             min.size=0, ncores=1, name=NA, n.toptabs=Inf, seed=0){
   if (is.null(ker)){
     ker <- diag_kernel(object=object, Gmat=Gmat)
   }
   
-  stopifnot(length(intersect(rownames(ker), rownames(object))) > 0, any(rownames(Gmat) %in% colnames(ker)), any(rownames(Gmat) %in% rownames(annot)), 
-            ncol(object)==length(phenotype.v), ncol(object)==nrow(as.matrix(exposure)), colnames(object)==names(phenotype.v))
+  stopifnot(length(intersect(rownames(ker), rownames(object))) > 0, any(rownames(Gmat) %in% colnames(ker)), 
+            ncol(object)==length(phenotype.v), ncol(object)==nrow(as.matrix(exposure)), colnames(object)==names(phenotype.v),
+            is.null(annot) || any(rownames(annot) %in% rownames(object)))
   
   if (ncol(as.matrix(exposure))==1){
     stopifnot(colnames(object)==names(exposure))
@@ -125,8 +126,12 @@ pants_hitman <- function(object, exposure, phenotype.v, Gmat, annot, covariates=
   if (!is.na(name)){
     index <- lapply(colnames(Gmat), function(pwy) rownames(Gmat)[Gmat[,pwy] > 0])
     names(index) <- colnames(Gmat)
-    feature.stats2 <- data.frame(signif(feature.stats, 3), annot[rownames(feature.stats), ])
-    ezlimma::write_linked_xlsx(name=name, fun="pants_hitman", res=pwy.stats, index=index, stats.tab=feature.stats2, 
+    if (!is.null(annot)){
+      feature.stats.ann <- data.frame(signif(feature.stats, 3), annot[rownames(feature.stats), ])
+    } else {
+      feature.stats.ann <- data.frame(signif(feature.stats, 3))
+    }
+    ezlimma::write_linked_xlsx(name=name, fun="pants_hitman", res=pwy.stats, index=index, stats.tab=feature.stats.ann, 
                                n.toptabs=n.toptabs)
   }
   

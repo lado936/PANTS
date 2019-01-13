@@ -22,6 +22,7 @@ test_that("kernel", {
   
   expect_equal(res2$pwy.stats$nfeatures, c(3,3))
   npm <- res2$null.pwy.mat
+  expect_gte(length(unique(npm[1,])), 7) #independent perms
   pwy1.p <- p_ecdf(eval.v=3*res2$pwy.stats["pwy1", 2], score.mat=t(as.matrix(npm["pwy1",])))
   expect_equal(pwy1.p[1, "p"], setNames(res2$pwy.stats["pwy1", "p"], nm="p"))
 })

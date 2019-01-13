@@ -9,8 +9,8 @@
 #' @param contrast.v A named vector of constrasts. The constrasts must refer to the phenotypes
 #' in \code{phenotype.v}. Their order defines the order they are passed to \code{score_fcn}.
 #' @param Gmat Binary feature by pathway inclusion matrix, indicating which features are in which pathways.
-#' @param annot A data frame of feature annotation.
 #' @param ker Laplacian kernel matrix.
+#' @param annot A data frame of feature annotation.
 #' @param score_fcn A function that transforms the t-statistics from the contrasts. \code{identity} is 
 #' the trivial identity function returning its argument. Its input must be a vector of same 
 #' length as number of elements in \code{contrast.v}. Its output must be a scalar.
@@ -60,14 +60,14 @@
 #'  }
 #' @export
 
-pants <- function(object, phenotype.v, contrast.v, Gmat, annot, ker=NULL, score_fcn=identity, nperm=10^4-1, ret.null.mats=FALSE, 
+pants <- function(object, phenotype.v, contrast.v, Gmat, ker=NULL, annot=NULL, score_fcn=identity, nperm=10^4-1, ret.null.mats=FALSE, 
                   alternative=c("two.sided", "less", "greater"), min.size=0, ncores=1, name=NA, 
                   n.toptabs=Inf, seed=0){
   if (is.null(ker)){
     ker <- diag_kernel(object=object, Gmat=Gmat)
   }
-  stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)), any(rownames(Gmat) %in% rownames(annot)), 
-            colnames(object)==names(phenotype.v))
+  stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)), 
+            colnames(object)==names(phenotype.v), is.null(annot) || any(rownames(annot) %in% rownames(object)))
   alternative <- match.arg(alternative)
   
   zeallot::`%<-%`(c(Gmat, nfeats.per.pwy), subset_gmat(object=object, Gmat=Gmat, min.size=min.size))
@@ -115,8 +115,12 @@ pants <- function(object, phenotype.v, contrast.v, Gmat, annot, ker=NULL, score_
   if (!is.na(name)){
     index <- lapply(colnames(Gmat), function(pwy) rownames(Gmat)[Gmat[,pwy] > 0])
     names(index) <- colnames(Gmat)
-    feature.stats2 <- data.frame(signif(feature.stats, 3), annot[rownames(feature.stats), ])
-    ezlimma::write_linked_xlsx(name=name, fun="pants", res=pwy.stats, index=index, stats.tab=feature.stats2, n.toptabs=n.toptabs)
+    if (!is.null(annot)){
+      feature.stats.ann <- data.frame(signif(feature.stats, 3), annot[rownames(feature.stats), ])
+    } else {
+      feature.stats.ann <- data.frame(signif(feature.stats, 3))
+    }
+    ezlimma::write_linked_xlsx(name=name, fun="pants", res=pwy.stats, index=index, stats.tab=feature.stats.ann, n.toptabs=n.toptabs)
   }
   
   # return res
