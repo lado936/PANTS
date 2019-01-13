@@ -4,7 +4,7 @@
 \alias{pants}
 \title{Pathway analysis via network smoothing}
 \usage{
-pants(object, phenotype.v, contrast.v, Gmat, ker = NULL,
+pants(object, phenotype.v, contrast.v, Gmat, ker = NULL, annot = NULL,
   score_fcn = identity, nperm = 10^4 - 1, ret.null.mats = FALSE,
   alternative = c("two.sided", "less", "greater"), min.size = 0,
   ncores = 1, name = NA, n.toptabs = Inf, seed = 0)
@@ -22,6 +22,8 @@ in \code{phenotype.v}. Their order defines the order they are passed to \code{sc
 \item{Gmat}{Binary feature by pathway inclusion matrix, indicating which features are in which pathways.}
 
 \item{ker}{Laplacian kernel matrix.}
+
+\item{annot}{A data frame of feature annotation.}
 
 \item{score_fcn}{A function that transforms the t-statistics from the contrasts. \code{identity} is 
 the trivial identity function returning its argument. Its input must be a vector of same 

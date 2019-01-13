@@ -5,8 +5,9 @@
 \title{Pathway Analysis via network smoothing using Hitman}
 \usage{
 pants_hitman(object, exposure, phenotype.v, Gmat, covariates = NULL,
-  ker = NULL, nperm = 10^4 - 1, ret.null.mats = FALSE,
-  min.size = 0, ncores = 1, name = NA, n.toptabs = Inf, seed = 0)
+  ker = NULL, annot = NULL, nperm = 10^4 - 1,
+  ret.null.mats = FALSE, min.size = 0, ncores = 1, name = NA,
+  n.toptabs = Inf, seed = 0)
 }
 \arguments{
 \item{object}{A matrix-like data object containing log-ratios or log-expression values for a
@@ -22,6 +23,8 @@ vector is named, the names must match the column names of \code{object}.}
 \item{covariates}{Numeric vector or matrix of covariates.}
 
 \item{ker}{Laplacian kernel matrix.}
+
+\item{annot}{A data frame of feature annotation.}
 
 \item{nperm}{Number of permutations to perform to evaluate significance of pathways.}
 
