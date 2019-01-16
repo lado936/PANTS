@@ -5,6 +5,8 @@ Pathway analysis via network smoothing R package.
 [![Coverage Status](https://img.shields.io/codecov/c/github/jdreyf/PANTS/master.svg)](https://codecov.io/github/jdreyf/PANTS?branch=master)
 
 ## Install
+On Windows, you need to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/).
+
 Install `PANTS` from GitHub using `remotes` within R. You must install `remotes` if you haven't before. `PANTS` depends on `ezlimma`, which depends on `limma`, so you must also install these if you haven't before.
 ```
 #if haven't already installed limma
