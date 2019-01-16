@@ -12,12 +12,12 @@ test_that("helper_pants", {
   expect_gt(res$feature.stats["a", 1], max(res$feature.stats[setdiff(rownames(kk), "a"), 1]))
 })
 
-test_that("kernel", {
+test_that("kernel & parallel", {
   #contr of length 2
   expect_error(pants(object=M, phenotypes.v=pheno, contrast.v=contrast.v, ker=kk, Gmat=G, nperm=10))
   ff <- function(v) v[2]-v[1]
   res2 <- pants(object=M, phenotype.v=pheno, contrast.v=contrast.v, ker=kk, Gmat=G, nperm=10, score_fcn = ff, 
-                ret.null.mats = TRUE)
+                ret.null.mats = TRUE, ncores=2)
   expect_equal(nrow(res2$pwy.stats), 2)
   
   expect_equal(res2$pwy.stats$nfeatures, c(3,3))
