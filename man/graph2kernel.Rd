@@ -19,7 +19,8 @@ Laplacian kernel matrix.
 \description{
 Transforms an igraph input graph into a p-step random walk kernel, using parameters \code{a} and \code{p}. This is 
 similar to \code{netClass::calc.diffusionKernelp}, except that function takes slightly different input. The 
-equation for the kernel is \eqn{(a * I - L)^p}.
+equation for the kernel is \eqn{(a * I - L)^p}. Up to scaling terms, this is equivalent to a p-step random walk on 
+the graph with random restarts, so it is similar to the diffusion kernel, but can be calculated more cheaply (Smola & Kondor).
 }
 \references{
 Smola and Kondor, "Kernels and Regularization on Graphs" In Learning Theory and Kernel Machines, 
