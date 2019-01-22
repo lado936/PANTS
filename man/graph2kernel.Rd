@@ -9,15 +9,19 @@ graph2kernel(gr, a = 2, p = 1)
 \arguments{
 \item{gr}{graph object of class \code{igraph}.}
 
-\item{a}{parameter of p-step random walk kernel.}
+\item{a}{parameter of p-step random walk kernel, must be >= 2.}
 
-\item{p}{parameter of p-step random walk kernel.}
+\item{p}{parameter of p-step random walk kernel, must be > 0.}
 }
 \value{
 Laplacian kernel matrix.
 }
 \description{
-Transforms an igraph input graph into a p-step random walk kernel, using parameters \code{a} and \code{p}.
-This is similar to \code{netClass::calc.diffusionKernelp}, except that function takes
-slightly different input. The equation for the kernel is (a * I - L)^p.
+Transforms an igraph input graph into a p-step random walk kernel, using parameters \code{a} and \code{p}. This is 
+similar to \code{netClass::calc.diffusionKernelp}, except that function takes slightly different input. The 
+equation for the kernel is \eqn{(a * I - L)^p}.
+}
+\references{
+Smola and Kondor, "Kernels and Regularization on Graphs" In Learning Theory and Kernel Machines, 
+Vol. 2777 (2003), pp. 144-158, doi:10.1007/978-3-540-45167-9_12.
 }
