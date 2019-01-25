@@ -4,21 +4,20 @@
 \alias{plot_pwy}
 \title{Plot network diagram for a pathway}
 \usage{
-plot_pwy(gr, ker, Gmat, pwy, score.v, annot = NA, ntop = 7,
+plot_pwy(gr, Gmat, pwy, score.v, ker = NULL, annot = NA, ntop = 7,
   alternative = c("two.sided", "less", "greater"), name = NULL,
   color.pal = NULL, plot = TRUE, seed = 0)
 }
 \arguments{
 \item{gr}{A graph of class \code{igraph} representing the interaction network. \code{is_simple(gr)} must be TRUE.}
 
-\item{ker}{Kernel matrix, can be sparse matrix from package \code{Matrix}.}
-
 \item{Gmat}{Pathway membership matrix, can be sparse matrix from package \code{Matrix}.}
 
 \item{pwy}{Pathway to plot. Must be a column name of \code{Gmat}.}
 
-\item{score.v}{Named vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select top nodes 
-and color them.}
+\item{score.v}{Named vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select driver nodes.}
+
+\item{ker}{Laplacian kernel matrix.}
 
 \item{annot}{Named vector of annotations for nodes. If \code{annot} is given, \code{names(annot)} should 
 have some overlap with \code{rownames(Gmat)}}
@@ -49,5 +48,7 @@ Invisibly, a list with components:
 }
 }
 \description{
-Plot network diagram for a pathway with node size corresponding to significance and color to pathway membership.
+Plot driver nodes for a pathway as a network diagram with node color corresponding to significance and shape to 
+pathway membership. The driver nodes are inferred by assuming the input here is the same as was used to calculate
+pathway significance in \code{\link{pants}} or \code{\link{pants_hitman}}.
 }

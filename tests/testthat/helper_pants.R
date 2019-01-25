@@ -20,3 +20,6 @@ G <- gmt2Gmat(gmt)
 contrast.v <- c(trt1="trt1-ctrl", trt2="trt2-ctrl")
 res <- pants(object=M, phenotype.v=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, nperm=10)
 score.v <- stats::setNames(res$feature.stats$score, nm=rownames(res$feature.stats))
+
+res.noker <- pants(object=M, phenotype.v=pheno, contrast.v=contrast.v[1], Gmat=G, nperm=10)
+score.noker <- stats::setNames(res.noker$feature.stats$score, nm=rownames(res.noker$feature.stats))

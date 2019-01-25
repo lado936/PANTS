@@ -12,7 +12,7 @@
 
 <meta name="author" content="Jonathan Dreyfuss" />
 
-<meta name="date" content="2019-01-10" />
+<meta name="date" content="2019-01-25" />
 
 <title>PANTS Vignette</title>
 
@@ -92,7 +92,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">PANTS Vignette</h1>
 <h4 class="author"><em>Jonathan Dreyfuss</em></h4>
-<h4 class="date"><em>2019-01-10</em></h4>
+<h4 class="date"><em>2019-01-25</em></h4>
 
 
 
@@ -106,7 +106,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(limma)
 <span class="kw">library</span>(ezlimma)
 <span class="kw">library</span>(PANTS)</code></pre></div>
-<pre><code>## Warning: package 'igraph' was built under R version 3.5.1</code></pre>
 </div>
 <div id="load-interaction-network" class="section level2">
 <h2>Load interaction network</h2>
@@ -120,12 +119,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="construct-predefined-pathways" class="section level2">
 <h2>Construct predefined pathways</h2>
-<p>We need to load predefined pathways that consist of genes and metabolites whose IDs are consistent with those of our interaction network, and transform these into a matrix that <code>PANTS</code> accepts. One source for these pathways is the Small Molecule Pathway Database (smpdb.ca). SMPDB offers one file for proteins and another for metabolites. I’ve alread read these and constructed pathways and included the result with the package. You can load this data with:</p>
+<p>We need to load predefined pathways that consist of genes and metabolites whose IDs are consistent with those of our interaction network, and transform these into a matrix that <code>PANTS</code> accepts. One source for these pathways is the Small Molecule Pathway Database (www.smpdb.ca). SMPDB offers one file for proteins and another for metabolites. I’ve alread read these and constructed pathways and included the result with the package. You can load this data with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;smpdb_gmat&quot;</span>)</code></pre></div>
 <p>You read in an arbitrary pathway file in GMT format with <code>ezlimma::read_gmt</code> and transform it with <code>PANTS::gmt2Gmat</code>.</p>
 </div>
-<div id="calculate-kernel" class="section level2">
-<h2>Calculate kernel</h2>
+<div id="calculate-laplacian-kernel-matrix" class="section level2">
+<h2>Calculate Laplacian kernel matrix</h2>
+<p>This matrix is used for smoothing scores across the network, like how heat diffuses. It can be a dense matrix, a sparse matrix from package <code>Matrix</code>, or <code>NULL</code> to avoid smoothing.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ker &lt;-<span class="st"> </span><span class="kw">graph2kernel</span>(gr)</code></pre></div>
 </div>
 <div id="get-data" class="section level2">

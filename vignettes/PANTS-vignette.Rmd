@@ -34,14 +34,16 @@ gr <- igraph::simplify(igraph::graph_from_edgelist(pc9, directed = FALSE))
 ```
 
 ## Construct predefined pathways
-We need to load predefined pathways that consist of genes and metabolites whose IDs are consistent with those of our interaction network, and transform these into a matrix that `PANTS` accepts. One source for these pathways is the Small Molecule Pathway Database (smpdb.ca). SMPDB offers one file for proteins and another for metabolites. I've alread read these and constructed pathways and included the result with the package. You can load this data with:
+We need to load predefined pathways that consist of genes and metabolites whose IDs are consistent with those of our interaction network, and transform these into a matrix that `PANTS` accepts. One source for these pathways is the Small Molecule Pathway Database (www.smpdb.ca). SMPDB offers one file for proteins and another for metabolites. I've alread read these and constructed pathways and included the result with the package. You can load this data with:
 ```{r gmat}
 data("smpdb_gmat")
 ```
 
 You read in an arbitrary pathway file in GMT format with `ezlimma::read_gmt` and transform it with `PANTS::gmt2Gmat`.
 
-## Calculate kernel
+## Calculate Laplacian kernel matrix
+This matrix is used for smoothing scores across the network, like how heat diffuses. It can be a dense matrix, a sparse matrix from package `Matrix`, or `NULL` to avoid smoothing.
+
 ```{r ker}
 ker <- graph2kernel(gr)
 ```

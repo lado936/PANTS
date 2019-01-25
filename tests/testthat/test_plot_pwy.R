@@ -1,5 +1,6 @@
 context("plot_pwy")
 
+#d? plot network
 dpn <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA)
 
 test_that("returned object", {
@@ -47,5 +48,11 @@ test_that("annot", {
 
 test_that("negatives with decimals", {
   dpn.f <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v/10, name = NA)
-  expect_doppelganger(title="pwy2", dpn.f)
+  expect_doppelganger(title="pwy1-neg", dpn.f)
+})
+
+test_that("no kernel", {
+  dpn.noker <- function() plot_pwy(gr=gr, Gmat=G, pwy="pwy2", score.v=score.v, name = NA, ntop = 3)
+  #should not have a
+  expect_doppelganger(title="pwy2-noker", dpn.noker)
 })

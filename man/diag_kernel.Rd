@@ -7,8 +7,7 @@
 diag_kernel(object, Gmat)
 }
 \arguments{
-\item{object}{A matrix-like data object containing log-ratios or log-expression values for a
-series of samples, with rows corresponding to features and columns to samples.}
+\item{object}{A matrix-like data object with rows corresponding to features and columns to samples.}
 
 \item{Gmat}{The feature by pathway inclusion matrix, indicating which features are in which pathways.}
 }

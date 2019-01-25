@@ -1,13 +1,14 @@
 #' Plot network diagram for a pathway
 #' 
-#' Plot network diagram for a pathway with node size corresponding to significance and color to pathway membership.
+#' Plot driver nodes for a pathway as a network diagram with node color corresponding to significance and shape to 
+#' pathway membership. The driver nodes are inferred by assuming the input here is the same as was used to calculate
+#' pathway significance in \code{\link{pants}} or \code{\link{pants_hitman}}.
 #' 
 #' @param gr A graph of class \code{igraph} representing the interaction network. \code{is_simple(gr)} must be TRUE.
-#' @param ker Kernel matrix, can be sparse matrix from package \code{Matrix}.
 #' @param Gmat Pathway membership matrix, can be sparse matrix from package \code{Matrix}.
 #' @param pwy Pathway to plot. Must be a column name of \code{Gmat}.
-#' @param score.v Named vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select top nodes 
-#' and color them.
+#' @param score.v Named vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select driver nodes.
+#' @param ker Laplacian kernel matrix.
 #' @param annot Named vector of annotations for nodes. If \code{annot} is given, \code{names(annot)} should 
 #' have some overlap with \code{rownames(Gmat)}
 #' @param ntop Number of top most significant features to include. If one of these is an external node, then its
@@ -29,10 +30,16 @@
 #' }
 #' @export
 
-plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot = NA, ntop = 7, alternative = c("two.sided", "less", "greater"), 
+plot_pwy <- function(gr, Gmat, pwy, score.v, ker=NULL, annot = NA, ntop = 7, alternative = c("two.sided", "less", "greater"), 
     name = NULL, color.pal = NULL, plot = TRUE, seed = 0) {
-    
+  
+  if (is.null(ker)){
+    score.mat <- matrix(score.v, nrow=length(score.v), ncol=1, dimnames=list(names(score.v), "scores"))
+    ker <- diag_kernel(object=score.mat, Gmat=Gmat)
+  }
+  
   stopifnot(pwy %in% colnames(Gmat), igraph::is_simple(gr), is.logical(plot), is.finite(score.v))
+  
   if (!is.na(annot) && length(intersect(names(annot), rownames(Gmat))) == 0) {
       stop("'annot' must be NA or 'names(annot)' must overlap with 'rownames(Gmat)'.")
   }
@@ -63,6 +70,7 @@ plot_pwy <- function(gr, ker, Gmat, pwy, score.v, annot = NA, ntop = 7, alternat
   mm <- match_mats(score.mat=sc.m, ker=ker, Gmat=Gmat, score.impute = NA)
   score.v <- mm$score.mat[,1,drop=FALSE]; ker <- mm$ker; Gmat <- mm$Gmat
   rm(mm) #to save memory
+  
   #expand graph to include all features, even if they're isolated
   new.v <- setdiff(rownames(Gmat), igraph::V(gr)$name)
   gr <- igraph::add_vertices(graph=gr, nv=length(new.v), name=new.v)
