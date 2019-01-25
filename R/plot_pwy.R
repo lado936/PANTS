@@ -5,20 +5,20 @@
 #' pathway significance in \code{\link{pants}} or \code{\link{pants_hitman}}.
 #' 
 #' @param gr A graph of class \code{igraph} representing the interaction network. \code{is_simple(gr)} must be TRUE.
+#' @param score.v Named vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select driver nodes.
+#' @param ntop Number of top most significant features to include. If one of these is an external node, then its
+#' internal neighbor nodes are also included. These nodes are then connected based on the interaction network.
 #' @param Gmat Pathway membership matrix, can be sparse matrix from package \code{Matrix}.
 #' @param pwy Pathway to plot. Must be a column name of \code{Gmat}.
-#' @param score.v Named vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select driver nodes.
 #' @param ker Laplacian kernel matrix.
 #' @param annot Named vector of annotations for nodes. If \code{annot} is given, \code{names(annot)} should 
 #' have some overlap with \code{rownames(Gmat)}
-#' @param ntop Number of top most significant features to include. If one of these is an external node, then its
-#' internal neighbor nodes are also included. These nodes are then connected based on the interaction network.
 #' @param alternative A character string specifying the alternative hypothesis.
 #' @param name Name for PDF file to plot. Extension ".pdf" is added to the name. Set to \code{NA} to suppress writing to
 #' file. If \code{NULL}, \code{name} is defined as \code{paste0(ezlimma::clean_filenames(pwy), '_ntop', ntop)}.
 #' @param color.pal A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
 #' a palette from \code{\link[RColorBrewer]{brewer.pal}} appropriate to \code{alternative} is chosen.
-#' @param plot Should the pathway be plotted?
+#' @param plot Logical indicating if the pathway should be plotted.
 #' @param seed Seed to set using \code{set.seed} for reproducibility of the graph layout.
 #' @return Invisibly, a list with components: 
 #'  \describe{
@@ -30,8 +30,8 @@
 #' }
 #' @export
 
-plot_pwy <- function(gr, Gmat, pwy, score.v, ker=NULL, annot = NA, ntop = 7, alternative = c("two.sided", "less", "greater"), 
-    name = NULL, color.pal = NULL, plot = TRUE, seed = 0) {
+plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot = NA, alternative = c("two.sided", "less", "greater"), 
+                     name = NULL, color.pal = NULL, plot = TRUE, seed = 0){
   
   if (is.null(ker)){
     score.mat <- matrix(score.v, nrow=length(score.v), ncol=1, dimnames=list(names(score.v), "scores"))
