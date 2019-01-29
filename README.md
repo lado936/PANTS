@@ -3,6 +3,7 @@ Pathway analysis via network smoothing R package.
 
 [![Build Status](https://travis-ci.org/jdreyf/PANTS.svg?branch=master)](https://travis-ci.org/jdreyf/PANTS)
 [![Coverage Status](https://img.shields.io/codecov/c/github/jdreyf/PANTS/master.svg)](https://codecov.io/github/jdreyf/PANTS?branch=master)
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
 ## Install
 On Windows, you need to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/).
