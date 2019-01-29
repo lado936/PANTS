@@ -4,10 +4,10 @@
 \alias{neighbor_nms}
 \title{Get names of nodes' neighbors}
 \usage{
-neighbor_nms(graph, nodes)
+neighbor_nms(gr, nodes)
 }
 \arguments{
-\item{graph}{A graph object from package \code{igraph}}
+\item{gr}{graph object of class \code{igraph}.}
 
 \item{nodes}{Node names in the graph}
 }

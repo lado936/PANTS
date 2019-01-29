@@ -4,10 +4,10 @@
 \alias{mat_pow}
 \title{Calculate power of a matrix}
 \usage{
-mat_pow(x, pow)
+mat_pow(xx, pow)
 }
 \arguments{
-\item{x}{a square matrix.}
+\item{xx}{a square matrix.}
 
 \item{pow}{positive integer power to raise the matrix to.}
 }

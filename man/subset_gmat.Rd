@@ -4,15 +4,15 @@
 \alias{subset_gmat}
 \title{Subset pathway inclusion matrix based on size}
 \usage{
-subset_gmat(object, Gmat, min.size)
+subset_gmat(object, Gmat, min.nfeats)
 }
 \arguments{
-\item{object}{A matrix-like data object containing log-ratios or log-expression values for a
-series of samples, with rows corresponding to features and columns to samples.}
+\item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
+features (e.g. genes) and columns to samples. Must have rownames that are non-duplicated and non-empty.}
 
-\item{Gmat}{Binary feature by pathway inclusion matrix, indicating which features are in which pathways.}
+\item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 
-\item{min.size}{Pathways with fewer than \code{min.size} measured features in \code{object} are filtered out.}
+\item{min.nfeats}{Minimum number of features (e.g. genes) needed in a gene set for testing.}
 }
 \value{
 List of two: \code{Gmat} and vector \code{nfeats.per.pwy} with number of features per pathway.

@@ -3,9 +3,10 @@
 #' Estimate p-value by comparing a score to its simulations.
 #'
 #' @param eval.v A vector of values where the cumulative distribution function should be evaluated.
-#' @param score.mat A matrix of values from the distribution, where each column is a different simulation, 
-#' and \code{rownames(score.mat)} corresponds to \code{names(eval.v)}.
 #' @param alternative A character string specifying the alternative hypothesis.
+#' @inheritParams match_mats
+#' @inheritParams ezlimma::roast_contrasts
+#' @details It's checked that \code{rownames(score.mat)==names(eval.v)}.
 #' @return A matrix with two columns containing z-scores (larger is more significant) & p-values with 
 #' \code{nrow = length(eval.v)}.
 

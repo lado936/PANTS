@@ -10,8 +10,8 @@ p_ecdf(eval.v, score.mat, alternative = c("two.sided", "less",
 \arguments{
 \item{eval.v}{A vector of values where the cumulative distribution function should be evaluated.}
 
-\item{score.mat}{A matrix of values from the distribution, where each column is a different simulation, 
-and \code{rownames(score.mat)} corresponds to \code{names(eval.v)}.}
+\item{score.mat}{A matrix-like object with scores from original data and possibly permutations with rows corresponding 
+to features and columns to simulations.}
 
 \item{alternative}{A character string specifying the alternative hypothesis.}
 }
@@ -21,4 +21,7 @@ A matrix with two columns containing z-scores (larger is more significant) & p-v
 }
 \description{
 Estimate p-value by comparing a score to its simulations.
+}
+\details{
+It's checked that \code{rownames(score.mat)==names(eval.v)}.
 }

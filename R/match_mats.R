@@ -5,9 +5,8 @@
 #' 
 #' @param score.mat A matrix-like object with scores from original data and possibly permutations with rows corresponding 
 #' to features and columns to simulations.
-#' @param ker sparse matrix (of class Matrix).
-#' @param Gmat Feature-by-pathway inclusion matrix, indicating which features are in which pathways.
 #' @param score.impute Value to impute missing scores. If zero, \code{score.mat} is sparser, saving computing time.
+#' @inheritParams pants
 #' @details There must be some overlap between the rownames of \code{score.mat}, \code{ker}, & \code{Gmat}.
 #' @return A list with elements \code{score.mat}, \code{ker}, and \code{Gmat} after matching.
 #' @export

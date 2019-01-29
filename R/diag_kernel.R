@@ -2,8 +2,8 @@
 #' 
 #' Make diagonal kernel matrix to run Pants without smoothing.
 #' 
-#' @param object A matrix-like data object with rows corresponding to features and columns to samples.
-#' @param Gmat The feature by pathway inclusion matrix, indicating which features are in which pathways.
+#' @inheritParams pants
+#' @inheritParams ezlimma::limma_contrasts
 #' @details \code{rownames(object)} and \code{rownames(Gmat)} should have some overlap.
 #' @return A diagonal matrix.
 

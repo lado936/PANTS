@@ -4,21 +4,19 @@
 \alias{score_features}
 \title{Score features using ezlimma and score_fcn}
 \usage{
-score_features(object, phenotype.v, contrast.v, score_fcn = identity)
+score_features(object, phenotype, contrast.v, score_fcn = identity)
 }
 \arguments{
-\item{object}{A matrix-like data object containing log-ratios or log-expression values for a
-series of samples, with rows corresponding to features and columns to samples.}
+\item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
+features (e.g. genes) and columns to samples. Must have rownames that are non-duplicated and non-empty.}
 
-\item{phenotype.v}{A vector of phenotypes of strings the same length as number of samples in \code{object}.
-If the vector is named, the names must match the column names of \code{object}.}
+\item{phenotype}{Vector of phenotypes of the samples. Should be same length as \code{ncol(object)}.}
 
-\item{contrast.v}{A named vector of constrasts. The constrasts must refer to the phenotypes
-in \code{phenotype.v}. Their order defines the order they are passed to \code{score_fcn}.}
+\item{contrast.v}{Named vector of contrasts, passed to \code{\link[limma]{makeContrasts}}.}
 
 \item{score_fcn}{A function that transforms the t-statistics from the contrasts. \code{identity} is 
-the trivial identity function returning its argument. It must accept a vector of \code{length(contrast.v)}, 
-and its output must be a scalar.}
+the trivial identity function returning its argument. Its input must be a vector of same 
+length as number of elements in \code{contrast.v}. Its output must be a scalar.}
 }
 \value{
 Vector of feature scores.

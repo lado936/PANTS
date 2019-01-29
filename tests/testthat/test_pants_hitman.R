@@ -5,7 +5,7 @@ rownames(pheno.mat) <- colnames(M)
 nperm <- 100
 
 test_that("kernel", {
-  res <- pants_hitman(object=M, exposure = pheno.mat, phenotype.v = M["a",], ker=kk, Gmat=G, nperm=nperm, 
+  res <- pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=kk, Gmat=G, nperm=nperm, 
                          ret.null.mats=TRUE)
   pwy.stats <- res$pwy.stats
   f.stats <- res$feature.stats
@@ -33,7 +33,7 @@ test_that("kernel", {
 
 test_that("univariate exposure", {
   pheno.v <- setNames(as.numeric(pheno==pheno[1]), nm=names(pheno))
-  res <- pants_hitman(object=M, exposure = pheno.v, phenotype.v = M["a",], ker=kk, Gmat=G, nperm=nperm)
+  res <- pants_hitman(object=M, exposure = pheno.v, phenotype = M["a",], ker=kk, Gmat=G, nperm=nperm)
   pwy.stats <- res$pwy.stats
   
   expect_lte(pwy.stats["pwy1", "p"], pwy.stats["pwy2", "p"])
@@ -41,7 +41,7 @@ test_that("univariate exposure", {
 })
 
 test_that("no kernel", {
-  res <- pants_hitman(object=M, exposure = pheno.mat, phenotype.v = M["a",], ker=NULL, Gmat=G, nperm=nperm)
+  res <- pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=NULL, Gmat=G, nperm=nperm)
   pwy.stats <- res$pwy.stats
   f.stats <- res$feature.stats
   expect_false("feat.score.avg" %in% colnames(pwy.stats))
@@ -55,10 +55,10 @@ test_that("no kernel", {
   expect_gte(pwy.stats["pwy2", "p"], 0.1)
 })
 
-test_that("min.size", {
-  expect_error(pants_hitman(object=M, exposure = pheno.mat, phenotype.v = M["a",], ker=NULL, Gmat=G, nperm=10, min.size=4))
-  res3 <- pants_hitman(object=M, exposure = pheno.mat, phenotype.v = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.size=3)
+test_that("min.nfeats", {
+  expect_error(pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=NULL, Gmat=G, nperm=10, min.nfeats=4))
+  res3 <- pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.nfeats=3)
   expect_equal(nrow(res3$pwy.stats), 1)
-  res4 <- pants_hitman(object=M, exposure = pheno.mat, phenotype.v = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.size=0)
+  res4 <- pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.nfeats=0)
   expect_equal(nrow(res4$pwy.stats), 2)
 })

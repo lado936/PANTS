@@ -4,10 +4,10 @@
 \alias{map2color}
 \title{Map values to colors}
 \usage{
-map2color(x, pal, limits = NULL)
+map2color(xx, pal, limits = NULL)
 }
 \arguments{
-\item{x}{Values to map.}
+\item{xx}{Values to map.}
 
 \item{pal}{Color palette.}
 

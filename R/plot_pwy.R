@@ -4,22 +4,18 @@
 #' pathway membership. The driver nodes are inferred by assuming the input here is the same as was used to calculate
 #' pathway significance in \code{\link{pants}} or \code{\link{pants_hitman}}.
 #' 
-#' @param gr A graph of class \code{igraph} representing the interaction network. \code{is_simple(gr)} must be TRUE.
 #' @param score.v Named vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select driver nodes.
 #' @param ntop Number of top most significant features to include. If one of these is an external node, then its
 #' internal neighbor nodes are also included. These nodes are then connected based on the interaction network.
-#' @param Gmat Pathway membership matrix, can be sparse matrix from package \code{Matrix}.
 #' @param pwy Pathway to plot. Must be a column name of \code{Gmat}.
-#' @param ker Laplacian kernel matrix.
-#' @param annot Named vector of annotations for nodes. If \code{annot} is given, \code{names(annot)} should 
+#' @param annot.v Named vector of annotations for nodes. If \code{annot.v} is given, \code{names(annot.v)} should 
 #' have some overlap with \code{rownames(Gmat)}
-#' @param alternative A character string specifying the alternative hypothesis.
-#' @param name Name for PDF file to plot. Extension ".pdf" is added to the name. Set to \code{NA} to suppress writing to
-#' file. If \code{NULL}, \code{name} is defined as \code{paste0(ezlimma::clean_filenames(pwy), '_ntop', ntop)}.
 #' @param color.pal A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
 #' a palette from \code{\link[RColorBrewer]{brewer.pal}} appropriate to \code{alternative} is chosen.
-#' @param plot Logical indicating if the pathway should be plotted.
-#' @param seed Seed to set using \code{set.seed} for reproducibility of the graph layout.
+#' @inheritParams ezheat
+#' @inheritParams graph2kernel
+#' @inheritParams pants
+#' @inheritParams ezlimma::roast_contrasts
 #' @return Invisibly, a list with components: 
 #'  \describe{
 #'    \item{gr}{the graph that gets plotted}
@@ -30,7 +26,7 @@
 #' }
 #' @export
 
-plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot = NA, alternative = c("two.sided", "less", "greater"), 
+plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, alternative = c("two.sided", "less", "greater"), 
                      name = NULL, color.pal = NULL, plot = TRUE, seed = 0){
   
   if (is.null(ker)){
@@ -40,8 +36,8 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot = NA, alt
   
   stopifnot(pwy %in% colnames(Gmat), igraph::is_simple(gr), is.logical(plot), is.finite(score.v))
   
-  if (!is.na(annot) && length(intersect(names(annot), rownames(Gmat))) == 0) {
-      stop("'annot' must be NA or 'names(annot)' must overlap with 'rownames(Gmat)'.")
+  if (!is.na(annot.v) && length(intersect(names(annot.v), rownames(Gmat))) == 0) {
+      stop("'annot.v' must be NA or 'names(annot.v)' must overlap with 'rownames(Gmat)'.")
   }
   
   alternative <- match.arg(alternative)
@@ -97,15 +93,15 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot = NA, alt
 
   gr.pwy <- igraph::induced_subgraph(gr, vid=which(igraph::V(gr)$name %in% c(pwy.nodes.ss, pwy.neighbors.ss)))
   x <- score.v[igraph::V(gr.pwy)$name, 1]
-  color.v <- stats::setNames(map2color(x=x, pal=color.pal, limits=lim), nm=names(x))
+  color.v <- stats::setNames(map2color(xx=x, pal=color.pal, limits=lim), nm=names(x))
   shape.v <- c(out.shape, in.shape)[(igraph::V(gr.pwy)$name %in% pwy.nodes)+1]
   names(shape.v) <- igraph::V(gr.pwy)$name
 
   #sub chebi id's for names
-  if (!is.na(annot[1])){
-    nms.int <- intersect(names(annot), igraph::V(gr.pwy)$name)
+  if (!is.na(annot.v[1])){
+    nms.int <- intersect(names(annot.v), igraph::V(gr.pwy)$name)
     if (length(nms.int) > 0){
-      igraph::V(gr.pwy)$name[match(nms.int, igraph::V(gr.pwy)$name)] <- annot[nms.int]
+      igraph::V(gr.pwy)$name[match(nms.int, igraph::V(gr.pwy)$name)] <- annot.v[nms.int]
     }
   }
   

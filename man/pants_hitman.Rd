@@ -4,42 +4,42 @@
 \alias{pants_hitman}
 \title{Pathway Analysis via network smoothing using Hitman}
 \usage{
-pants_hitman(object, exposure, phenotype.v, Gmat, covariates = NULL,
+pants_hitman(object, exposure, phenotype, Gmat, covariates = NULL,
   ker = NULL, annot = NULL, nperm = 10^4 - 1,
-  ret.null.mats = FALSE, min.size = 0, ncores = 1, name = NA,
+  ret.null.mats = FALSE, min.nfeats = 0, ncores = 1, name = NA,
   n.toptabs = Inf, seed = 0)
 }
 \arguments{
-\item{object}{A matrix-like data object containing log-ratios or log-expression values for a
-series of samples, with rows corresponding to features and columns to samples.}
+\item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
+features (e.g. genes) and columns to samples. Must have rownames that are non-duplicated and non-empty.}
 
 \item{exposure}{A numeric vector or matrix of exposures.}
 
-\item{phenotype.v}{A vector of numeric phenotypes the same length as number of samples in \code{object}. If the 
-vector is named, the names must match the column names of \code{object}.}
+\item{phenotype}{Vector of phenotypes of the samples. Should be same length as \code{ncol(object)}.}
 
-\item{Gmat}{Binary feature by pathway inclusion matrix, indicating which features are in which pathways.}
+\item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 
 \item{covariates}{Numeric vector or matrix of covariates.}
 
 \item{ker}{Laplacian kernel matrix.}
 
-\item{annot}{A data frame of feature annotation.}
+\item{annot}{Data frame of feature annotation.}
 
 \item{nperm}{Number of permutations to perform to evaluate significance of pathways.}
 
-\item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathways.}
+\item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathwaysle}
 
-\item{min.size}{Pathways with fewer than \code{min.size} measured features in \code{object} are filtered out.}
+\item{min.nfeats}{Minimum number of features (e.g. genes) needed in a gene set for testing.}
 
 \item{ncores}{Number of cores to use for parallel computing. You can detect how many are available for your system
 using \code{\link[parallel]{detectCores}}.}
 
 \item{name}{Name for the folder and Excel file that get written. Set to \code{NA} to avoid writing output.}
 
-\item{n.toptabs}{number of pathway toptables to write to CSV and link to from Excel.}
+\item{n.toptabs}{Number of gene set toptables to write to CSV and link to from Excel.}
 
-\item{seed}{Seed to set using \code{set.seed} for reproducibility.}
+\item{seed}{Integer seed to set for reproducility if \code{fun="mroast"}, since \code{mroast} uses random 
+simulations. Ignored if \code{fun="fry"}.}
 }
 \value{
 List of at least two dataframes:

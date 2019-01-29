@@ -4,38 +4,37 @@
 \alias{plot_pwy}
 \title{Plot network diagram for a pathway}
 \usage{
-plot_pwy(gr, score.v, ntop = 7, Gmat, pwy, ker = NULL, annot = NA,
+plot_pwy(gr, score.v, ntop = 7, Gmat, pwy, ker = NULL, annot.v = NA,
   alternative = c("two.sided", "less", "greater"), name = NULL,
   color.pal = NULL, plot = TRUE, seed = 0)
 }
 \arguments{
-\item{gr}{A graph of class \code{igraph} representing the interaction network. \code{is_simple(gr)} must be TRUE.}
+\item{gr}{graph object of class \code{igraph}.}
 
 \item{score.v}{Named vector of scores of features, where \code{names(score.v) == rownames(gr)}, to select driver nodes.}
 
 \item{ntop}{Number of top most significant features to include. If one of these is an external node, then its
 internal neighbor nodes are also included. These nodes are then connected based on the interaction network.}
 
-\item{Gmat}{Pathway membership matrix, can be sparse matrix from package \code{Matrix}.}
+\item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 
 \item{pwy}{Pathway to plot. Must be a column name of \code{Gmat}.}
 
 \item{ker}{Laplacian kernel matrix.}
 
-\item{annot}{Named vector of annotations for nodes. If \code{annot} is given, \code{names(annot)} should 
+\item{annot.v}{Named vector of annotations for nodes. If \code{annot.v} is given, \code{names(annot.v)} should 
 have some overlap with \code{rownames(Gmat)}}
 
-\item{alternative}{A character string specifying the alternative hypothesis.}
+\item{alternative}{Alternative hypothesis; must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}. 
+\code{"greater"} corresponds to positive association, \code{"less"} to negative association.}
 
-\item{name}{Name for PDF file to plot. Extension ".pdf" is added to the name. Set to \code{NA} to suppress writing to
-file. If \code{NULL}, \code{name} is defined as \code{paste0(ezlimma::clean_filenames(pwy), '_ntop', ntop)}.}
+\item{name}{Name for the folder and Excel file that get written. Set to \code{NA} to avoid writing output.}
 
 \item{color.pal}{A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
 a palette from \code{\link[RColorBrewer]{brewer.pal}} appropriate to \code{alternative} is chosen.}
 
-\item{plot}{Logical indicating if the pathway should be plotted.}
-
-\item{seed}{Seed to set using \code{set.seed} for reproducibility of the graph layout.}
+\item{seed}{Integer seed to set for reproducility if \code{fun="mroast"}, since \code{mroast} uses random 
+simulations. Ignored if \code{fun="fry"}.}
 }
 \value{
 Invisibly, a list with components: 

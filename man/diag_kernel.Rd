@@ -7,9 +7,10 @@
 diag_kernel(object, Gmat)
 }
 \arguments{
-\item{object}{A matrix-like data object with rows corresponding to features and columns to samples.}
+\item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
+features (e.g. genes) and columns to samples. Must have rownames that are non-duplicated and non-empty.}
 
-\item{Gmat}{The feature by pathway inclusion matrix, indicating which features are in which pathways.}
+\item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 }
 \value{
 A diagonal matrix.

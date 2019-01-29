@@ -4,26 +4,24 @@
 \alias{pants}
 \title{Pathway analysis via network smoothing}
 \usage{
-pants(object, phenotype.v, contrast.v, Gmat, ker = NULL, annot = NULL,
+pants(object, phenotype, contrast.v, Gmat, ker = NULL, annot = NULL,
   score_fcn = identity, nperm = 10^4 - 1, ret.null.mats = FALSE,
-  alternative = c("two.sided", "less", "greater"), min.size = 0,
+  alternative = c("two.sided", "less", "greater"), min.nfeats = 0,
   ncores = 1, name = NA, n.toptabs = Inf, seed = 0)
 }
 \arguments{
-\item{object}{A matrix-like data object containing log-ratios or log-expression values for a
-series of samples, with rows corresponding to features and columns to samples.}
+\item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
+features (e.g. genes) and columns to samples. Must have rownames that are non-duplicated and non-empty.}
 
-\item{phenotype.v}{A vector of phenotypes of strings the same length as number of samples in \code{object}.
-If the vector is named, the names must match the column names of \code{object}.}
+\item{phenotype}{Vector of phenotypes of the samples. Should be same length as \code{ncol(object)}.}
 
-\item{contrast.v}{A named vector of constrasts. The constrasts must refer to the phenotypes
-in \code{phenotype.v}. Their order defines the order they are passed to \code{score_fcn}.}
+\item{contrast.v}{Named vector of contrasts, passed to \code{\link[limma]{makeContrasts}}.}
 
-\item{Gmat}{Binary feature by pathway inclusion matrix, indicating which features are in which pathways.}
+\item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 
 \item{ker}{Laplacian kernel matrix.}
 
-\item{annot}{A data frame of feature annotation.}
+\item{annot}{Data frame of feature annotation.}
 
 \item{score_fcn}{A function that transforms the t-statistics from the contrasts. \code{identity} is 
 the trivial identity function returning its argument. Its input must be a vector of same 
@@ -33,16 +31,20 @@ length as number of elements in \code{contrast.v}. Its output must be a scalar.}
 
 \item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathwaysle}
 
-\item{alternative}{A character string specifying the alternative hypothesis.}
+\item{alternative}{Alternative hypothesis; must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}. 
+\code{"greater"} corresponds to positive association, \code{"less"} to negative association.}
 
-\item{min.size}{Pathways with fewer than \code{min.size} measured features in \code{object} are filtered out.}
+\item{min.nfeats}{Minimum number of features (e.g. genes) needed in a gene set for testing.}
 
 \item{ncores}{Number of cores to use for parallel computing. You can detect how many are available for your system
 using \code{\link[parallel]{detectCores}}.}
 
 \item{name}{Name for the folder and Excel file that get written. Set to \code{NA} to avoid writing output.}
 
-\item{n.toptabs}{number of pathway toptables to write to CSV and link to from Excel.}
+\item{n.toptabs}{Number of gene set toptables to write to CSV and link to from Excel.}
+
+\item{seed}{Integer seed to set for reproducility if \code{fun="mroast"}, since \code{mroast} uses random 
+simulations. Ignored if \code{fun="fry"}.}
 }
 \value{
 List of at least two dataframes:
@@ -72,7 +74,7 @@ List of at least two dataframes:
  }
 }
 \description{
-This is the main function of the \code{PANTS} package, which implements the Pants algorithm for group contrasts.
+Implements the Pants algorithm for pathway analysis via network smoothing with group contrasts.
 }
 \details{
 Scores for features in the kernel but not in the data are assigned a z-score of zero by default for sparsity.
