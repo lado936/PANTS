@@ -111,17 +111,9 @@ pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker
   pwy.stats <- pwy.stats[order(pwy.stats$p, -pwy.stats$feat.score.avg),]
   
   #write xlsx file with links
-  #tested this manually once
   if (!is.na(name)){
-    index <- lapply(colnames(Gmat), function(pwy) rownames(Gmat)[Gmat[,pwy] > 0])
-    names(index) <- colnames(Gmat)
-    if (!is.null(annot)){
-      feature.stats.ann <- data.frame(signif(feature.stats, 3), annot[rownames(feature.stats), ])
-    } else {
-      feature.stats.ann <- data.frame(signif(feature.stats, 3))
-    }
-    ezlimma:::write_linked_xlsx(name=name, fun="pants_hitman", res=pwy.stats, index=index, stats.tab=feature.stats.ann, 
-                               n.toptabs=n.toptabs)
+    write_pants_xl(score.v=score.v, pwy.tab=pwy.stats, feat.tab=feature.stats, Gmat=Gmat, ker=ker, alternative=alternative, 
+                   annot=annot, name=paste0(name, "_pants_hitman"), n.toptabs=n.toptabs)
   }
   
   # return res

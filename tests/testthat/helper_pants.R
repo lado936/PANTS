@@ -23,3 +23,6 @@ score.v <- stats::setNames(res$feature.stats$score, nm=rownames(res$feature.stat
 
 res.noker <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], Gmat=G, nperm=10)
 score.noker <- stats::setNames(res.noker$feature.stats$score, nm=rownames(res.noker$feature.stats))
+
+fl <- lapply(gmt, FUN=function(x) x$genes)
+names(fl) <- lapply(gmt, FUN=function(x) x$name)
