@@ -5,9 +5,8 @@
 \title{Pathway Analysis via network smoothing using Hitman}
 \usage{
 pants_hitman(object, exposure, phenotype, Gmat, covariates = NULL,
-  ker = NULL, annot = NULL, nperm = 10^4 - 1,
-  ret.null.mats = FALSE, min.nfeats = 0, ncores = 1, name = NA,
-  n.toptabs = Inf, seed = 0)
+  ker = NULL, nperm = 10^4 - 1, ret.null.mats = FALSE,
+  min.nfeats = 0, ncores = 1, name = NA, seed = 0)
 }
 \arguments{
 \item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
@@ -23,8 +22,6 @@ features (e.g. genes) and columns to samples. Must have rownames that are non-du
 
 \item{ker}{Laplacian kernel matrix.}
 
-\item{annot}{Data frame of feature annotation.}
-
 \item{nperm}{Number of permutations to perform to evaluate significance of pathways.}
 
 \item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathwaysle}
@@ -36,37 +33,35 @@ using \code{\link[parallel]{detectCores}}.}
 
 \item{name}{Name for the folder and Excel file that get written. Set to \code{NA} to avoid writing output.}
 
-\item{n.toptabs}{Number of gene set toptables to write to CSV and link to from Excel.}
-
 \item{seed}{Integer seed to set for reproducility if \code{fun="mroast"}, since \code{mroast} uses random 
 simulations. Ignored if \code{fun="fry"}.}
 }
 \value{
-List of at least two dataframes:
+List of at least two data frames:
 \describe{
-   \item{pwy.stats}{A dataframe with columns 
+   \item{\code{pwy.stats}}{A data frame with columns 
    \describe{
-   \item{nfeatures}{number of features in the pathway} 
-   \item{feat.score.avg}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
+   \item{\code{nfeatures}}{number of features in the pathway} 
+   \item{\code{feat.score.avg}}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
    to scores in permutations. Only included if \code{ret.null.mats==TRUE}.}
-   \item{z}{pathway permutation z-score (larger is more significant)}
-   \item{p}{pathway permutation p-value} 
-   \item{FDR}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
+   \item{\code{z}}{pathway permutation z-score (larger is more significant)}
+   \item{\code{p}}{pathway permutation p-value} 
+   \item{\code{FDR}}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
    }}
-   \item{feature.stats}{A dataframe with columns
+   \item{\code{feature.stats}}{A data frame with columns
    \describe{
-   \item{score}{feature's score, which is p-value from \code{\link[ezlimma]{hitman}} transformed into z-score 
+   \item{\code{score}}{feature's score, which is p-value from \code{\link[ezlimma]{hitman}} transformed into z-score 
    (larger is more significant)}
-   \item{z}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
+   \item{\code{z}}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
    without smoothing. This should be similar to \code{score} if the permutation null distribution matches the 
    theoretical null distribution.} 
-   \item{p}{feature's permutation p-value} 
-   \item{FDR}{feature's FDR from permutation \code{p}}
+   \item{\code{p}}{feature's permutation p-value} 
+   \item{\code{FDR}}{feature's FDR from permutation \code{p}}
    }}
    And if \code{ret.null.mats} is TRUE:
-   \item{null.feature.mat}{Matrix with features as rows and permutations as columns, where each element represents
+   \item{\code{null.feature.mat}}{Matrix with features as rows and permutations as columns, where each element represents
    the score of that feature in that permutation}
-   \item{null.pwy.mat}{Matrix with pathways as rows and permutations as columns, where each element represents
+   \item{\code{null.pwy.mat}}{Matrix with pathways as rows and permutations as columns, where each element represents
    the score of that pathway in that permutation}
  }
 }

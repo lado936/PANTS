@@ -4,10 +4,10 @@
 \alias{pants}
 \title{Pathway analysis via network smoothing}
 \usage{
-pants(object, phenotype, contrast.v, Gmat, ker = NULL, annot = NULL,
+pants(object, phenotype, contrast.v, Gmat, ker = NULL,
   score_fcn = identity, nperm = 10^4 - 1, ret.null.mats = FALSE,
   alternative = c("two.sided", "less", "greater"), min.nfeats = 0,
-  ncores = 1, name = NA, n.toptabs = Inf, seed = 0)
+  ncores = 1, name = NA, seed = 0)
 }
 \arguments{
 \item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
@@ -20,8 +20,6 @@ features (e.g. genes) and columns to samples. Must have rownames that are non-du
 \item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 
 \item{ker}{Laplacian kernel matrix.}
-
-\item{annot}{Data frame of feature annotation.}
 
 \item{score_fcn}{A function that transforms the t-statistics from the contrasts. \code{identity} is 
 the trivial identity function returning its argument. Its input must be a vector of same 
@@ -41,35 +39,33 @@ using \code{\link[parallel]{detectCores}}.}
 
 \item{name}{Name for the folder and Excel file that get written. Set to \code{NA} to avoid writing output.}
 
-\item{n.toptabs}{Number of gene set toptables to write to CSV and link to from Excel.}
-
 \item{seed}{Integer seed to set for reproducility if \code{fun="mroast"}, since \code{mroast} uses random 
 simulations. Ignored if \code{fun="fry"}.}
 }
 \value{
-List of at least two dataframes:
+List of at least two data frames:
 \describe{
-   \item{pwy.stats}{A dataframe with columns 
+   \item{\code{pwy.stats}}{A data frame with columns 
    \describe{
-   \item{nfeatures}{number of features in the pathway} 
-   \item{feat.score.avg}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
+   \item{\code{nfeatures}}{number of features in the pathway} 
+   \item{\code{feat.score.avg}}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
    to scores in permutations. Only included if \code{ret.null.mats==TRUE}.}
-   \item{z}{pathway permutation z-score (larger is more significant)}
-   \item{p}{pathway permutation p-value} 
-   \item{FDR}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
+   \item{\code{z}}{pathway permutation z-score (larger is more significant)}
+   \item{\code{p}}{pathway permutation p-value} 
+   \item{\code{FDR}}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
    }}
-   \item{feature.stats}{A dataframe with columns
+   \item{\code{feature.stats}}{A data frame with columns
    \describe{
-   \item{score}{feature's score from applying \code{score_fcn} in \code{\link{score_features}}}
-   \item{z}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
+   \item{\code{score}}{feature's score from applying \code{score_fcn} in \code{\link{score_features}}}
+   \item{\code{z}}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
    (without smoothing)} 
-   \item{p}{feature's permutation p-value} 
-   \item{FDR}{feature's FDR from permutation \code{p}}
+   \item{\code{p}}{feature's permutation p-value} 
+   \item{\code{FDR}}{feature's FDR from permutation \code{p}}
    }}
    And if \code{ret.null.mats} is TRUE:
-   \item{null.feature.mat}{Matrix with features as rows and permutations as columns, where each element represents
+   \item{\code{null.feature.mat}}{Matrix with features as rows and permutations as columns, where each element represents
    the score of that feature in that permutation}
-   \item{null.pwy.mat}{Matrix with pathways as rows and permutations as columns, where each element represents
+   \item{\code{null.pwy.mat}}{Matrix with pathways as rows and permutations as columns, where each element represents
    the score of that pathway in that permutation}
  }
 }

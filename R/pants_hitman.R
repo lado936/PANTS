@@ -19,44 +19,43 @@
 #' the pathway. If \code{ker} is used, pathways may be affected via smoothing by features outside the pathway. These can be seen
 #' with \code{\link[PANTS]{plot_pwy}}.
 #' 
-#' @return List of at least two dataframes:
+#' @return List of at least two data frames:
 #' \describe{
-#'    \item{pwy.stats}{A dataframe with columns 
+#'    \item{\code{pwy.stats}}{A data frame with columns 
 #'    \describe{
-#'    \item{nfeatures}{number of features in the pathway} 
-#'    \item{feat.score.avg}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
+#'    \item{\code{nfeatures}}{number of features in the pathway} 
+#'    \item{\code{feat.score.avg}}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
 #'    to scores in permutations. Only included if \code{ret.null.mats==TRUE}.}
-#'    \item{z}{pathway permutation z-score (larger is more significant)}
-#'    \item{p}{pathway permutation p-value} 
-#'    \item{FDR}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
+#'    \item{\code{z}}{pathway permutation z-score (larger is more significant)}
+#'    \item{\code{p}}{pathway permutation p-value} 
+#'    \item{\code{FDR}}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
 #'    }}
-#'    \item{feature.stats}{A dataframe with columns
+#'    \item{\code{feature.stats}}{A data frame with columns
 #'    \describe{
-#'    \item{score}{feature's score, which is p-value from \code{\link[ezlimma]{hitman}} transformed into z-score 
+#'    \item{\code{score}}{feature's score, which is p-value from \code{\link[ezlimma]{hitman}} transformed into z-score 
 #'    (larger is more significant)}
-#'    \item{z}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
+#'    \item{\code{z}}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
 #'    without smoothing. This should be similar to \code{score} if the permutation null distribution matches the 
 #'    theoretical null distribution.} 
-#'    \item{p}{feature's permutation p-value} 
-#'    \item{FDR}{feature's FDR from permutation \code{p}}
+#'    \item{\code{p}}{feature's permutation p-value} 
+#'    \item{\code{FDR}}{feature's FDR from permutation \code{p}}
 #'    }}
 #'    And if \code{ret.null.mats} is TRUE:
-#'    \item{null.feature.mat}{Matrix with features as rows and permutations as columns, where each element represents
+#'    \item{\code{null.feature.mat}}{Matrix with features as rows and permutations as columns, where each element represents
 #'    the score of that feature in that permutation}
-#'    \item{null.pwy.mat}{Matrix with pathways as rows and permutations as columns, where each element represents
+#'    \item{\code{null.pwy.mat}}{Matrix with pathways as rows and permutations as columns, where each element represents
 #'    the score of that pathway in that permutation}
 #'  }
 #' @export
 
-pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker=NULL, annot=NULL, nperm=10^4-1, ret.null.mats=FALSE, 
-                            min.nfeats=0, ncores=1, name=NA, n.toptabs=Inf, seed=0){
+pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker=NULL, nperm=10^4-1, ret.null.mats=FALSE, 
+                            min.nfeats=0, ncores=1, name=NA, seed=0){
   if (is.null(ker)){
     ker <- diag_kernel(object=object, Gmat=Gmat)
   }
   
   stopifnot(length(intersect(rownames(ker), rownames(object))) > 0, any(rownames(Gmat) %in% colnames(ker)), 
-            ncol(object)==length(phenotype), ncol(object)==nrow(as.matrix(exposure)), colnames(object)==names(phenotype),
-            is.null(annot) || any(rownames(annot) %in% rownames(object)))
+            ncol(object)==length(phenotype), ncol(object)==nrow(as.matrix(exposure)), colnames(object)==names(phenotype))
   
   if (ncol(as.matrix(exposure))==1){
     stopifnot(colnames(object)==names(exposure))
@@ -113,7 +112,7 @@ pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker
   #write xlsx file with links
   if (!is.na(name)){
     write_pants_xl(score.v=score.v, pwy.tab=pwy.stats, feat.tab=feature.stats, Gmat=Gmat, ker=ker, alternative=alternative, 
-                   annot=annot, name=paste0(name, "_pants_hitman"), n.toptabs=n.toptabs)
+                   name=paste0(name, "_pants_hitman"))
   }
   
   # return res

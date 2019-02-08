@@ -11,11 +11,13 @@ M <- matrix(rnorm(n=90), ncol=9, dimnames=list(letters[1:10], paste0("s", 1:9)))
 M["a", 1:3] <- M["a", 1:3]+5
 pheno <- rep(c("trt1", "trt2", "ctrl"), each=3)
 
-gr <- edgelist2graph(el)
-kk <- graph2kernel(gr)
 gmt <- list(pwy1=list(name="pwy1", description="pwy1", genes=c("a", "b", "c")),
             pwy2=list(name="pwy2", description="pwy2", genes=c("b", "c", "d")))
 G <- gmt2Gmat(gmt)
+
+gr <- edgelist2graph(el)
+kk0 <- graph2kernel(gr)
+kk <- kk0[rownames(G), rownames(G)]
 
 contrast.v <- c(trt1="trt1-ctrl", trt2="trt2-ctrl")
 res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, nperm=10)

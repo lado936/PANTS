@@ -20,11 +20,11 @@
 #' internal neighbor nodes are also included. These nodes are then connected based on the interaction network.
 #' @return Invisibly, a list with components: 
 #'  \describe{
-#'    \item{gr}{the graph that gets plotted}
-#'    \item{vertex.color}{the vertex colors}
-#'    \item{vertex.size}{the vertex sizes}
-#'    \item{score}{scores of the vertices of the plotted graph}
-#'    \item{top.nodes}{ntop top nodes driving pathway}
+#'    \item{\code{gr}}{the graph that gets plotted}
+#'    \item{\code{vertex.color}}{the vertex colors}
+#'    \item{\code{vertex.size}}{the vertex sizes}
+#'    \item{\code{score}}{scores of the vertices of the plotted graph}
+#'    \item{\code{top.nodes}}{ntop top nodes driving pathway}
 #' }
 #' @export
 
@@ -77,7 +77,7 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
   pwy.nodes <- rownames(Gmat)[Gmat[,pwy]>0]
   pwy.neighbors <- setdiff(neighbor_nms(gr, pwy.nodes), pwy.nodes)
 
-  top.nodes <- select_ntop(score.v=score.v, Gmat=Gmat, pwy=pwy, ker=ker, alternative=alternative, ntop=ntop)
+  top.nodes <- select_ntop(score.v=score.v, Gmat=Gmat, pwy=pwy, ker=ker, alternative=alternative, ntop=ntop)$node
 
   #get neighbors
   pwy.neighbors.ss <- intersect(pwy.neighbors, top.nodes)

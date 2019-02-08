@@ -4,9 +4,8 @@
 \alias{write_pants_xl}
 \title{Write Excel XLSX file with links to CSVs}
 \usage{
-write_pants_xl(score.v, pwy.tab, feat.tab, Gmat, ker,
-  alternative = c("two.sided", "less", "greater"), annot = NULL,
-  name = NA, n.toptabs = Inf)
+write_pants_xl(score.v, pwy.tab, feat.tab, Gmat, ker, name,
+  alternative = c("two.sided", "less", "greater"))
 }
 \arguments{
 \item{score.v}{Named vector of scores of features to select driver nodes.}
@@ -19,24 +18,13 @@ write_pants_xl(score.v, pwy.tab, feat.tab, Gmat, ker,
 
 \item{ker}{Laplacian kernel matrix.}
 
-\item{alternative}{Alternative hypothesis; must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}. 
-\code{"greater"} corresponds to positive association, \code{"less"} to negative association.}
-
-\item{annot}{Data frame of feature annotation.}
-
 \item{name}{Name for the folder and Excel file that get written. Set to \code{NA} to avoid writing output.}
 
-\item{n.toptabs}{Number of gene set toptables to write to CSV and link to from Excel.}
-}
-\value{
-A matrix with two columns containing z-scores (larger is more significant) & p-values with 
-\code{nrow = length(eval.v)}.
+\item{alternative}{Alternative hypothesis; must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}. 
+\code{"greater"} corresponds to positive association, \code{"less"} to negative association.}
 }
 \description{
 Create directory; write CSV files with stats from \code{feat.tab} for all features in each pathway, and the top
 3 features that impact each pathway (even if they're outside the pathway); and write an Excel XLSX file using 
 \code{writexl} that links to the CSVs.
-}
-\details{
-It's checked that \code{rownames(score.mat)==names(eval.v)}.
 }

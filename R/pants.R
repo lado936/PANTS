@@ -4,7 +4,6 @@
 #' 
 #' @param Gmat Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.
 #' @param ker Laplacian kernel matrix.
-#' @param annot Data frame of feature annotation.
 #' @param score_fcn A function that transforms the t-statistics from the contrasts. \code{identity} is 
 #' the trivial identity function returning its argument. Its input must be a vector of same 
 #' length as number of elements in \code{contrast.v}. Its output must be a scalar.
@@ -26,40 +25,41 @@
 #' the pathway. If \code{ker} is used, pathways may be affected via smoothing by features outside the pathway. These can be seen
 #' with \code{\link[PANTS]{plot_pwy}}.
 #'  
-#' @return List of at least two dataframes:
+#' @return List of at least two data frames:
 #' \describe{
-#'    \item{pwy.stats}{A dataframe with columns 
+#'    \item{\code{pwy.stats}}{A data frame with columns 
 #'    \describe{
-#'    \item{nfeatures}{number of features in the pathway} 
-#'    \item{feat.score.avg}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
+#'    \item{\code{nfeatures}}{number of features in the pathway} 
+#'    \item{\code{feat.score.avg}}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
 #'    to scores in permutations. Only included if \code{ret.null.mats==TRUE}.}
-#'    \item{z}{pathway permutation z-score (larger is more significant)}
-#'    \item{p}{pathway permutation p-value} 
-#'    \item{FDR}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
+#'    \item{\code{z}}{pathway permutation z-score (larger is more significant)}
+#'    \item{\code{p}}{pathway permutation p-value} 
+#'    \item{\code{FDR}}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
 #'    }}
-#'    \item{feature.stats}{A dataframe with columns
+#'    \item{\code{feature.stats}}{A data frame with columns
 #'    \describe{
-#'    \item{score}{feature's score from applying \code{score_fcn} in \code{\link{score_features}}}
-#'    \item{z}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
+#'    \item{\code{score}}{feature's score from applying \code{score_fcn} in \code{\link{score_features}}}
+#'    \item{\code{z}}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
 #'    (without smoothing)} 
-#'    \item{p}{feature's permutation p-value} 
-#'    \item{FDR}{feature's FDR from permutation \code{p}}
+#'    \item{\code{p}}{feature's permutation p-value} 
+#'    \item{\code{FDR}}{feature's FDR from permutation \code{p}}
 #'    }}
 #'    And if \code{ret.null.mats} is TRUE:
-#'    \item{null.feature.mat}{Matrix with features as rows and permutations as columns, where each element represents
+#'    \item{\code{null.feature.mat}}{Matrix with features as rows and permutations as columns, where each element represents
 #'    the score of that feature in that permutation}
-#'    \item{null.pwy.mat}{Matrix with pathways as rows and permutations as columns, where each element represents
+#'    \item{\code{null.pwy.mat}}{Matrix with pathways as rows and permutations as columns, where each element represents
 #'    the score of that pathway in that permutation}
 #'  }
 #' @export
 
-pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, annot=NULL, score_fcn=identity, nperm=10^4-1, ret.null.mats=FALSE, 
-                  alternative=c("two.sided", "less", "greater"), min.nfeats=0, ncores=1, name=NA, n.toptabs=Inf, seed=0){
+pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, score_fcn=identity, nperm=10^4-1, 
+                  ret.null.mats=FALSE, alternative=c("two.sided", "less", "greater"), min.nfeats=0, ncores=1, 
+                  name=NA, seed=0){
   if (is.null(ker)){
     ker <- diag_kernel(object=object, Gmat=Gmat)
   }
   stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)), 
-            colnames(object)==names(phenotype), is.null(annot) || any(rownames(annot) %in% rownames(object)))
+            colnames(object)==names(phenotype))
   alternative <- match.arg(alternative)
   
   zeallot::`%<-%`(c(Gmat, nfeats.per.pwy), subset_gmat(object=object, Gmat=Gmat, min.nfeats=min.nfeats))
@@ -105,7 +105,7 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, annot=NULL, sco
   #write xlsx file with links
   if (!is.na(name)){
     write_pants_xl(score.v=score.v, pwy.tab=pwy.stats, feat.tab=feature.stats, Gmat=Gmat, ker=ker, alternative=alternative, 
-                   annot=annot, name=paste0(name, "_pants"), n.toptabs=n.toptabs)
+                   name=paste0(name, "_pants"))
   }
   
   # return res

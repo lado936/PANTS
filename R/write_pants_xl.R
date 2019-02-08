@@ -7,23 +7,38 @@
 #' @inheritParams pants
 #' @inheritParams plot_pwy
 #' @inheritParams ezlimma::write_top_xl
-#' @details It's checked that \code{rownames(score.mat)==names(eval.v)}.
-#' @return A matrix with two columns containing z-scores (larger is more significant) & p-values with 
-#' \code{nrow = length(eval.v)}.
 
-write_pants_xl <- function(score.v, pwy.tab, feat.tab, Gmat, ker, alternative=c("two.sided", "less", "greater"), 
-                           annot=NULL, name=NA, n.toptabs=Inf){
+# req kernel: ok, since not exported
+# feat.tab may have score column if spit out from pants/pants_hitman, but need not
+write_pants_xl <- function(score.v, pwy.tab, feat.tab, Gmat, ker, name, alternative=c("two.sided", "less", "greater")){
+  stopifnot(!is.null(names(score.v)), is.finite(score.v), nrow(pwy.tab) > 0, nrow(feat.tab) > 0, 
+            !is.null(ker), ncol(ker) == nrow(Gmat), ncol(ker) == length(score.v), colnames(ker) == names(score.v), 
+            !is.null(name))
   
-  feat.lst <- lapply(colnames(Gmat), FUN=function(pwy){
+  if (!requireNamespace("writexl", quietly = TRUE)){
+    stop("Install 'writexl' package.", call. = FALSE)
+  }
+
+  tx <- ezlimma:::top_xl(pwy.tab=pwy.tab)
+  
+  feat.lst <- lapply(rownames(tx), FUN=function(pwy){
     select_ntop(score.v=score.v, Gmat=Gmat, pwy=pwy, ker=ker, alternative=alternative, ntop=3)
   })
-  names(feat.lst) <- colnames(Gmat)
+  names(feat.lst) <- rownames(tx)
   
-  if (!is.null(annot)){
-    feature.stats.ann <- data.frame(signif(feat.tab, 3), annot[rownames(feat.tab), ])
-  } else {
-    feature.stats.ann <- data.frame(signif(feat.tab, 3))
+  dir.create(name)
+  dir.create(paste0(name, '/pathways'))
+  names(feat.lst) <- ezlimma:::clean_filenames(names(feat.lst))
+  for(pwy in rownames(tx)){
+    fl.tmp <- feat.lst[[pwy]]
+    ft <- data.frame(in_pwy=fl.tmp$in.pwy, impact=fl.tmp$impact, feat.tab[fl.tmp$node,], stringsAsFactors = FALSE)
+    ft[,setdiff(colnames(ft), "in_pwy")] <- signif(x=ft[,setdiff(colnames(ft), "in_pwy")], digits=3)
+    utils::write.csv(ft, paste0(name, '/pathways/', pwy, '.csv'))
   }
   
-  ezlimma:::write_top_xl(pwy.tab=pwy.tab, feat.lst=feat.lst, feat.tab=feature.stats.ann, name=name, n.toptabs=n.toptabs)
+  tx.out <- tx
+  tx.out[,-1] <- signif(x=tx.out[,-1], digits=3)
+  writexl::write_xlsx(x=tx.out, path = paste0(name, "/", name, ".xlsx"))
+  
+  return(invisible(tx))
 }

@@ -21,6 +21,10 @@ select_ntop(score.v, Gmat, pwy, ker, alternative = c("two.sided", "less",
 
 \item{ntop}{Number of top features that most impact the pathway to include.}
 }
+\value{
+Data frame with \code{ntop} rows ordered by impact & 3 columns: \code{node} with node names; 
+\code{impact} with impact values; \code{in.pwy} with logicals if node is in \code{pwy}.
+}
 \description{
 Select \code{ntop} top drivers for a pathway.
 }
