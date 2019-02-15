@@ -32,7 +32,8 @@ write_pants_xl <- function(score.v, pwy.tab, feat.tab, Gmat, ker, name, alternat
   for(pwy in rownames(tx)){
     fl.tmp <- feat.lst[[pwy]]
     ft <- data.frame(in_pwy=fl.tmp$in.pwy, impact=fl.tmp$impact, feat.tab[fl.tmp$node,], stringsAsFactors = FALSE)
-    ft[,setdiff(colnames(ft), "in_pwy")] <- signif(x=ft[,setdiff(colnames(ft), "in_pwy")], digits=3)
+    
+    ft[,setdiff(colnames(ft), "in_pwy")] <- ezlimma::df_signif(tab=ft[,setdiff(colnames(ft), "in_pwy")], digits=3)
     utils::write.csv(ft, paste0(name, '/pathways/', pwy, '.csv'))
   }
   

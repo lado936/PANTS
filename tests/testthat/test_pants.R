@@ -39,3 +39,15 @@ test_that("min.nfeats", {
   res4 <- pants(object=M, phenotype=pheno, contrast.v=contrast.v, ker=NULL, Gmat=G[1:3,], nperm=10, score_fcn = ff, min.nfeats=0)
   expect_equal(nrow(res4$pwy.stats), 2)
 })
+
+test_that("write with feat.tab", {
+  eztt <- ezlimma::limma_contrasts(M, grp=pheno, contrast.v = contrast.v)
+  eztt.df <- data.frame(signif(eztt, 3), sym=rownames(eztt))
+  
+  res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=10, 
+               name="test_eztt")
+  pwy1 <- read.csv("test_eztt_pants/pathways/pwy1.csv", row.names = 1)
+  expect_lt(pwy1["a", "trt1.p"], res$feature.stats["a", "p"])
+  
+  unlink("test_eztt_pants", recursive = TRUE) #in case it already exists
+})
