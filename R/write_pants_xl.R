@@ -30,7 +30,7 @@ write_pants_xl <- function(score.v, pwy.tab, feat.tab, Gmat, ker, name, alternat
   
   dir.create(name)
   dir.create(paste0(name, '/pathways'))
-  names(feat.lst) <- ezlimma:::clean_filenames(names(feat.lst))
+  names(feat.lst) <- ezlimma::clean_filenames(names(feat.lst))
   for(pwy in rownames(tx)){
     fl.tmp <- feat.lst[[pwy]]
     ft <- data.frame(in_pwy=fl.tmp$in.pwy, impact=fl.tmp$impact, feat.tab[fl.tmp$node,], stringsAsFactors = FALSE)
