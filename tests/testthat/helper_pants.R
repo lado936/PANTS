@@ -19,6 +19,8 @@ gr <- edgelist2graph(el)
 kk0 <- graph2kernel(gr)
 kk <- kk0[rownames(G), rownames(G)]
 
+noker <- diag_kernel(object=M, Gmat=G)
+
 contrast.v <- c(trt1="trt1-ctrl", trt2="trt2-ctrl")
 res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, nperm=10)
 score.v <- stats::setNames(res$feature.stats$score, nm=rownames(res$feature.stats))
@@ -28,3 +30,10 @@ score.noker <- stats::setNames(res.noker$feature.stats$score, nm=rownames(res.no
 
 fl <- lapply(gmt, FUN=function(x) x$genes)
 names(fl) <- lapply(gmt, FUN=function(x) x$name)
+
+eztt <- ezlimma::limma_contrasts(M, grp=pheno, contrast.v = contrast.v)
+eztt.df <- data.frame(signif(eztt, 3), sym=rownames(eztt))
+
+pheno.mat <- ezlimma::batch2design(pheno)
+rownames(pheno.mat) <- colnames(M)
+nperm <- 100

@@ -1,9 +1,5 @@
 context("pants_hitman")
 
-pheno.mat <- ezlimma::batch2design(pheno)
-rownames(pheno.mat) <- colnames(M)
-nperm <- 100
-
 test_that("kernel", {
   res <- pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=kk, Gmat=G, nperm=nperm, 
                          ret.null.mats=TRUE)
@@ -61,4 +57,13 @@ test_that("min.nfeats", {
   expect_equal(nrow(res3$pwy.stats), 1)
   res4 <- pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.nfeats=0)
   expect_equal(nrow(res4$pwy.stats), 2)
+})
+
+test_that("write with feat.tab", {
+  res <- pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=5,
+               name="test_eztt")
+  pwy1 <- read.csv("test_eztt_pants_hitman/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
+  unlink("test_eztt_pants_hitman", recursive = TRUE)
+  expect_equal(nrow(pwy1), 4)
+  expect_equal(pwy1$sym, c("a", "c", "b", "d"))
 })

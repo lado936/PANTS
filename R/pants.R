@@ -8,6 +8,7 @@
 #' the trivial identity function returning its argument. Its input must be a vector of same 
 #' length as number of elements in \code{contrast.v}. Its output must be a scalar.
 #' @param feat.tab Table of feature (e.g. gene) statistics and annotation that the Excel table can link to.
+#' @param ntop Number of top features that most impact a pathway to include.
 #' @param nperm Number of permutations to perform to evaluate significance of pathways.
 #' @param ret.null.mats If TRUE, return matrices with null distributions for features and pathwaysle
 #' @param ncores Number of cores to use for parallel computing. You can detect how many are available for your system
@@ -56,7 +57,7 @@
 #'  }
 #' @export
 
-pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, score_fcn=identity, nperm=10^4-1, 
+pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, ntop=5, score_fcn=identity, nperm=10^4-1, 
                   ret.null.mats=FALSE, alternative=c("two.sided", "less", "greater"), min.nfeats=0, ncores=1, 
                   name=NA, seed=0){
   if (is.null(ker)){
@@ -110,7 +111,7 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   if (!is.na(name)){
     if (is.null(feat.tab)) feat.tab <- feature.stats
     write_pants_xl(score.v=score.v, pwy.tab=pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, alternative=alternative, 
-                   name=paste0(name, "_pants"))
+                   name=paste0(name, "_pants"), ntop=ntop)
   }
   
   # return res

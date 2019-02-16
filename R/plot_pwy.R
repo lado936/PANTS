@@ -5,7 +5,6 @@
 #' to calculate pathway significance in \code{\link{pants}} or \code{\link{pants_hitman}}.
 #' 
 #' @param score.v Named vector of scores of features to select driver nodes.
-#' @param ntop Number of top features that most impact the pathway to include.
 #' @param pwy Pathway, must be a column name of \code{Gmat}.
 #' @param annot.v Named vector of annotations for nodes. If \code{annot.v} is given, \code{names(annot.v)} should 
 #' have some overlap with \code{rownames(Gmat)}.
@@ -22,9 +21,10 @@
 #'  \describe{
 #'    \item{\code{gr}}{the graph that gets plotted}
 #'    \item{\code{vertex.color}}{the vertex colors}
-#'    \item{\code{vertex.size}}{the vertex sizes}
+#'    \item{\code{vertex.shape}}{the vertex shapes}
 #'    \item{\code{score}}{scores of the vertices of the plotted graph}
 #'    \item{\code{top.nodes}}{ntop top nodes driving pathway}
+#'    \item{\code{impact}}{impact score on pathways}
 #' }
 #' @export
 
@@ -77,17 +77,18 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
   pwy.nodes <- rownames(Gmat)[Gmat[,pwy]>0]
   pwy.neighbors <- setdiff(neighbor_nms(gr, pwy.nodes), pwy.nodes)
 
-  top.nodes <- select_ntop(score.v=score.v, Gmat=Gmat, pwy=pwy, ker=ker, alternative=alternative, ntop=ntop)$node
+  top.nodes <- select_ntop(score.v=score.v, Gmat=Gmat, pwy=pwy, ker=ker, alternative=alternative, ntop=ntop)
+  top.node.nms <- top.nodes$node
 
   #get neighbors
-  pwy.neighbors.ss <- intersect(pwy.neighbors, top.nodes)
+  pwy.neighbors.ss <- intersect(pwy.neighbors, top.node.nms)
   #get pwy nodes with large stats OR pwy nodes connected to neighbors with large stats
-  pwy.nodes.ss <- union(intersect(pwy.nodes, top.nodes),
+  pwy.nodes.ss <- union(intersect(pwy.nodes, top.node.nms),
                         intersect(pwy.nodes, neighbor_nms(gr, pwy.neighbors.ss)))
 
   gr.pwy <- igraph::induced_subgraph(gr, vid=which(igraph::V(gr)$name %in% c(pwy.nodes.ss, pwy.neighbors.ss)))
-  x <- score.v[igraph::V(gr.pwy)$name]
-  color.v <- stats::setNames(map2color(xx=x, pal=color.pal, limits=lim), nm=names(x))
+  xx <- score.v[igraph::V(gr.pwy)$name]
+  color.v <- stats::setNames(map2color(xx=xx, pal=color.pal, limits=lim), nm=names(xx))
   shape.v <- c(out.shape, in.shape)[(igraph::V(gr.pwy)$name %in% pwy.nodes)+1]
   names(shape.v) <- igraph::V(gr.pwy)$name
 
@@ -109,6 +110,7 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
     if (!is.na(name)) grDevices::dev.off()
   }
   
-  ret <- list(gr=gr.pwy, vertex.color=color.v, vertex.shape=shape.v, score=x, top.nodes=top.nodes)
+  ret <- list(gr=gr.pwy, vertex.color=color.v, vertex.shape=shape.v, score=xx, top.node.nms=top.node.nms, 
+              impact=top.nodes[top.node.nms, "impact"])
   return(invisible(ret))
 }

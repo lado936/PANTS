@@ -19,12 +19,17 @@ select_ntop(score.v, Gmat, pwy, ker, alternative = c("two.sided", "less",
 \item{alternative}{Alternative hypothesis; must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}. 
 \code{"greater"} corresponds to positive association, \code{"less"} to negative association.}
 
-\item{ntop}{Number of top features that most impact the pathway to include.}
+\item{ntop}{Number of top features that most impact a pathway to include.}
 }
 \value{
 Data frame with \code{ntop} rows ordered by impact & 3 columns: \code{node} with node names; 
 \code{impact} with impact values; \code{in.pwy} with logicals if node is in \code{pwy}.
 }
 \description{
-Select \code{ntop} top drivers for a pathway.
+Select \code{ntop} top drivers for a pathway by calculating impact, sorting nodes, and selecting top nodes.
+}
+\details{
+Independent of the alternative, pathway significance is most affected by nodes with largest magnitude impact,
+however these nodes are sorted in the output dependent on the alternative. Nodes outside the pathway with no impact, 
+which may arise when the kernel is diagonal, are removed.
 }

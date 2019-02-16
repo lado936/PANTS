@@ -5,9 +5,9 @@
 \title{Pathway analysis via network smoothing}
 \usage{
 pants(object, phenotype, contrast.v, Gmat, ker = NULL, feat.tab = NULL,
-  score_fcn = identity, nperm = 10^4 - 1, ret.null.mats = FALSE,
-  alternative = c("two.sided", "less", "greater"), min.nfeats = 0,
-  ncores = 1, name = NA, seed = 0)
+  ntop = 5, score_fcn = identity, nperm = 10^4 - 1,
+  ret.null.mats = FALSE, alternative = c("two.sided", "less",
+  "greater"), min.nfeats = 0, ncores = 1, name = NA, seed = 0)
 }
 \arguments{
 \item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
@@ -22,6 +22,8 @@ features (e.g. genes) and columns to samples. Must have rownames that are non-du
 \item{ker}{Laplacian kernel matrix.}
 
 \item{feat.tab}{Table of feature (e.g. gene) statistics and annotation that the Excel table can link to.}
+
+\item{ntop}{Number of top features that most impact a pathway to include.}
 
 \item{score_fcn}{A function that transforms the t-statistics from the contrasts. \code{identity} is 
 the trivial identity function returning its argument. Its input must be a vector of same 

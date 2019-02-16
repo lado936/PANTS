@@ -5,7 +5,7 @@
 \title{Write Excel XLSX file with links to CSVs}
 \usage{
 write_pants_xl(score.v, pwy.tab, feat.tab, Gmat, ker, name,
-  alternative = c("two.sided", "less", "greater"))
+  alternative = c("two.sided", "less", "greater"), ntop = 5)
 }
 \arguments{
 \item{score.v}{Named vector of scores of features to select driver nodes.}
@@ -22,6 +22,8 @@ write_pants_xl(score.v, pwy.tab, feat.tab, Gmat, ker, name,
 
 \item{alternative}{Alternative hypothesis; must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}. 
 \code{"greater"} corresponds to positive association, \code{"less"} to negative association.}
+
+\item{ntop}{Number of top features that most impact a pathway to include.}
 }
 \description{
 Create directory; write CSV files with stats from \code{feat.tab} for all features in each pathway, and the top

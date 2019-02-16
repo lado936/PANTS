@@ -27,7 +27,7 @@ test_that("alternative", {
   expect_equal(dpn$score, dpn2$score)
   
   ppl <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, alternative = "less", ntop=2)
-  expect_equal(signif(ppl$score, 2), c(b=-1.1, c=0.43))
+  expect_equal(ppl$top.node.nms, c("b", "a"))
   
   #fig changes if seed changes
   ppl.f <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, alternative = "less", 
@@ -35,7 +35,7 @@ test_that("alternative", {
   expect_doppelganger(title="pwy1-less", ppl.f)
   
   ppg <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", score.v=score.v, name = NA, alternative = "greater", ntop=2)
-  expect_equal(ppg$score, score.v[c(1:2, 4, 3)])
+  expect_equal(ppg$score, score.v[c(1:2)])
 })
 
 test_that("annot", {

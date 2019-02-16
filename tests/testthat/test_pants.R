@@ -41,13 +41,19 @@ test_that("min.nfeats", {
 })
 
 test_that("write with feat.tab", {
-  eztt <- ezlimma::limma_contrasts(M, grp=pheno, contrast.v = contrast.v)
-  eztt.df <- data.frame(signif(eztt, 3), sym=rownames(eztt))
-  
-  res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=10, 
+  res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=5,
                name="test_eztt")
-  pwy1 <- read.csv("test_eztt_pants/pathways/pwy1.csv", row.names = 1)
+  pwy1 <- read.csv("test_eztt_pants/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
+  unlink("test_eztt_pants", recursive = TRUE)
+  expect_equal(nrow(pwy1), 4)
+  expect_equal(pwy1$sym, c("a", "b", "d", "c"))
   expect_lt(pwy1["a", "trt1.p"], res$feature.stats["a", "p"])
   
-  unlink("test_eztt_pants", recursive = TRUE) #in case it already exists
+  res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=noker, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=2,
+               name="test_eztt", alternative = "greater")
+  pwy1 <- read.csv("test_eztt_pants/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
+  unlink("test_eztt_pants", recursive = TRUE)
+  
+  expect_equal(nrow(pwy1), 2)
+  expect_equal(pwy1$sym, c("a", "b"))
 })

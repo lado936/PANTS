@@ -13,7 +13,7 @@ plot_pwy(gr, score.v, ntop = 7, Gmat, pwy, ker = NULL, annot.v = NA,
 
 \item{score.v}{Named vector of scores of features to select driver nodes.}
 
-\item{ntop}{Number of top features that most impact the pathway to include.}
+\item{ntop}{Number of top features that most impact a pathway to include.}
 
 \item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 
@@ -42,9 +42,10 @@ Invisibly, a list with components:
  \describe{
    \item{\code{gr}}{the graph that gets plotted}
    \item{\code{vertex.color}}{the vertex colors}
-   \item{\code{vertex.size}}{the vertex sizes}
+   \item{\code{vertex.shape}}{the vertex shapes}
    \item{\code{score}}{scores of the vertices of the plotted graph}
    \item{\code{top.nodes}}{ntop top nodes driving pathway}
+   \item{\code{impact}}{impact score on pathways}
 }
 }
 \description{

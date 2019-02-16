@@ -10,7 +10,8 @@
 
 # req kernel: ok, since not exported
 # feat.tab may have score column if spit out from pants/pants_hitman, but need not
-write_pants_xl <- function(score.v, pwy.tab, feat.tab, Gmat, ker, name, alternative=c("two.sided", "less", "greater")){
+write_pants_xl <- function(score.v, pwy.tab, feat.tab, Gmat, ker, name, alternative=c("two.sided", "less", "greater"),
+                           ntop=5){
   stopifnot(!is.null(names(score.v)), is.finite(score.v), nrow(pwy.tab) > 0, nrow(feat.tab) > 0, 
             !is.null(ker), ncol(ker) == nrow(Gmat), ncol(ker) == length(score.v), colnames(ker) == names(score.v), 
             !is.null(name))
@@ -21,8 +22,9 @@ write_pants_xl <- function(score.v, pwy.tab, feat.tab, Gmat, ker, name, alternat
 
   tx <- ezlimma:::top_xl(pwy.tab=pwy.tab)
   
+  #should provide ordered nodes
   feat.lst <- lapply(rownames(tx), FUN=function(pwy){
-    select_ntop(score.v=score.v, Gmat=Gmat, pwy=pwy, ker=ker, alternative=alternative, ntop=3)
+    select_ntop(score.v=score.v, Gmat=Gmat, pwy=pwy, ker=ker, alternative=alternative, ntop=ntop)
   })
   names(feat.lst) <- rownames(tx)
   
@@ -32,7 +34,6 @@ write_pants_xl <- function(score.v, pwy.tab, feat.tab, Gmat, ker, name, alternat
   for(pwy in rownames(tx)){
     fl.tmp <- feat.lst[[pwy]]
     ft <- data.frame(in_pwy=fl.tmp$in.pwy, impact=fl.tmp$impact, feat.tab[fl.tmp$node,], stringsAsFactors = FALSE)
-    
     ft[,setdiff(colnames(ft), "in_pwy")] <- ezlimma::df_signif(tab=ft[,setdiff(colnames(ft), "in_pwy")], digits=3)
     utils::write.csv(ft, paste0(name, '/pathways/', pwy, '.csv'))
   }
