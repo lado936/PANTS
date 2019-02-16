@@ -62,8 +62,10 @@ test_that("min.nfeats", {
 test_that("write with feat.tab", {
   res <- pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=5,
                name="test_eztt")
+  ps.xl <- readxl::read_excel("test_eztt_pants_hitman/test_eztt_pants_hitman.xlsx")
   pwy1 <- read.csv("test_eztt_pants_hitman/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
   unlink("test_eztt_pants_hitman", recursive = TRUE)
+  expect_false("feat.score.avg" %in% colnames(ps.xl))
   expect_equal(nrow(pwy1), 4)
   expect_equal(pwy1$sym, c("a", "c", "b", "d"))
 })

@@ -107,13 +107,6 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method='BH')
   pwy.stats <- pwy.stats[order(pwy.stats$p, -pwy.stats$feat.score.avg),]
 
-  #write xlsx file with links
-  if (!is.na(name)){
-    if (is.null(feat.tab)) feat.tab <- feature.stats
-    write_pants_xl(score.v=score.v, pwy.tab=pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, alternative=alternative, 
-                   name=paste0(name, "_pants"), ntop=ntop)
-  }
-  
   # return res
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)
   if (ret.null.mats){
@@ -122,6 +115,13 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   } else {
     #only include "feat.score.avg" if ret.null.mats
     res$pwy.stats <- res$pwy.stats[,setdiff(colnames(res$pwy.stats), "feat.score.avg")]
+  }
+  
+  #write xlsx file with links
+  if (!is.na(name)){
+    if (is.null(feat.tab)) feat.tab <- feature.stats
+    write_pants_xl(score.v=score.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, alternative=alternative, 
+                   name=paste0(name, "_pants"), ntop=ntop)
   }
   
   return(res)
