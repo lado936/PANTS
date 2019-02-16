@@ -1,7 +1,7 @@
 Package: PANTS
 Type: Package
 Title: Pathway analysis via network smoothing
-Version: 0.0.3.9006
+Version: 0.0.3.9007
 Authors@R: c(person("Jonathan", "Dreyfuss", role = c("aut", "cre"), email = "jdreyf@bu.edu"),
              person("Hui", "Pan", role = "ctb"),
 			 person("Grace", "Daher", role = "ctb"))
@@ -12,6 +12,7 @@ Imports:
 	ezlimma,
 	igraph (>= 1.0.0),
 	knitr,
+	limma,
 	Matrix,
 	parallel,
 	zeallot
