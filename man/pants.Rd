@@ -5,9 +5,9 @@
 \title{Pathway analysis via network smoothing}
 \usage{
 pants(object, phenotype, contrast.v, Gmat, ker = NULL, feat.tab = NULL,
-  ntop = 5, score_fcn = identity, nperm = 10^4 - 1,
+  ntop = 10, score_fcn = identity, nperm = 10^4 - 1,
   ret.null.mats = FALSE, alternative = c("two.sided", "less",
-  "greater"), min.nfeats = 0, ncores = 1, name = NA, seed = 0)
+  "greater"), min.nfeats = 3, ncores = 1, name = NA, seed = 0)
 }
 \arguments{
 \item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 

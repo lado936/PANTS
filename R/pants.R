@@ -57,8 +57,8 @@
 #'  }
 #' @export
 
-pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, ntop=5, score_fcn=identity, nperm=10^4-1, 
-                  ret.null.mats=FALSE, alternative=c("two.sided", "less", "greater"), min.nfeats=0, ncores=1, 
+pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, ntop=10, score_fcn=identity, nperm=10^4-1, 
+                  ret.null.mats=FALSE, alternative=c("two.sided", "less", "greater"), min.nfeats=3, ncores=1, 
                   name=NA, seed=0){
   if (is.null(ker)){
     ker <- diag_kernel(object=object, Gmat=Gmat)
@@ -72,8 +72,12 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   score.v <- score_features(object=object, phenotype=phenotype, contrast.v=contrast.v, score_fcn=score_fcn)
   
   #feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
-  cl.type <- ifelse(.Platform$OS.type=='windows', "PSOCK", "FORK")
+  cl.type <- ifelse(.Platform$OS.type=="windows", "PSOCK", "FORK")
   cl <- parallel::makeCluster(spec=ncores, type=cl.type)
+  # if (cl.type=="PSOCK"){
+  #   parallel::clusterExport(cl=cl, varlist=c("seed", "nperm", "phenotype", "object", "contrast.v", "score_fcn", 
+  #                                            "score_features"))
+  # }
   set.seed(seed)
   perms <- lapply(seq_len(nperm), function(i) sample.int(length(phenotype)))
   score.mat <- parallel::parSapply(cl, perms, function(perm){
