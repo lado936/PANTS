@@ -23,7 +23,6 @@ write_pants_xl <- function(score.v, pwy.tab, feat.tab, Gmat, ker, name, alternat
   tx <- ezlimma:::top_xl(pwy.tab=pwy.tab)
   #need to clean pwy names in Gmat & ker to match
   colnames(Gmat) <- substr(ezlimma::clean_filenames(colnames(Gmat)), 1, 150)
-  rownames(ker) <- colnames(ker) <- substr(ezlimma::clean_filenames(rownames(ker)), 1, 150)
   
   #should provide ordered nodes
   feat.lst <- lapply(rownames(tx), FUN=function(pwy){
