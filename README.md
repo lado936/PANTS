@@ -14,7 +14,7 @@ Install `PANTS` from GitHub using `remotes` within R. You must install `remotes`
 source("http://bioconductor.org/biocLite.R")
 biocLite("limma")
 
-install.packages("remotes") #if haven't already installed remotes
+install.packages("remotes", repos="https://cloud.r-project.org") #if haven't already installed remotes
 library(remotes)
 remotes::install_github(repo="jdreyf/ezlimma", build_opts = c("--no-resave-data", "--no-manual"))
 remotes::install_github(repo="jdreyf/PANTS", build_opts = c("--no-resave-data", "--no-manual"))
