@@ -26,9 +26,9 @@
 #' For \code{\link[parallel]{makeCluster}}, the cluster \code{type} depends on the OS, which is tested in the body
 #' of the function using \code{.Platform$OS.type}.
 #' 
-#' If \code{!is.na(name)}, an Excel file gets written out with links to toptable CSVs, containing the statistics of features in
-#' the pathway. If \code{ker} is used, pathways may be affected via smoothing by features outside the pathway. These can be seen
-#' with \code{\link[PANTS]{plot_pwy}}.
+#' If \code{!is.na(name)}, an Excel file with "_pants.xlsx" appended to the name gets written out with links to toptable 
+#' CSVs, containing the statistics of features in the pathway. If \code{ker} is used, pathways may be affected via 
+#' smoothing by features outside the pathway. These can be seen with \code{\link[PANTS]{plot_pwy}}.
 #'  
 #' @return List of at least two data frames:
 #' \describe{
@@ -74,10 +74,7 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   #feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
   cl.type <- ifelse(.Platform$OS.type=="windows", "PSOCK", "FORK")
   cl <- parallel::makeCluster(spec=ncores, type=cl.type)
-  # if (cl.type=="PSOCK"){
-  #   parallel::clusterExport(cl=cl, varlist=c("seed", "nperm", "phenotype", "object", "contrast.v", "score_fcn", 
-  #                                            "score_features"))
-  # }
+  # PSOCK works without parallel::clusterExport
   set.seed(seed)
   perms <- lapply(seq_len(nperm), function(i) sample.int(length(phenotype)))
   score.mat <- parallel::parSapply(cl, perms, function(perm){
