@@ -10,7 +10,7 @@ gmt2Gmat(gmt.lst)
 \item{gmt.lst}{List returned by \code{\link[ezlimma]{read_gmt}}.}
 }
 \value{
-A numeric Matrix of features (e.g. proteins) as rows and pathways as columns, indicating pathway membership.
+A binary Matrix of features (e.g. proteins) as rows and pathways as columns, indicating pathway membership.
 }
 \description{
 Transform list from reading in GMT using \code{ezlimma::read_gmt} into feature-by-pathway matrix.

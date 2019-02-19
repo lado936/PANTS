@@ -3,7 +3,7 @@
 #' Transform list from reading in GMT using \code{ezlimma::read_gmt} into feature-by-pathway matrix.
 #'
 #' @param gmt.lst List returned by \code{\link[ezlimma]{read_gmt}}.
-#' @return A numeric Matrix of features (e.g. proteins) as rows and pathways as columns, indicating pathway membership.
+#' @return A binary Matrix of features (e.g. proteins) as rows and pathways as columns, indicating pathway membership.
 #' @export
 
 gmt2Gmat <- function(gmt.lst){
