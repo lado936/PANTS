@@ -64,8 +64,13 @@ test_that("write with feat.tab", {
                name="test_eztt")
   ps.xl <- readxl::read_excel("test_eztt_pants_hitman/test_eztt_pants_hitman.xlsx")
   pwy1 <- read.csv("test_eztt_pants_hitman/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
-  unlink("test_eztt_pants_hitman", recursive = TRUE)
+  
   expect_false("feat.score.avg" %in% colnames(ps.xl))
   expect_equal(nrow(pwy1), 4)
   expect_equal(pwy1$sym, c("a", "c", "b", "d"))
+})
+
+teardown({
+  unlink("test_eztt_pants_hitman", recursive = TRUE, force=TRUE)
+  unlink("tests/testthat/test_eztt_pants_hitman", recursive = TRUE, force=TRUE)
 })

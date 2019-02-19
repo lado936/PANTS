@@ -7,7 +7,6 @@ test_that("w/o ker", {
   
   expect_equal(grep("=HYPERLINK(", wpx[,1], fixed = TRUE), 1:nrow(wpx))
   expect_equal(wpx[,-1], res.noker$pwy.stats)
-  unlink("test_wpx", recursive = TRUE)
 })
 
 test_that("w ker", {
@@ -24,6 +23,8 @@ test_that("w ker", {
   expect_true(file.exists("test_wpx/test_wpx.xlsx"))
   expect_true(file.exists("test_wpx/pathways/pwy1.csv"))
   expect_true(file.exists("test_wpx/pathways/pwy2_.csv"))
-  
+})
+
+teardown({
   unlink("test_wpx", recursive = TRUE)
 })

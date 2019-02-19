@@ -41,13 +41,10 @@ test_that("min.nfeats", {
 })
 
 test_that("write with feat.tab", {
-  unlink("test_eztt_pants", recursive = TRUE)
-  unlink("tests/testthat/test_eztt_pants", recursive = TRUE)
-  
   res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=5,
                name="test_eztt")
   pwy1 <- read.csv("test_eztt_pants/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
-  unlink("test_eztt_pants", recursive = TRUE)
+
   expect_equal(nrow(pwy1), 4)
   expect_equal(pwy1$sym, c("a", "b", "d", "c"))
   expect_lt(pwy1["a", "trt1.p"], res$feature.stats["a", "p"])
@@ -57,7 +54,9 @@ test_that("write with feat.tab", {
   pwy1 <- read.csv("test_eztt_pants/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
   expect_equal(nrow(pwy1), 2)
   expect_equal(pwy1$sym, c("a", "b"))
-  
+})
+
+teardown({
   unlink("test_eztt_pants", recursive = TRUE, force=TRUE)
   unlink("tests/testthat/test_eztt_pants", recursive = TRUE, force=TRUE)
 })
