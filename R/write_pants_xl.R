@@ -30,6 +30,8 @@ write_pants_xl <- function(score.v, pwy.tab, feat.tab, Gmat, ker, name, alternat
   })
   names(feat.lst) <- rownames(xp)
   
+  if (file.exists(name)) unlink(name, recursive = TRUE)
+  
   dir.create(name)
   dir.create(paste0(name, '/pathways'))
   names(feat.lst) <- ezlimma::clean_filenames(names(feat.lst))

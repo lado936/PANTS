@@ -1,8 +1,6 @@
 context("write pants xl")
 
 test_that("w/o ker", {
-  unlink("test_wpx", recursive = TRUE) #in case it already exists
-  
   sv <- setNames(res.noker$feature.stats$score, nm=rownames(res.noker$feature.stats))
   wpx <- write_pants_xl(score.v=sv, pwy.tab=res.noker$pwy.stats, feat.tab=res.noker$feature.stats, Gmat=G, 
                                 ker=noker, alternative="two.sided", name="test_wpx")
@@ -13,8 +11,6 @@ test_that("w/o ker", {
 })
 
 test_that("w ker", {
-  unlink("test_wpx", recursive = TRUE) #in case it already exists
-  
   sv <- setNames(res$feature.stats$score, nm=rownames(res$feature.stats))
   pwy.tab <- res$pwy.stats
   rownames(pwy.tab)[2] <- colnames(G)[2] <- "pwy2."
