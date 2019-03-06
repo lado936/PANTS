@@ -69,10 +69,10 @@ pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker
   zeallot::`%<-%`(c(Gmat, nfeats.per.pwy), subset_gmat(object=object, Gmat=Gmat, min.nfeats=min.nfeats))
   
   lmed <- ezlimma::hitman(E=exposure, M=object, Y=phenotype, covariates=covariates)
-  #transform to one-sided z-score
+  # transform to one-sided z-score
   score.v <- stats::qnorm(p=lmed[rownames(object), "EMY.p"], lower.tail = FALSE)
   
-  #feature scores in permutations
+  # feature scores in permutations
   cl.type <- ifelse(.Platform$OS.type=='windows', "PSOCK", "FORK")
   cl <- parallel::makeCluster(spec=ncores, type=cl.type)
   set.seed(seed)
@@ -90,19 +90,19 @@ pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker
   parallel::stopCluster(cl=cl)
   
   mm <- match_mats(score.mat = cbind(v=score.v, score.mat), ker=ker, Gmat=Gmat)
-  #1st column contains non-permuted scores
+  # 1st column contains non-permuted scores
   score.mat <- mm$score.mat[,-1]; score.v <- mm$score.mat[,1]; ker <- mm$ker; Gmat <- mm$Gmat
   rm(mm) #to save memory
   
-  ##feature p-values (for plotting)
+  # feature p-values (for plotting)
   #features in object & in kernel
   feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=3,
                                                       dimnames=list(rownames(score.mat), c("z", "p", "FDR"))))
-  #need to coerce score.mat to matrix to prevent rowSums error
+  # need to coerce score.mat to matrix to prevent rowSums error
   feature.stats[,c("z", "p")] <- p_ecdf(eval.v=score.v, score.mat = as.matrix(score.mat), alternative = "greater")
   feature.stats[,"FDR"] <- stats::p.adjust(feature.stats[,"p"], method="BH")
   
-  ##need to compare to pwys, sometimes runs out of memory
+  # need to compare to pwys, sometimes runs out of memory
   pwy.v <- (score.v %*% ker %*% Gmat)[1,]
   pwy.mat <- as.matrix(Matrix::t(Matrix::crossprod(score.mat, ker) %*% Gmat))
   
@@ -122,12 +122,11 @@ pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker
     res$pwy.stats <- res$pwy.stats[,setdiff(colnames(res$pwy.stats), "feat.score.avg")]
   }
   
-  #write xlsx file with links
+  # write xlsx file with links
   if (!is.na(name)){
     if (is.null(feat.tab)) feat.tab <- feature.stats
     write_pants_xl(score.v=score.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, alternative="greater", 
                    name=paste0(name, "_pants_hitman"), ntop=ntop)
   }
-  
   return(res)
 }

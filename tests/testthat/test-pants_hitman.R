@@ -1,7 +1,7 @@
 context("pants_hitman")
 
 test_that("kernel", {
-  res <- pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=kk, Gmat=G, nperm=nperm, 
+  res <- pants_hitman(object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, nperm=nperm, 
                          ret.null.mats=TRUE)
   pwy.stats <- res$pwy.stats
   f.stats <- res$feature.stats
@@ -37,7 +37,7 @@ test_that("univariate exposure", {
 })
 
 test_that("no kernel", {
-  res <- pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=NULL, Gmat=G, nperm=nperm)
+  res <- pants_hitman(object=M, exposure = pheno.num, phenotype = M["a",], ker=NULL, Gmat=G, nperm=nperm)
   pwy.stats <- res$pwy.stats
   f.stats <- res$feature.stats
   expect_false("feat.score.avg" %in% colnames(pwy.stats))
@@ -52,22 +52,22 @@ test_that("no kernel", {
 })
 
 test_that("min.nfeats", {
-  expect_error(pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=NULL, Gmat=G, nperm=10, min.nfeats=4))
-  res3 <- pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.nfeats=3)
+  expect_error(pants_hitman(object=M, exposure = pheno.num, phenotype = M["a",], ker=NULL, Gmat=G, nperm=10, min.nfeats=4))
+  res3 <- pants_hitman(object=M, exposure = pheno.num, phenotype = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.nfeats=3)
   expect_equal(nrow(res3$pwy.stats), 1)
-  res4 <- pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.nfeats=0)
+  res4 <- pants_hitman(object=M, exposure = pheno.num, phenotype = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.nfeats=0)
   expect_equal(nrow(res4$pwy.stats), 2)
 })
 
 test_that("write with feat.tab", {
-  res <- pants_hitman(object=M, exposure = pheno.mat, phenotype = M["a",], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=5,
+  res <- pants_hitman(object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=5,
                name="test_eztt")
-  ps.xl <- readxl::read_excel("test_eztt_pants_hitman/test_eztt_pants_hitman.xlsx")
+  ps.xl <- ezlimma::read_linked_xl("test_eztt_pants_hitman/test_eztt_pants_hitman.xlsx")
   pwy1 <- read.csv("test_eztt_pants_hitman/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
   
   expect_false("feat.score.avg" %in% colnames(ps.xl))
   expect_equal(nrow(pwy1), 4)
-  expect_equal(pwy1$sym, c("a", "c", "b", "d"))
+  expect_equal(pwy1$sym[1], "a")
 })
 
 teardown({

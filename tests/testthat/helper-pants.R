@@ -34,6 +34,6 @@ names(fl) <- lapply(gmt, FUN=function(x) x$name)
 eztt <- ezlimma::limma_contrasts(M, grp=pheno, contrast.v = contrast.v)
 eztt.df <- data.frame(signif(eztt, 3), sym=rownames(eztt))
 
-pheno.mat <- ezlimma::batch2design(pheno)
-rownames(pheno.mat) <- colnames(M)
+pheno.num <- as.numeric(pheno == "trt1")
+names(pheno.num) <- colnames(M)
 nperm <- 100

@@ -71,34 +71,34 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
 
   score.v <- score_features(object=object, phenotype=phenotype, contrast.v=contrast.v, score_fcn=score_fcn)
   
-  #feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
+  # feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
   cl.type <- ifelse(.Platform$OS.type=="windows", "PSOCK", "FORK")
   cl <- parallel::makeCluster(spec=ncores, type=cl.type)
   # PSOCK works without parallel::clusterExport
   set.seed(seed)
   perms <- lapply(seq_len(nperm), function(i) sample.int(length(phenotype)))
   score.mat <- parallel::parSapply(cl, perms, function(perm){
-    #must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
+    # must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
     pheno.tmp <- stats::setNames(phenotype[perm], nm=NULL)
     score_features(object=object, phenotype=pheno.tmp, contrast.v=contrast.v, score_fcn=score_fcn)
   })
   dimnames(score.mat) <- list(rownames(object), paste0('perm', 1:nperm))
   parallel::stopCluster(cl=cl)
   
-  #could use zeallot, but would still need temporary score.mat.comb
+  # could use zeallot, but would still need temporary score.mat.comb
   mm <- match_mats(score.mat = cbind(v=score.v, score.mat), ker=ker, Gmat=Gmat)
   score.mat <- mm$score.mat[,-1]; score.v <- mm$score.mat[,1]; ker <- mm$ker; Gmat <- mm$Gmat
   rm(mm) #to save memory
   
-  ##feature p-values (for plotting)
-  #features in object & in kernel
+  # feature p-values (for plotting)
+  # features in object & in kernel
   feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=3, 
                                                       dimnames=list(rownames(score.mat), c("z", "p", "FDR"))))
-  #need to coerce score.mat to matrix to prevent rowSums error
+  # need to coerce score.mat to matrix to prevent rowSums error
   feature.stats[,c("z", "p")] <- p_ecdf(eval.v=score.v, score.mat = as.matrix(score.mat), alternative = alternative)
   feature.stats[,"FDR"] <- stats::p.adjust(feature.stats[,"p"], method="BH")
 
-  ##need to compare to pwys, sometimes runs out of memory
+  # need to compare to pwys, sometimes runs out of memory
   pwy.v <- (score.v %*% ker %*% Gmat)[1,]
   pwy.mat <- as.matrix(Matrix::t(Matrix::crossprod(score.mat, ker) %*% Gmat))
 
@@ -114,16 +114,15 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
     res$null.feature.mat <- as.matrix(score.mat)
     res$null.pwy.mat <- as.matrix(pwy.mat)
   } else {
-    #only include "feat.score.avg" if ret.null.mats
+    # only include "feat.score.avg" if ret.null.mats
     res$pwy.stats <- res$pwy.stats[,setdiff(colnames(res$pwy.stats), "feat.score.avg")]
   }
   
-  #write xlsx file with links
+  # write xlsx file with links
   if (!is.na(name)){
     if (is.null(feat.tab)) feat.tab <- feature.stats
     write_pants_xl(score.v=score.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, alternative=alternative, 
                    name=paste0(name, "_pants"), ntop=ntop)
   }
-  
   return(res)
 }
