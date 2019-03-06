@@ -1,7 +1,7 @@
 Package: PANTS
 Type: Package
 Title: Pathway analysis via network smoothing
-Version: 0.0.3.9011
+Version: 0.0.3.9012
 Authors@R: c(person("Jonathan", "Dreyfuss", role = c("aut", "cre"), email = "jdreyf@bu.edu"),
              person("Hui", "Pan", role = "ctb"),
 			 person("Grace", "Daher", role = "ctb"))
@@ -23,8 +23,10 @@ RoxygenNote: 6.1.1
 Suggests:
 	covr,
 	RColorBrewer,
+	readxl,
     rmarkdown,
     testthat,
+	tidyxl,
 	vdiffr,
 	writexl
 VignetteBuilder: knitr
