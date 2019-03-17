@@ -84,6 +84,7 @@ For \code{\link[parallel]{makeCluster}}, the cluster \code{type} depends on the 
 of the function using \code{.Platform$OS.type}.
 
 If \code{!is.na(name)}, an Excel file with "_pants_hitman.xlsx" appended to the name gets written out with links to 
-toptable CSVs, containing the statistics of features in the pathway. If \code{ker} is used, pathways may be 
-affected via smoothing by features outside the pathway. These can be seen with \code{\link[PANTS]{plot_pwy}}.
+CSVs containing the statistics of features most affecting the pathway's score. These features are selected as those
+with the largest magnitude impact score, and can be visualized with \code{\link[PANTS]{plot_pwy}}. Depending on \code{ker}, 
+pathways may be affected via smoothing by features outside the pathway.
 }

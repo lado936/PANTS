@@ -15,11 +15,10 @@ write_pants_xl <- function(score.v, pwy.tab, feat.tab, Gmat, ker, name, alternat
   stopifnot(!is.null(names(score.v)), is.finite(score.v), nrow(pwy.tab) > 0, nrow(feat.tab) > 0, 
             !is.null(ker), ncol(ker) == nrow(Gmat), ncol(ker) == length(score.v), colnames(ker) == names(score.v), 
             !is.null(name), rownames(ker)==colnames(ker))
-  
   if (!requireNamespace("writexl", quietly = TRUE)){
     stop("Install 'writexl' package.", call. = FALSE)
   }
-
+  
   xp <- ezlimma:::xl_pwys(pwy.tab=pwy.tab)
   #need to clean pwy names in Gmat & ker to match
   colnames(Gmat) <- substr(ezlimma::clean_filenames(colnames(Gmat)), 1, 150)

@@ -87,7 +87,9 @@ the Excel file links to tables derived from \code{feature.stats}.
 For \code{\link[parallel]{makeCluster}}, the cluster \code{type} depends on the OS, which is tested in the body
 of the function using \code{.Platform$OS.type}.
 
-If \code{!is.na(name)}, an Excel file with "_pants.xlsx" appended to the name gets written out with links to toptable 
-CSVs, containing the statistics of features in the pathway. If \code{ker} is used, pathways may be affected via 
-smoothing by features outside the pathway. These can be seen with \code{\link[PANTS]{plot_pwy}}.
+If \code{!is.na(name)}, an Excel file with "_pants.xlsx" appended to the name gets written out with links to 
+CSVs containing the statistics of features most affecting the pathway's score. These features are selected as those
+with the largest magnitude impact score, and can be visualized with \code{\link[PANTS]{plot_pwy}}, but whether 
+these features increase or decrease a pathway's score depends on the \code{alternative}. Depending on \code{ker}, 
+pathways may be affected via smoothing by features outside the pathway.
 }
