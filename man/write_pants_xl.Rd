@@ -16,7 +16,7 @@ write_pants_xl(score.v, pwy.tab, feat.tab, Gmat, ker, name,
 
 \item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 
-\item{ker}{Laplacian kernel matrix.}
+\item{ker}{Laplacian kernel matrix representing the interaction network.}
 
 \item{name}{Name for the folder and Excel file that get written. Set to \code{NA} to avoid writing output.}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/pants.R
 \name{pants}
 \alias{pants}
-\title{Pathway analysis via network smoothing}
+\title{Pathway analysis via network smoothing (Pants) testing group contrasts}
 \usage{
 pants(object, phenotype, contrast.v, Gmat, ker = NULL, feat.tab = NULL,
   ntop = 10, score_fcn = identity, nperm = 10^4 - 1,
@@ -19,7 +19,7 @@ features (e.g. genes) and columns to samples. Must have rownames that are non-du
 
 \item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 
-\item{ker}{Laplacian kernel matrix.}
+\item{ker}{Laplacian kernel matrix representing the interaction network.}
 
 \item{feat.tab}{Table of feature (e.g. gene) statistics and annotation that the Excel table can link to.}
 
@@ -74,7 +74,9 @@ List of at least two data frames:
  }
 }
 \description{
-Implements the Pants algorithm for pathway analysis via network smoothing with group contrasts.
+Pants algorithm to test group differences for features (i.e. analytes such as a gene, protein, or metabolite) in a 
+pathway or those connected to the pathway in an interaction network. A workflow is described in the vignette; 
+instructions to view the vignette are in the README.
 }
 \details{
 Scores for features in the kernel but not in the data are assigned a z-score of zero by default for sparsity.
@@ -87,9 +89,14 @@ the Excel file links to tables derived from \code{feature.stats}.
 For \code{\link[parallel]{makeCluster}}, the cluster \code{type} depends on the OS, which is tested in the body
 of the function using \code{.Platform$OS.type}.
 
-If \code{!is.na(name)}, an Excel file with "_pants.xlsx" appended to the name gets written out with links to 
-CSVs containing the statistics of features most affecting the pathway's score. These features are selected as those
-with the largest magnitude impact score, and can be visualized with \code{\link[PANTS]{plot_pwy}}, but whether 
-these features increase or decrease a pathway's score depends on the \code{alternative}. Depending on \code{ker}, 
-pathways may be affected via smoothing by features outside the pathway.
+If \code{!is.na(name)}, an Excel file with "_pants.xlsx" appended to \code{name} gets written out with links to CSVs 
+containing the statistics and annotation of features most affecting the pathway's score. The statistics and annotation
+are from \code{feat.tab}, which is usually calculated with \pkg{ezlimma}. Additionally, the CSVs contain whether each 
+feature is in the pathway, and an \code{impact} column describing the impact of each feature on the pathway's 
+score. Since a pathway's score is calculated in \code{pants}, \code{impact} uses the feature statistics calculated 
+in \code{pants} by comparing to permutation. The feature statistics from \pkg{ezlimma} and those from 
+\code{pants} are nearly identical, though; the main difference is that \code{pants} feature significances are limited 
+by the number of permutations, so they flatten near the extreme. The features with the largest magnitude impact score
+are selected and can be visualized with \code{\link[PANTS]{plot_pwy}}. Whether these features increase or decrease a 
+pathway's score depends on the \code{alternative}.
 }

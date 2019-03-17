@@ -19,7 +19,7 @@ plot_pwy(gr, score.v, ntop = 7, Gmat, pwy, ker = NULL, annot.v = NA,
 
 \item{pwy}{Pathway, must be a column name of \code{Gmat}.}
 
-\item{ker}{Laplacian kernel matrix.}
+\item{ker}{Laplacian kernel matrix representing the interaction network.}
 
 \item{annot.v}{Named vector of annotations for nodes. If \code{annot.v} is given, \code{names(annot.v)} should 
 have some overlap with \code{rownames(Gmat)}.}

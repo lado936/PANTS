@@ -14,7 +14,7 @@ select_ntop(score.v, Gmat, pwy, ker, alternative = c("two.sided", "less",
 
 \item{pwy}{Pathway, must be a column name of \code{Gmat}.}
 
-\item{ker}{Laplacian kernel matrix.}
+\item{ker}{Laplacian kernel matrix representing the interaction network.}
 
 \item{alternative}{Alternative hypothesis; must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}. 
 \code{"greater"} corresponds to positive association, \code{"less"} to negative association.}

@@ -2,11 +2,11 @@
 % Please edit documentation in R/pants_hitman.R
 \name{pants_hitman}
 \alias{pants_hitman}
-\title{Pathway Analysis via network smoothing using Hitman}
+\title{Pathway Analysis via network smoothing (Pants) testing mediation with Hitman}
 \usage{
 pants_hitman(object, exposure, phenotype, Gmat, covariates = NULL,
   ker = NULL, feat.tab = NULL, ntop = 5, nperm = 10^4 - 1,
-  ret.null.mats = FALSE, min.nfeats = 0, ncores = 1, name = NA,
+  ret.null.mats = FALSE, min.nfeats = 3, ncores = 1, name = NA,
   seed = 0)
 }
 \arguments{
@@ -21,7 +21,7 @@ features (e.g. genes) and columns to samples. Must have rownames that are non-du
 
 \item{covariates}{Numeric vector or matrix of covariates.}
 
-\item{ker}{Laplacian kernel matrix.}
+\item{ker}{Laplacian kernel matrix representing the interaction network.}
 
 \item{feat.tab}{Table of feature (e.g. gene) statistics and annotation that the Excel table can link to.}
 
@@ -71,7 +71,9 @@ List of at least two data frames:
  }
 }
 \description{
-Pants algorithm for pathway mediation analysis with Hitman and network smoothing.
+Pants with \code{\link[ezlimma]{hitman}} to test mediation of features (i.e. an analyte such as a gene, protein, 
+or metabolite) in a pathway or those connected to the pathway in an interaction network. A workflow is described in
+the vignette; instructions to view the vignette are in the README.
 }
 \details{
 Scores for features in the kernel but not in the data are assigned a z-score of zero by default for sparsity.
@@ -83,8 +85,15 @@ the Excel file links to tables derived from \code{feature.stats}.
 For \code{\link[parallel]{makeCluster}}, the cluster \code{type} depends on the OS, which is tested in the body
 of the function using \code{.Platform$OS.type}.
 
-If \code{!is.na(name)}, an Excel file with "_pants_hitman.xlsx" appended to the name gets written out with links to 
-CSVs containing the statistics of features most affecting the pathway's score. These features are selected as those
-with the largest magnitude impact score, and can be visualized with \code{\link[PANTS]{plot_pwy}}. Depending on \code{ker}, 
-pathways may be affected via smoothing by features outside the pathway.
+If \code{!is.na(name)}, an Excel file with "_pants_hitman.xlsx" appended to \code{name} gets written out with links to CSVs 
+containing the statistics and annotation of features most affecting the pathway's score. The statistics and annotation
+are from \code{feat.tab}, which is usually calculated with \code{\link[ezlimma]{hitman}}. Additionally, the CSVs contain
+whether each feature is in the pathway, and an \code{impact} column describing the impact of each feature on the pathway's
+score. Since pathway significance is calculated in \code{pants_hitman}, \code{impact} uses the feature statistics 
+calculated in \code{pants_hitman} by comparing to permutation. The feature statistics from \code{\link[ezlimma]{hitman}}
+and those from \code{pants_hitman} are nearly identical, though; the main difference is that \code{pants_hitman} 
+feature significances are limited by the number of permutations, so they flatten near the extreme. The features with the
+largest magnitude impact score are those most affecting the pathway's score, and can be visualized with 
+\code{\link[PANTS]{plot_pwy}}. Features with positive impact increase a pathway's score, whereas those with negative 
+impact decrease it.
 }

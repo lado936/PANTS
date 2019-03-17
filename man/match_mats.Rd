@@ -10,7 +10,7 @@ match_mats(score.mat, ker, Gmat, score.impute = 0)
 \item{score.mat}{A matrix-like object with scores from original data and possibly permutations with rows corresponding 
 to features and columns to simulations.}
 
-\item{ker}{Laplacian kernel matrix.}
+\item{ker}{Laplacian kernel matrix representing the interaction network.}
 
 \item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 
