@@ -6,7 +6,7 @@
 \usage{
 plot_pwy(gr, score.v, ntop = 7, Gmat, pwy, ker = NULL, annot.v = NA,
   alternative = c("two.sided", "less", "greater"), name = NULL,
-  color.pal = NULL, plot = TRUE, seed = 0)
+  plot = TRUE, signif.dig = 2, seed = 0)
 }
 \arguments{
 \item{gr}{graph object of class \code{igraph}.}
@@ -27,12 +27,12 @@ have some overlap with \code{rownames(Gmat)}.}
 \item{alternative}{Alternative hypothesis; must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}. 
 \code{"greater"} corresponds to positive association, \code{"less"} to negative association.}
 
-\item{name}{Name of file to plot to; if \code{NA} plots to screen instead of to file.}
-
-\item{color.pal}{Color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
-a palette from \code{\link[RColorBrewer]{brewer.pal}} appropriate to \code{alternative} is chosen.}
+\item{name}{Name of file to plot to. If \code{NULL}, creates a filename from \code{pwy} and \code{ntop}. Set to 
+\code{NA} to plot to screen instead of to file.}
 
 \item{plot}{Logical; should plot be generated?}
+
+\item{signif.dig}{Number of significant digits to use for colorbar axis labels.}
 
 \item{seed}{Integer seed to set for reproducility if \code{fun="mroast"}, since \code{mroast} uses random 
 simulations. Ignored if \code{fun="fry"}.}
@@ -59,6 +59,7 @@ plotted. These nodes are then connected based on the interaction network. Nodes 
 circles, whereas those outside the network are drawn as squares, which is indicated by a legend when some nodes
 are outside the pathway.
 
-Unmeasued nodes have \code{is.na(score.v)} and are drawn as white. When some \code{is.na(score.v)}, a legend is 
-drawn that shows that white nodes are "Unmeasured".
+Unmeasued nodes have \code{is.na(score.v)} and are drawn as white, which is indicated in the colorbar.
+
+The color palette is from \code{\link[RColorBrewer]{brewer.pal}}, and depends on the \code{alternative}.
 }

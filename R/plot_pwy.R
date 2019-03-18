@@ -8,10 +8,10 @@
 #' @param pwy Pathway, must be a column name of \code{Gmat}.
 #' @param annot.v Named vector of annotations for nodes. If \code{annot.v} is given, \code{names(annot.v)} should 
 #' have some overlap with \code{rownames(Gmat)}.
-#' @param name Name of file to plot to; if \code{NA} plots to screen instead of to file.
-#' @param color.pal Color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
-#' a palette from \code{\link[RColorBrewer]{brewer.pal}} appropriate to \code{alternative} is chosen.
+#' @param name Name of file to plot to. If \code{NULL}, creates a filename from \code{pwy} and \code{ntop}. Set to 
+#' \code{NA} to plot to screen instead of to file.
 #' @param plot Logical; should plot be generated?
+#' @param signif.dig Number of significant digits to use for colorbar axis labels.
 #' @inheritParams graph2kernel
 #' @inheritParams pants
 #' @inheritParams ezlimma::roast_contrasts
@@ -20,8 +20,9 @@
 #' circles, whereas those outside the network are drawn as squares, which is indicated by a legend when some nodes
 #' are outside the pathway.
 #' 
-#' Unmeasued nodes have \code{is.na(score.v)} and are drawn as white. When some \code{is.na(score.v)}, a legend is 
-#' drawn that shows that white nodes are "Unmeasured".
+#' Unmeasued nodes have \code{is.na(score.v)} and are drawn as white, which is indicated in the colorbar.
+#' 
+#' The color palette is from \code{\link[RColorBrewer]{brewer.pal}}, and depends on the \code{alternative}.
 #' 
 #' @return Invisibly, a list with components: 
 #'  \describe{
@@ -35,7 +36,7 @@
 #' @export
 
 plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, alternative = c("two.sided", "less", "greater"), 
-                     name = NULL, color.pal = NULL, plot = TRUE, seed = 0){
+                     name = NULL, plot = TRUE, signif.dig=2, seed = 0){
   if (is.null(ker)){
     score.mat <- matrix(score.v, nrow=length(score.v), ncol=1, dimnames=list(names(score.v), "scores"))
     ker <- diag_kernel(object=score.mat, Gmat=Gmat)
@@ -44,31 +45,30 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
   if (!is.na(annot.v) && length(intersect(names(annot.v), rownames(Gmat))) == 0) {
       stop("'annot.v' must be NA or 'names(annot.v)' must overlap with 'rownames(Gmat)'.")
   }
-  if (is.null(color.pal)){
-    if (!requireNamespace("RColorBrewer", quietly = TRUE)){
-      stop("Package 'RColorBrewer' needed since 'color.pal' is NULL. Please install it.", call. = FALSE)
-    }
+  if (!requireNamespace("RColorBrewer", quietly = TRUE)){
+    stop("Package 'RColorBrewer' needed since 'color.pal' is NULL. Please install it.", call. = FALSE)
   }
   alternative <- match.arg(alternative)
-  if (is.null(name)) name <- paste0(ezlimma::clean_filenames(pwy), '_ntop', ntop)
+  if (is.null(name)) name <- paste0(ezlimma::clean_filenames(pwy), "_ntop", ntop)
   
   in.shape <- "circle"
   out.shape <- "square"
   
   # lim doesn't need to worry about score.v having NAs, since it doesn't here
+  # creates common lim using all score.v, so pwys have consistent colorbar
   if (alternative=="two.sided"){
     lim <- c(-max(abs(score.v)), max(abs(score.v)))
     #use yellow in middle to distinguish NAs, which are grey
-    if (is.null(color.pal)) color.pal <- RColorBrewer::brewer.pal(n=9, name="RdYlBu")[9:1]
+    color.pal <- RColorBrewer::brewer.pal(n=9, name="RdYlBu")[9:1]
   } else {
     lim <- range(score.v)
-    if (is.null(color.pal)) color.pal <- RColorBrewer::brewer.pal(n=9, name="Reds")
+    color.pal <- RColorBrewer::brewer.pal(n=9, name="Reds")
   }
   
   sc.m <- as.matrix(data.frame(score.v))
   # rownames(sc.m) <- names(score.v)
   mm <- match_mats(score.mat=sc.m, ker=ker, Gmat=Gmat, score.impute = NA)
-  score.v <- stats::setNames(mm$score.mat[,1], nm=rownames(mm$score.mat)) 
+  score.pwy.v <- stats::setNames(mm$score.mat[,1], nm=rownames(mm$score.mat)) 
   ker <- mm$ker; Gmat <- mm$Gmat
   rm(mm) #to save memory
   
@@ -79,7 +79,7 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
   pwy.nodes <- rownames(Gmat)[Gmat[,pwy]>0]
   pwy.neighbors <- setdiff(neighbor_nms(gr, pwy.nodes), pwy.nodes)
 
-  top.nodes <- select_ntop(score.v=score.v, Gmat=Gmat, pwy=pwy, ker=ker, alternative=alternative, ntop=ntop)
+  top.nodes <- select_ntop(score.v=score.pwy.v, Gmat=Gmat, pwy=pwy, ker=ker, alternative=alternative, ntop=ntop)
   top.node.nms <- top.nodes$node
 
   #get neighbors
@@ -89,13 +89,13 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
                         intersect(pwy.nodes, neighbor_nms(gr, pwy.neighbors.ss)))
 
   gr.pwy <- igraph::induced_subgraph(gr, vid=which(igraph::V(gr)$name %in% c(pwy.nodes.ss, pwy.neighbors.ss)))
-  xx <- score.v[igraph::V(gr.pwy)$name]
-  # color.v is NA where xx is NA
+  xx <- score.pwy.v[igraph::V(gr.pwy)$name]
+  # color.v node colors is NA where xx is NA
   color.v <- stats::setNames(map2color(xx=xx, pal=color.pal, limits=lim), nm=names(xx))
   shape.v <- c(out.shape, in.shape)[(igraph::V(gr.pwy)$name %in% pwy.nodes)+1]
   names(shape.v) <- igraph::V(gr.pwy)$name
 
-  #sub annot for names
+  # sub annot for names
   if (!is.na(annot.v[1])){
     nms.int <- intersect(names(annot.v), igraph::V(gr.pwy)$name)
     if (length(nms.int) > 0){
@@ -108,11 +108,12 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
     set.seed(seed)
     graphics::par(mar=c(5.1, 4.1, 4.1, 2.5))
     graphics::plot(gr.pwy, vertex.color=color.v, vertex.shape=shape.v, vertex.label.font=2) #bold label font
-    legend_colorbar(col=color.pal, lev=lim)
-    col.legend <- color.pal[ceiling(length(color.pal)/2)] #median color
-    if (any(shape.v==out.shape)) graphics::legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=21:22, 
-                                                  bty="n", col="black", pt.bg = col.legend)
-    if (any(is.na(color.v))) graphics::legend(x="bottomright", legend="Unmeasured", pch=1, bty="n")
+    if (any(is.na(score.pwy.v))){
+      color_bar(col=c(NA, color.pal), lev=lim, signif.dig=signif.dig)
+    } else {
+      color_bar(col=color.pal, lev=lim, signif.dig=signif.dig)
+    }
+    if (any(shape.v==out.shape)) graphics::legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=1:0, bty="n")
     if (!is.na(name)) grDevices::dev.off()
   }
   
