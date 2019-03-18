@@ -14,9 +14,7 @@
 match_mats <- function(score.mat, ker, Gmat, score.impute=0){
   stopifnot(length(intersect(rownames(score.mat), rownames(ker))) > 0, 
             length(intersect(rownames(score.mat), rownames(Gmat))) > 0)
-  
   all.feats <- unique(c(rownames(score.mat), rownames(ker), rownames(Gmat)))
-  
   venn.mat <- cbind(all.feats %in% rownames(score.mat), all.feats %in% rownames(ker), all.feats %in% rownames(Gmat))
   rownames(venn.mat) <- all.feats
   vm.rs <- rowSums(venn.mat)
