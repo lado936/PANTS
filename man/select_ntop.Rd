@@ -8,7 +8,7 @@ select_ntop(score.v, Gmat, pwy, ker, alternative = c("two.sided", "less",
   "greater"), ntop = 3)
 }
 \arguments{
-\item{score.v}{Named vector of scores of features to select driver nodes.}
+\item{score.v}{Named vector of scores of features to select high impact nodes.}
 
 \item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 

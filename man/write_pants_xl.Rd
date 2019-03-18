@@ -8,7 +8,7 @@ write_pants_xl(score.v, pwy.tab, feat.tab, Gmat, ker, name,
   alternative = c("two.sided", "less", "greater"), ntop = 5)
 }
 \arguments{
-\item{score.v}{Named vector of scores of features to select driver nodes.}
+\item{score.v}{Named vector of scores of features to select high impact nodes.}
 
 \item{pwy.tab}{A table of pathway results.}
 
