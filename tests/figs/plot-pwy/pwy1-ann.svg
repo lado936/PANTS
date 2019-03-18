@@ -31,10 +31,10 @@
     <rect x='0.00' y='0.00' width='720.00' height='576.00' />
   </clipPath>
 </defs>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='357.92' y='93.75' style='font-size: 12.00px; fill: #00008B; font-family: Liberation Serif;' textLength='8.67px' lengthAdjust='spacingAndGlyphs'>A</text></g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='558.53' y='282.99' style='font-size: 12.00px; fill: #00008B; font-family: Liberation Serif;' textLength='8.00px' lengthAdjust='spacingAndGlyphs'>B</text></g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='177.51' y='286.37' style='font-size: 12.00px; fill: #00008B; font-family: Liberation Serif;' textLength='6.00px' lengthAdjust='spacingAndGlyphs'>d</text></g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='376.74' y='475.72' style='font-size: 12.00px; fill: #00008B; font-family: Liberation Serif;' textLength='8.00px' lengthAdjust='spacingAndGlyphs'>C</text></g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='357.92' y='93.75' style='font-size: 12.00px; font-weight: bold; fill: #00008B; font-family: Liberation Serif;' textLength='8.67px' lengthAdjust='spacingAndGlyphs'>A</text></g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='558.53' y='282.99' style='font-size: 12.00px; font-weight: bold; fill: #00008B; font-family: Liberation Serif;' textLength='8.00px' lengthAdjust='spacingAndGlyphs'>B</text></g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='177.18' y='286.37' style='font-size: 12.00px; font-weight: bold; fill: #00008B; font-family: Liberation Serif;' textLength='6.67px' lengthAdjust='spacingAndGlyphs'>d</text></g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='376.41' y='475.72' style='font-size: 12.00px; font-weight: bold; fill: #00008B; font-family: Liberation Serif;' textLength='8.67px' lengthAdjust='spacingAndGlyphs'>C</text></g>
 <polygon points='684.00,502.56 684.00,453.28 690.25,453.28 690.25,502.56 ' style='stroke-width: 0.75; stroke: #4575B4; fill: #4575B4;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
 <polygon points='684.00,453.28 684.00,404.00 690.25,404.00 690.25,453.28 ' style='stroke-width: 0.75; stroke: #74ADD1; fill: #74ADD1;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
 <polygon points='684.00,404.00 684.00,354.72 690.25,354.72 690.25,404.00 ' style='stroke-width: 0.75; stroke: #ABD9E9; fill: #ABD9E9;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />

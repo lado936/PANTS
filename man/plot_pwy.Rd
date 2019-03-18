@@ -11,7 +11,7 @@ plot_pwy(gr, score.v, ntop = 7, Gmat, pwy, ker = NULL, annot.v = NA,
 \arguments{
 \item{gr}{graph object of class \code{igraph}.}
 
-\item{score.v}{Named vector of scores of features to select driver nodes.}
+\item{score.v}{Named vector of scores of features to select high impact nodes.}
 
 \item{ntop}{Number of top features that most impact a pathway to include.}
 
@@ -27,7 +27,7 @@ have some overlap with \code{rownames(Gmat)}.}
 \item{alternative}{Alternative hypothesis; must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}. 
 \code{"greater"} corresponds to positive association, \code{"less"} to negative association.}
 
-\item{name}{Name of file to create. Set to \code{NA} to plot to screen instead of to file.}
+\item{name}{Name of file to plot to; if \code{NA} plots to screen instead of to file.}
 
 \item{color.pal}{A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
 a palette from \code{\link[RColorBrewer]{brewer.pal}} appropriate to \code{alternative} is chosen.}
@@ -49,11 +49,12 @@ Invisibly, a list with components:
 }
 }
 \description{
-Plot driver nodes for pathway \code{pwy} as a network diagram with node color corresponding to significance and 
-shape to pathway membership. The driver nodes are inferred by assuming the input here is the same as was used 
-to calculate pathway significance in \code{\link{pants}} or \code{\link{pants_hitman}}.
+Plot nodes most impacting a pathway as a network diagram with node color corresponding to significance and 
+shape to pathway membership. The most impactful nodes are inferred by assuming the input here is the same as
+was used to calculate pathway significance in \code{\link{pants}} or \code{\link{pants_hitman}}.
 }
 \details{
-It's checked that \code{names(score.v) == rownames(gr)}. If some \code{ntop} nodes are external, then their 
-internal neighbor nodes are also included. These nodes are then connected based on the interaction network.
+It's checked that \code{names(score.v) == rownames(gr)}. If some \code{ntop} nodes are outside \code{pwy}, 
+then their neighbor nodes inside \code{pwy} are also plotted. These nodes are then connected based on the 
+interaction network.
 }
