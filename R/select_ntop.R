@@ -12,7 +12,7 @@
 #' \code{impact} with impact values; \code{in.pwy} with logicals if node is in \code{pwy}.
 
 select_ntop <- function(score.v, Gmat, pwy, ker, alternative=c("two.sided", "less", "greater"), ntop=3){
-  stopifnot(is.finite(score.v), !is.null(names(score.v)), length(pwy) == 1, pwy %in% colnames(Gmat), 
+  stopifnot(is.na(score.v) | is.finite(score.v), !is.null(names(score.v)), length(pwy) == 1, pwy %in% colnames(Gmat), 
             !is.null(ker), ncol(ker) == nrow(Gmat), ncol(ker) == length(score.v), 
             colnames(ker) == names(score.v))
   alternative <- match.arg(alternative)

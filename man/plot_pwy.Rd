@@ -29,10 +29,10 @@ have some overlap with \code{rownames(Gmat)}.}
 
 \item{name}{Name of file to plot to; if \code{NA} plots to screen instead of to file.}
 
-\item{color.pal}{A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
+\item{color.pal}{Color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
 a palette from \code{\link[RColorBrewer]{brewer.pal}} appropriate to \code{alternative} is chosen.}
 
-\item{plot}{Logical, should plot be generated?}
+\item{plot}{Logical; should plot be generated?}
 
 \item{seed}{Integer seed to set for reproducility if \code{fun="mroast"}, since \code{mroast} uses random 
 simulations. Ignored if \code{fun="fry"}.}
@@ -54,7 +54,11 @@ shape to pathway membership. The most impactful nodes are inferred by assuming t
 was used to calculate pathway significance in \code{\link{pants}} or \code{\link{pants_hitman}}.
 }
 \details{
-It's checked that \code{names(score.v) == rownames(gr)}. If some \code{ntop} nodes are outside \code{pwy}, 
-then their neighbor nodes inside \code{pwy} are also plotted. These nodes are then connected based on the 
-interaction network.
+If some \code{ntop} nodes are outside \code{pwy}, then their neighbor nodes inside \code{pwy} are also 
+plotted. These nodes are then connected based on the interaction network. Nodes inside the network are drawn as
+circles, whereas those outside the network are drawn as squares, which is indicated by a legend when some nodes
+are outside the pathway.
+
+Unmeasued nodes have \code{is.na(score.v)} and are drawn as white. When some \code{is.na(score.v)}, a legend is 
+drawn that shows that white nodes are "Unmeasured".
 }

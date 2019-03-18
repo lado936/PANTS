@@ -9,15 +9,20 @@
 #' @param annot.v Named vector of annotations for nodes. If \code{annot.v} is given, \code{names(annot.v)} should 
 #' have some overlap with \code{rownames(Gmat)}.
 #' @param name Name of file to plot to; if \code{NA} plots to screen instead of to file.
-#' @param color.pal A color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
+#' @param color.pal Color palette, as a vector. Must be accepted by \code{\link[igraph]{plot.igraph}}. If \code{NULL},
 #' a palette from \code{\link[RColorBrewer]{brewer.pal}} appropriate to \code{alternative} is chosen.
-#' @param plot Logical, should plot be generated?
+#' @param plot Logical; should plot be generated?
 #' @inheritParams graph2kernel
 #' @inheritParams pants
 #' @inheritParams ezlimma::roast_contrasts
-#' @details It's checked that \code{names(score.v) == rownames(gr)}. If some \code{ntop} nodes are outside \code{pwy}, 
-#' then their neighbor nodes inside \code{pwy} are also plotted. These nodes are then connected based on the 
-#' interaction network.
+#' @details If some \code{ntop} nodes are outside \code{pwy}, then their neighbor nodes inside \code{pwy} are also 
+#' plotted. These nodes are then connected based on the interaction network. Nodes inside the network are drawn as
+#' circles, whereas those outside the network are drawn as squares, which is indicated by a legend when some nodes
+#' are outside the pathway.
+#' 
+#' Unmeasued nodes have \code{is.na(score.v)} and are drawn as white. When some \code{is.na(score.v)}, a legend is 
+#' drawn that shows that white nodes are "Unmeasured".
+#' 
 #' @return Invisibly, a list with components: 
 #'  \describe{
 #'    \item{\code{gr}}{the graph that gets plotted}
@@ -50,6 +55,7 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
   in.shape <- "circle"
   out.shape <- "square"
   
+  # lim doesn't need to worry about score.v having NAs, since it doesn't here
   if (alternative=="two.sided"){
     lim <- c(-max(abs(score.v)), max(abs(score.v)))
     #use yellow in middle to distinguish NAs, which are grey
@@ -61,7 +67,7 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
   
   sc.m <- as.matrix(data.frame(score.v))
   # rownames(sc.m) <- names(score.v)
-  mm <- match_mats(score.mat=sc.m, ker=ker, Gmat=Gmat, score.impute = 0)
+  mm <- match_mats(score.mat=sc.m, ker=ker, Gmat=Gmat, score.impute = NA)
   score.v <- stats::setNames(mm$score.mat[,1], nm=rownames(mm$score.mat)) 
   ker <- mm$ker; Gmat <- mm$Gmat
   rm(mm) #to save memory
@@ -84,6 +90,7 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
 
   gr.pwy <- igraph::induced_subgraph(gr, vid=which(igraph::V(gr)$name %in% c(pwy.nodes.ss, pwy.neighbors.ss)))
   xx <- score.v[igraph::V(gr.pwy)$name]
+  # color.v is NA where xx is NA
   color.v <- stats::setNames(map2color(xx=xx, pal=color.pal, limits=lim), nm=names(xx))
   shape.v <- c(out.shape, in.shape)[(igraph::V(gr.pwy)$name %in% pwy.nodes)+1]
   names(shape.v) <- igraph::V(gr.pwy)$name
@@ -102,7 +109,10 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
     graphics::par(mar=c(5.1, 4.1, 4.1, 2.5))
     graphics::plot(gr.pwy, vertex.color=color.v, vertex.shape=shape.v, vertex.label.font=2) #bold label font
     legend_colorbar(col=color.pal, lev=lim)
-    if (any(shape.v==out.shape)) graphics::legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=1:0, bty="n")
+    col.legend <- color.pal[ceiling(length(color.pal)/2)] #median color
+    if (any(shape.v==out.shape)) graphics::legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=21:22, 
+                                                  bty="n", col="black", pt.bg = col.legend)
+    if (any(is.na(color.v))) graphics::legend(x="bottomright", legend="Unmeasured", pch=1, bty="n")
     if (!is.na(name)) grDevices::dev.off()
   }
   

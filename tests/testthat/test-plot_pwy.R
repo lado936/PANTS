@@ -56,3 +56,8 @@ test_that("no kernel", {
   #should not have a
   expect_doppelganger(title="pwy2-noker", dpn.noker)
 })
+
+test_that("analyte in G & kernel but not score.v", {
+  dpn.f <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy2", score.v=score.v[-4], name = NA, ntop=4)
+  expect_doppelganger(title="pwy2-na", dpn.f)
+})

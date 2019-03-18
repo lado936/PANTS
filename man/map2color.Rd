@@ -17,5 +17,5 @@ map2color(xx, pal, limits = NULL)
 Map values to colors in a palette.
 }
 \details{
-From \href{https://stackoverflow.com/questions/15006211/how-do-i-generate-a-mapping-from-numbers-to-colors-in-r}{stack overflow}.
+From \href{https://stackoverflow.com/questions/15006211/how-do-i-generate-a-mapping-from-numbers-to-colors-in-r}{stackoverflow}.
 }
