@@ -1,7 +1,5 @@
 context("pants")
 
-ff <- function(v) v[2]-v[1]
-
 test_that("helper_pants", {
   #res is from helper_pants.R
   expect_equal(res$pwy.stats$nfeatures, c(3,3))
@@ -15,14 +13,20 @@ test_that("helper_pants", {
 test_that("kernel & parallel", {
   #contr of length 2
   expect_error(pants(object=M, phenotypes.v=pheno, contrast.v=contrast.v, ker=kk, Gmat=G, nperm=10))
-  ff <- function(v) v[2]-v[1]
   res2 <- pants(object=M, phenotype=pheno, contrast.v=contrast.v, ker=kk, Gmat=G, nperm=10, score_fcn = ff, 
                 ret.null.mats = TRUE, ncores=2)
   expect_equal(nrow(res2$pwy.stats), 2)
-  
   expect_equal(res2$pwy.stats$nfeatures, c(3,3))
+  # independent perms not corrupted by parallelization
   npm <- res2$null.pwy.mat
-  expect_gte(length(unique(npm[1,])), 7) #independent perms
+  nfm <- res2$null.feature.mat
+  sp <- res2$sample.perms
+  n.unique.perm <- sum(!duplicated(sp, MARGIN=2)) # n unique perms
+  expect_equal(length(unique(npm[1,])), n.unique.perm)
+  expect_equal(length(unique(npm[2,])), n.unique.perm)
+  expect_equal(length(unique(nfm[1,])), n.unique.perm)
+  expect_equal(length(unique(nfm[2,])), n.unique.perm)
+  
   pwy1.p <- p_ecdf(eval.v=3*res2$pwy.stats["pwy1", 2], score.mat=t(as.matrix(npm["pwy1",])))
   expect_equal(pwy1.p[1, "p"], setNames(res2$pwy.stats["pwy1", "p"], nm="p"))
 })

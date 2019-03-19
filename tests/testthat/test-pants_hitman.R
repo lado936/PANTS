@@ -36,6 +36,18 @@ test_that("univariate exposure", {
   expect_lt(pwy.stats["pwy1", "p"], 0.05)
 })
 
+test_that("permutations stats not duplicated in parallization", {
+  res2 <- pants_hitman(object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, nperm=nperm, 
+                      ret.null.mats=TRUE)
+  # independent perms not corrupted by parallelization
+  npm <- res2$null.pwy.mat
+  nfm <- res2$null.feature.mat
+  sp <- res2$sample.perms
+  n.unique.perm <- sum(!duplicated(sp, MARGIN=2)) # n unique perms
+  expect_equal(sum(!duplicated(npm, MARGIN = 2)), n.unique.perm)
+  expect_equal(sum(!duplicated(nfm, MARGIN = 2)), n.unique.perm)
+})
+
 test_that("no kernel", {
   res <- pants_hitman(object=M, exposure = pheno.num, phenotype = M["a",], ker=NULL, Gmat=G, nperm=nperm)
   pwy.stats <- res$pwy.stats

@@ -9,9 +9,10 @@
 #' @param score_fcn A function that transforms the t-statistics from the contrasts. \code{identity} is 
 #' the trivial identity function returning its argument. Its input must be a vector of same 
 #' length as number of elements in \code{contrast.v}. Its output must be a scalar.
-#' @param feat.tab Table of feature (e.g. gene) statistics and annotation that the Excel table can link to.
+#' @param feat.tab Table of feature (e.g. gene) statistics and annotation that the Excel table can link to. If 
+#' \code{NULL}, statistics from permutation testing are used.
 #' @param ntop Number of top features that most impact a pathway to include.
-#' @param nperm Number of permutations to perform to evaluate significance of pathways.
+#' @param nperm Number of sample permutations of phenotype to evaluate significance of pathways.
 #' @param ret.null.mats If TRUE, return matrices with null distributions for features and pathwaysle
 #' @param ncores Number of cores to use for parallel computing. You can detect how many are available for your system
 #' using \code{\link[parallel]{detectCores}}.
@@ -43,26 +44,28 @@
 #' \describe{
 #'    \item{\code{pwy.stats}}{A data frame with columns 
 #'    \describe{
-#'    \item{\code{nfeatures}}{number of features in the pathway} 
+#'    \item{\code{nfeatures}}{number of features in the pathway.} 
 #'    \item{\code{feat.score.avg}}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
 #'    to scores in permutations. Only included if \code{ret.null.mats==TRUE}.}
 #'    \item{\code{z}}{pathway permutation z-score (larger is more significant)}
-#'    \item{\code{p}}{pathway permutation p-value} 
-#'    \item{\code{FDR}}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
+#'    \item{\code{p}}{pathway permutation p-value}
+#'    \item{\code{FDR}}{pathway FDR calculated from p-values with \code{p.adjust(p, method="BH")}}
 #'    }}
 #'    \item{\code{feature.stats}}{A data frame with columns
 #'    \describe{
 #'    \item{\code{score}}{feature's score from applying \code{score_fcn} in \code{\link{score_features}}}
 #'    \item{\code{z}}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
 #'    (without smoothing)} 
-#'    \item{\code{p}}{feature's permutation p-value} 
+#'    \item{\code{p}}{feature's permutation p-value}
 #'    \item{\code{FDR}}{feature's FDR from permutation \code{p}}
 #'    }}
-#'    And if \code{ret.null.mats} is TRUE:
+#'    And if \code{ret.null.mats} is \code{TRUE}:
 #'    \item{\code{null.feature.mat}}{Matrix with features as rows and permutations as columns, where each element represents
 #'    the score of that feature in that permutation}
 #'    \item{\code{null.pwy.mat}}{Matrix with pathways as rows and permutations as columns, where each element represents
 #'    the score of that pathway in that permutation}
+#'    \item{\code{sample.perms}}{Matrix with samples as rows and permutations as columns, where each element represents
+#'    the index of the sample simulated to represent the sample in the row in that permutation}
 #'  }
 #' @export
 
@@ -86,12 +89,12 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   # PSOCK works without parallel::clusterExport
   set.seed(seed)
   perms <- lapply(seq_len(nperm), function(i) sample.int(length(phenotype)))
-  score.mat <- parallel::parSapply(cl, perms, function(perm){
+  score.mat <- parallel::parSapply(cl=cl, X=perms, function(perm){
     # must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
     pheno.tmp <- stats::setNames(phenotype[perm], nm=NULL)
     score_features(object=object, phenotype=pheno.tmp, contrast.v=contrast.v, score_fcn=score_fcn)
   })
-  dimnames(score.mat) <- list(rownames(object), paste0('perm', 1:nperm))
+  dimnames(score.mat) <- list(rownames(object), paste0("perm", 1:nperm))
   parallel::stopCluster(cl=cl)
   
   # could use zeallot, but would still need temporary score.mat.comb
@@ -114,7 +117,7 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   pwy.stats <- data.frame(nfeatures=nfeats.per.pwy, feat.score.avg=pwy.v/nfeats.per.pwy, z=NA, p=NA)
   rownames(pwy.stats) <- colnames(Gmat)
   pwy.stats[,c("z", "p")] <- p_ecdf(eval.v=pwy.v, score.mat=pwy.mat, alternative = alternative)
-  pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method='BH')
+  pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method="BH")
   pwy.stats <- pwy.stats[order(pwy.stats$p, -pwy.stats$feat.score.avg),]
 
   # return res
@@ -122,6 +125,8 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   if (ret.null.mats){
     res$null.feature.mat <- as.matrix(score.mat)
     res$null.pwy.mat <- as.matrix(pwy.mat)
+    res$sample.perms <- simplify2array(perms)
+    dimnames(res$sample.perms) <- list(colnames(object), dimnames(score.mat)[[2]])
   } else {
     # only include "feat.score.avg" if ret.null.mats
     res$pwy.stats <- res$pwy.stats[,setdiff(colnames(res$pwy.stats), "feat.score.avg")]

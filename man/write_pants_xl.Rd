@@ -12,7 +12,8 @@ write_pants_xl(score.v, pwy.tab, feat.tab, Gmat, ker, name,
 
 \item{pwy.tab}{A table of pathway results.}
 
-\item{feat.tab}{Table of feature (e.g. gene) statistics and annotation that the Excel table can link to.}
+\item{feat.tab}{Table of feature (e.g. gene) statistics and annotation that the Excel table can link to. If 
+\code{NULL}, statistics from permutation testing are used.}
 
 \item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 

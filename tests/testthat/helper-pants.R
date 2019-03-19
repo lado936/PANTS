@@ -37,3 +37,5 @@ eztt.df <- data.frame(signif(eztt, 3), sym=rownames(eztt))
 pheno.num <- as.numeric(pheno == "trt1")
 names(pheno.num) <- colnames(M)
 nperm <- 100
+
+ff <- function(v) v[2]-v[1]

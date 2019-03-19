@@ -21,7 +21,8 @@ features (e.g. genes) and columns to samples. Must have rownames that are non-du
 
 \item{ker}{Laplacian kernel matrix representing the interaction network.}
 
-\item{feat.tab}{Table of feature (e.g. gene) statistics and annotation that the Excel table can link to.}
+\item{feat.tab}{Table of feature (e.g. gene) statistics and annotation that the Excel table can link to. If 
+\code{NULL}, statistics from permutation testing are used.}
 
 \item{ntop}{Number of top features that most impact a pathway to include.}
 
@@ -29,7 +30,7 @@ features (e.g. genes) and columns to samples. Must have rownames that are non-du
 the trivial identity function returning its argument. Its input must be a vector of same 
 length as number of elements in \code{contrast.v}. Its output must be a scalar.}
 
-\item{nperm}{Number of permutations to perform to evaluate significance of pathways.}
+\item{nperm}{Number of sample permutations of phenotype to evaluate significance of pathways.}
 
 \item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathwaysle}
 
@@ -51,26 +52,28 @@ List of at least two data frames:
 \describe{
    \item{\code{pwy.stats}}{A data frame with columns 
    \describe{
-   \item{\code{nfeatures}}{number of features in the pathway} 
+   \item{\code{nfeatures}}{number of features in the pathway.} 
    \item{\code{feat.score.avg}}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
    to scores in permutations. Only included if \code{ret.null.mats==TRUE}.}
    \item{\code{z}}{pathway permutation z-score (larger is more significant)}
-   \item{\code{p}}{pathway permutation p-value} 
-   \item{\code{FDR}}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
+   \item{\code{p}}{pathway permutation p-value}
+   \item{\code{FDR}}{pathway FDR calculated from p-values with \code{p.adjust(p, method="BH")}}
    }}
    \item{\code{feature.stats}}{A data frame with columns
    \describe{
    \item{\code{score}}{feature's score from applying \code{score_fcn} in \code{\link{score_features}}}
    \item{\code{z}}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
    (without smoothing)} 
-   \item{\code{p}}{feature's permutation p-value} 
+   \item{\code{p}}{feature's permutation p-value}
    \item{\code{FDR}}{feature's FDR from permutation \code{p}}
    }}
-   And if \code{ret.null.mats} is TRUE:
+   And if \code{ret.null.mats} is \code{TRUE}:
    \item{\code{null.feature.mat}}{Matrix with features as rows and permutations as columns, where each element represents
    the score of that feature in that permutation}
    \item{\code{null.pwy.mat}}{Matrix with pathways as rows and permutations as columns, where each element represents
    the score of that pathway in that permutation}
+   \item{\code{sample.perms}}{Matrix with samples as rows and permutations as columns, where each element represents
+   the index of the sample simulated to represent the sample in the row in that permutation}
  }
 }
 \description{
