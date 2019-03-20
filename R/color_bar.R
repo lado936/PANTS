@@ -2,7 +2,7 @@
 #' 
 #' Plot colorbar. There are many functions for this in other pacakges, but they do not appear to handle NAs.
 #' 
-#' @param col Color palette vector. First value can be NA. \code{NA} is transformed to white, so \code{col} cannot have
+#' @param cols Color palette vector. First value can be NA. \code{NA} is transformed to white, so \code{cols} cannot have
 #' \code{"white"} or its hex version \code{"#ffffff"}.
 #' @param lev Vector of numeric levels corresponding to colors. The min and max of this vector is used to define numeric 
 #' range. Cannot have NAs.
