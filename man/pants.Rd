@@ -5,7 +5,7 @@
 \title{Pathway analysis via network smoothing (Pants) testing group contrasts}
 \usage{
 pants(object, phenotype, contrast.v, Gmat, ker = NULL, feat.tab = NULL,
-  ntop = 10, score_fcn = identity, nperm = 10^4 - 1,
+  ntop = 25, score_fcn = identity, nperm = 10^4 - 1,
   ret.null.mats = FALSE, alternative = c("two.sided", "less",
   "greater"), min.nfeats = 3, ncores = 1, name = NA, seed = 0)
 }

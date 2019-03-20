@@ -69,7 +69,7 @@
 #'  }
 #' @export
 
-pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker=NULL, feat.tab=NULL, ntop=5, nperm=10^4-1, 
+pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker=NULL, feat.tab=NULL, ntop=25, nperm=10^4-1, 
                          ret.null.mats=FALSE, min.nfeats=3, ncores=1, name=NA, seed=0){
   if (is.null(ker)){
     ker <- diag_kernel(object=object, Gmat=Gmat)

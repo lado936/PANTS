@@ -5,7 +5,7 @@
 \title{Pathway Analysis via network smoothing (Pants) testing mediation with Hitman}
 \usage{
 pants_hitman(object, exposure, phenotype, Gmat, covariates = NULL,
-  ker = NULL, feat.tab = NULL, ntop = 5, nperm = 10^4 - 1,
+  ker = NULL, feat.tab = NULL, ntop = 25, nperm = 10^4 - 1,
   ret.null.mats = FALSE, min.nfeats = 3, ncores = 1, name = NA,
   seed = 0)
 }
