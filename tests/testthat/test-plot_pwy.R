@@ -58,6 +58,6 @@ test_that("no kernel", {
 })
 
 test_that("analyte in G & kernel but not score.v", {
-  dpn.f <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy2", score.v=score.v[-4], name = NA)
-  expect_doppelganger(title="pwy2-na", dpn.f)
+  pp.na <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy2", score.v=score.v[-4], name = NA, plot = FALSE)
+  expect_true(is.na(pp.na$vertex.color["d"]))
 })

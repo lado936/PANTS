@@ -40,9 +40,9 @@ simulations. Ignored if \code{fun="fry"}.}
 \value{
 Invisibly, a list with components: 
  \describe{
-   \item{\code{gr}}{the graph that gets plotted}
-   \item{\code{vertex.color}}{the vertex colors}
-   \item{\code{vertex.shape}}{the vertex shapes}
+   \item{\code{gr}}{graph that gets plotted}
+   \item{\code{vertex.color}}{vertex colors}
+   \item{\code{vertex.shape}}{vertex shapes}
    \item{\code{score}}{scores of the vertices of the plotted graph}
    \item{\code{top.nodes}}{ntop top nodes driving pathway}
    \item{\code{impact}}{impact score on pathways}

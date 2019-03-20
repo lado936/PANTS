@@ -11,4 +11,7 @@ test_that("alternative", {
   
   pp.nona <- function(){ plot.new(); color_bar(col=color.pal, lev=lim) }
   expect_doppelganger(title="cb.nona", pp.nona)
+  
+  cb.na <- color_bar(cols=c(NA, color.pal), lev=lim, plot=FALSE)
+  expect_equal(cb.na[1, "barcolors"], "#ffffff")
 })

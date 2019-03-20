@@ -4,19 +4,21 @@
 \alias{color_bar}
 \title{Plot colorbar}
 \usage{
-color_bar(col, lev, signif.dig = 2)
+color_bar(cols, lev, signif.dig = 2, plot = TRUE)
 }
 \arguments{
-\item{col}{Color palette vector. First value can be NA. \code{NA} is transformed to white, so \code{col} cannot have
-\code{"white"} or its hex version \code{"#ffffff"}.}
-
 \item{lev}{Vector of numeric levels corresponding to colors. The min and max of this vector is used to define numeric 
 range. Cannot have NAs.}
 
 \item{signif.dig}{Number of significant digits to use for colorbar axis labels.}
+
+\item{plot}{Logical; should plot be generated?}
+
+\item{col}{Color palette vector. First value can be NA. \code{NA} is transformed to white, so \code{col} cannot have
+\code{"white"} or its hex version \code{"#ffffff"}.}
 }
 \value{
-Invibly, \code{col}.
+Invibly, data frame with axis labels and positions.
 }
 \description{
 Plot colorbar. There are many functions for this in other pacakges, but they do not appear to handle NAs.

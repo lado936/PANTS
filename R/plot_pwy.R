@@ -26,9 +26,9 @@
 #' 
 #' @return Invisibly, a list with components: 
 #'  \describe{
-#'    \item{\code{gr}}{the graph that gets plotted}
-#'    \item{\code{vertex.color}}{the vertex colors}
-#'    \item{\code{vertex.shape}}{the vertex shapes}
+#'    \item{\code{gr}}{graph that gets plotted}
+#'    \item{\code{vertex.color}}{vertex colors}
+#'    \item{\code{vertex.shape}}{vertex shapes}
 #'    \item{\code{score}}{scores of the vertices of the plotted graph}
 #'    \item{\code{top.nodes}}{ntop top nodes driving pathway}
 #'    \item{\code{impact}}{impact score on pathways}
@@ -109,15 +109,14 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
     graphics::par(mar=c(5.1, 4.1, 4.1, 2.5))
     graphics::plot(gr.pwy, vertex.color=color.v, vertex.shape=shape.v, vertex.label.font=2) #bold label font
     if (any(is.na(score.pwy.v))){
-      color_bar(col=c(NA, color.pal), lev=lim, signif.dig=signif.dig)
+      color_bar(cols=c(NA, color.pal), lev=lim, signif.dig=signif.dig)
     } else {
-      color_bar(col=color.pal, lev=lim, signif.dig=signif.dig)
+      color_bar(cols=color.pal, lev=lim, signif.dig=signif.dig)
     }
     if (any(shape.v==out.shape)) graphics::legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=1:0, bty="n")
     if (!is.na(name)) grDevices::dev.off()
   }
-  
-  ret <- list(gr=gr.pwy, vertex.color=color.v, vertex.shape=shape.v, score=xx, top.node.nms=top.node.nms, 
-              impact=top.nodes[top.node.nms, "impact"])
+  ret <- list(gr=gr.pwy, vertex.color=color.v, vertex.shape=shape.v, score=xx, 
+              top.node.nms=top.node.nms, impact=top.nodes[top.node.nms, "impact"])
   return(invisible(ret))
 }
