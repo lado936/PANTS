@@ -42,9 +42,7 @@
 #' \describe{
 #'    \item{\code{pwy.stats}}{A data frame with columns 
 #'    \describe{
-#'    \item{\code{nfeatures}}{number of features in the pathway} 
-#'    \item{\code{feat.score.avg}}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
-#'    to scores in permutations. Only included if \code{ret.null.mats==TRUE}.}
+#'    \item{\code{nfeatures}}{number of features in the pathway}
 #'    \item{\code{z}}{pathway permutation z-score (larger is more significant)}
 #'    \item{\code{p}}{pathway permutation p-value} 
 #'    \item{\code{FDR}}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}
@@ -74,10 +72,8 @@ pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker
   if (is.null(ker)){
     ker <- diag_kernel(object=object, Gmat=Gmat)
   }
-  
   stopifnot(length(intersect(rownames(ker), rownames(object))) > 0, any(rownames(Gmat) %in% colnames(ker)), 
             ncol(object)==length(phenotype), ncol(object)==nrow(as.matrix(exposure)), colnames(object)==names(phenotype))
-  
   if (ncol(as.matrix(exposure))==1){
     stopifnot(colnames(object)==names(exposure))
   } else {
@@ -86,67 +82,73 @@ pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker
   
   zeallot::`%<-%`(c(Gmat, nfeats.per.pwy), subset_gmat(object=object, Gmat=Gmat, min.nfeats=min.nfeats))
   
-  lmed <- ezlimma::hitman(E=exposure, M=object, Y=phenotype, covariates=covariates)
+  hm <- ezlimma::hitman(E=exposure, M=object, Y=phenotype, covariates=covariates)
   # transform to one-sided z-score
-  score.v <- stats::qnorm(p=lmed[rownames(object), "EMY.p"], lower.tail = FALSE)
+  hm.zscore.v <- stats::qnorm(p=hm[rownames(object), "EMY.p"], lower.tail = FALSE)
   
   # feature scores in permutations
-  cl.type <- ifelse(.Platform$OS.type=='windows', "PSOCK", "FORK")
+  cl.type <- ifelse(.Platform$OS.type=="windows", "PSOCK", "FORK")
   cl <- parallel::makeCluster(spec=ncores, type=cl.type)
   set.seed(seed)
   perms <- lapply(seq_len(nperm), function(i) sample.int(ncol(object)))
-  score.mat <- parallel::parSapply(cl, perms, function(perm){
-    #must set permuted names to NULL st limma_contrasts doesn't complain that they clash with colnames(object)
+  hm.zscore.mat <- parallel::parSapply(cl, perms, function(perm){
+    # permute object
+    # must set permuted names to NULL st limma_contrasts doesn't complain that they clash with colnames(object)
     object.tmp <- object[,perm]
-    #to avoid names error in stopifnot
+    # to avoid names error in stopifnot
     colnames(object.tmp) <- colnames(object)
-    
-    lmed.tmp <- ezlimma::hitman(E=exposure, M=object.tmp, Y=phenotype, covariates=covariates)
-    stats::qnorm(p=lmed.tmp[rownames(object), "EMY.p"], lower.tail = FALSE)
+    # permuted hm result
+    hm.tmp <- ezlimma::hitman(E=exposure, M=object.tmp, Y=phenotype, covariates=covariates)
+    # return z-scores from permuted object
+    stats::qnorm(p=hm.tmp[rownames(object), "EMY.p"], lower.tail = FALSE)
   })
-  dimnames(score.mat) <- list(rownames(object), paste0('perm', 1:nperm))
+  dimnames(hm.zscore.mat) <- list(rownames(object), paste0("perm", 1:nperm))
   parallel::stopCluster(cl=cl)
   
-  mm <- match_mats(score.mat = cbind(v=score.v, score.mat), ker=ker, Gmat=Gmat)
-  # 1st column contains non-permuted scores
-  score.mat <- mm$score.mat[,-1]; score.v <- mm$score.mat[,1]; ker <- mm$ker; Gmat <- mm$Gmat
+  mm <- match_mats(score.mat = cbind(v=hm.zscore.v, hm.zscore.mat), ker=ker, Gmat=Gmat)
+  # 1st column contains non-permuted scores, which matches other objects
+  hm.zscore.mat <- mm$score.mat[,-1]; hm.zscore.v <- mm$score.mat[,1]; ker <- mm$ker; Gmat <- mm$Gmat
   rm(mm) #to save memory
+  if (any(rownames(hm.zscore.v) != rownames(ker) | rownames(ker) != rownames(Gmat))){
+    stop("internal function match_mats failed; please report the error by raising an issue in the github repo.")
+  }
   
   # feature p-values (for plotting)
-  #features in object & in kernel
-  feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=3,
-                                                      dimnames=list(rownames(score.mat), c("z", "p", "FDR"))))
+  # features in object & in kernel
+  # feature.stats$score != feature.stats$z, because z is from comparing to permutations!
+  feature.stats <- data.frame(score = hm.zscore.v, matrix(NA, nrow=length(hm.zscore.v), ncol=3,
+                                                      dimnames=list(rownames(hm.zscore.mat), c("z", "p", "FDR"))))
   # need to coerce score.mat to matrix to prevent rowSums error
-  feature.stats[,c("z", "p")] <- p_ecdf(eval.v=score.v, score.mat = as.matrix(score.mat), alternative = "greater")
+  feature.stats[,c("z", "p")] <- p_ecdf(eval.v=hm.zscore.v, score.mat = as.matrix(hm.zscore.mat), alternative = "greater")
   feature.stats[,"FDR"] <- stats::p.adjust(feature.stats[,"p"], method="BH")
+  # ph=pants hitman; scores from permutations
+  ph.zscore.v <- stats::setNames(feature.stats[,"z"], nm=rownames(feature.stats))
   
-  # need to compare to pwys, sometimes runs out of memory
-  pwy.v <- (score.v %*% ker %*% Gmat)[1,]
-  pwy.mat <- as.matrix(Matrix::t(Matrix::crossprod(score.mat, ker) %*% Gmat))
+  # need to compare pwys to permutations, sometimes runs out of memory
+  pwy.score.v <- (hm.zscore.v %*% ker %*% Gmat)[1,]
+  pwy.score.mat <- as.matrix(Matrix::t(Matrix::crossprod(hm.zscore.mat, ker) %*% Gmat))
   
-  pwy.stats <- data.frame(nfeatures=nfeats.per.pwy, feat.score.avg=pwy.v/nfeats.per.pwy, z=NA, p=NA)
+  # feat.score.avg=pwy.v/nfeats.per.pwy is confusing and not helpful enough to include
+  pwy.stats <- data.frame(nfeatures=nfeats.per.pwy, z=NA, p=NA)
   rownames(pwy.stats) <- colnames(Gmat)
-  pwy.stats[,c("z", "p")] <- p_ecdf(eval.v=pwy.v, score.mat=pwy.mat, alternative = "greater")
-  pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method='BH')
-  pwy.stats <- pwy.stats[order(pwy.stats$p, -pwy.stats$feat.score.avg),]
+  pwy.stats[,c("z", "p")] <- p_ecdf(eval.v=pwy.score.v, score.mat=pwy.score.mat, alternative = "greater")
+  pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method="BH")
+  pwy.stats <- pwy.stats[order(pwy.stats$p),]
   
   # return res
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)
   if (ret.null.mats){
-    res$null.feature.mat <- as.matrix(score.mat)
-    res$null.pwy.mat <- as.matrix(pwy.mat)
+    res$null.feature.mat <- as.matrix(hm.zscore.mat)
+    res$null.pwy.mat <- as.matrix(pwy.score.mat)
     res$sample.perms <- simplify2array(perms)
-    dimnames(res$sample.perms) <- list(colnames(object), dimnames(score.mat)[[2]])
-    
-  } else {
-    #only include "feat.score.avg" if ret.null.mats
-    res$pwy.stats <- res$pwy.stats[,setdiff(colnames(res$pwy.stats), "feat.score.avg")]
+    dimnames(res$sample.perms) <- list(colnames(object), dimnames(hm.zscore.mat)[[2]])
   }
   
   # write xlsx file with links
   if (!is.na(name)){
-    if (is.null(feat.tab)) feat.tab <- feature.stats
-    write_pants_xl(score.v=score.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, alternative="greater", 
+    if (is.null(feat.tab)){ feat.tab <- feature.stats }
+    stopifnot(is.finite(ph.zscore.v))
+    write_pants_xl(zscore.v=ph.zscore.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, alternative="greater", 
                    name=paste0(name, "_pants_hitman"), ntop=ntop)
   }
   return(res)

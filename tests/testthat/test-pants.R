@@ -44,20 +44,23 @@ test_that("min.nfeats", {
   expect_equal(nrow(res4$pwy.stats), 2)
 })
 
-test_that("write with feat.tab", {
+test_that("write with feat.tab & test impact", {
   res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=5,
                name="test_eztt")
   pwy1 <- read.csv("test_eztt_pants/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
 
   expect_equal(nrow(pwy1), 4)
-  expect_equal(pwy1$sym, c("a", "b", "d", "c"))
   expect_lt(pwy1["a", "trt1.p"], res$feature.stats["a", "p"])
   
   res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=noker, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=2,
                name="test_eztt", alternative = "greater")
   pwy1 <- read.csv("test_eztt_pants/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
   expect_equal(nrow(pwy1), 2)
-  expect_equal(pwy1$sym, c("a", "b"))
+  
+  # impact = Ki*Gj*zi
+  zscore.v <- stats::setNames(res$feature.stats$z, nm=rownames(res$feature.stats))
+  impact.v <- (noker %*% G[,"pwy1"])[,1] * zscore.v
+  expect_equal(signif(impact.v[rownames(pwy1)], 3), setNames(pwy1$impact, nm=rownames(pwy1)))
 })
 
 teardown({

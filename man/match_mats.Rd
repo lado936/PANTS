@@ -17,7 +17,7 @@ to features and columns to simulations.}
 \item{score.impute}{Value to impute missing scores. If zero, \code{score.mat} is sparser, saving computing time.}
 }
 \value{
-A list with elements \code{score.mat}, \code{ker}, and \code{Gmat} after matching.
+List with elements \code{score.mat}, \code{ker}, and \code{Gmat} after matching.
 }
 \description{
 Expand kernel to match features in both object and pathway matrix, so that maintain these features in 

@@ -4,14 +4,15 @@
 \alias{plot_pwy}
 \title{Plot network diagram for a pathway}
 \usage{
-plot_pwy(gr, score.v, ntop = 7, Gmat, pwy, ker = NULL, annot.v = NA,
+plot_pwy(gr, zscore.v, ntop = 7, Gmat, pwy, ker = NULL, annot.v = NA,
   alternative = c("two.sided", "less", "greater"), name = NULL,
   plot = TRUE, signif.dig = 2, seed = 0)
 }
 \arguments{
 \item{gr}{graph object of class \code{igraph}.}
 
-\item{score.v}{Named vector of scores of features to select high impact nodes.}
+\item{zscore.v}{Named vector of feature z-scores to select high impact nodes. These should be finite unless they 
+are \code{NA}.}
 
 \item{ntop}{Number of top features that most impact a pathway to include.}
 
@@ -43,9 +44,9 @@ Invisibly, a list with components:
    \item{\code{gr}}{graph that gets plotted}
    \item{\code{vertex.color}}{vertex colors}
    \item{\code{vertex.shape}}{vertex shapes}
-   \item{\code{score}}{scores of the vertices of the plotted graph}
+   \item{\code{vertex.zscore}}{z-scores of the vertices of the plotted graph}
+   \item{\code{vertex.impact}}{vertex impact on pathway}
    \item{\code{top.nodes}}{ntop top nodes driving pathway}
-   \item{\code{impact}}{impact score on pathways}
 }
 }
 \description{
@@ -59,7 +60,7 @@ plotted. These nodes are then connected based on the interaction network. Nodes 
 circles, whereas those outside the network are drawn as squares, which is indicated by a legend when some nodes
 are outside the pathway.
 
-Unmeasued nodes have \code{is.na(score.v)} and are drawn as white, which is indicated in the colorbar.
+Unmeasured nodes have \code{is.na(zscore.v)} and are drawn as white, which is indicated in the colorbar.
 
 The color palette is from \code{\link[RColorBrewer]{brewer.pal}}, and depends on the \code{alternative}.
 }

@@ -22,8 +22,10 @@ kk <- kk0[rownames(G), rownames(G)]
 noker <- diag_kernel(object=M, Gmat=G)
 
 contrast.v <- c(trt1="trt1-ctrl", trt2="trt2-ctrl")
-res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, nperm=10)
+res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, nperm=50)
 score.v <- stats::setNames(res$feature.stats$score, nm=rownames(res$feature.stats))
+# feature z-score from permutations
+zscore.v <- stats::setNames(res$feature.stats$z, nm=rownames(res$feature.stats))
 
 res.noker <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], Gmat=G, nperm=10)
 score.noker <- stats::setNames(res.noker$feature.stats$score, nm=rownames(res.noker$feature.stats))
@@ -39,3 +41,7 @@ names(pheno.num) <- colnames(M)
 nperm <- 100
 
 ff <- function(v) v[2]-v[1]
+
+# d? plot network
+dpn <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", zscore.v=zscore.v, name = NA, plot=FALSE, annot.v = NA, 
+                alternative = "two.sided", signif.dig=2, seed = 0, ntop=7)

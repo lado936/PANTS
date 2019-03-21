@@ -4,11 +4,12 @@
 \alias{select_ntop}
 \title{Select top drivers for a pathway}
 \usage{
-select_ntop(score.v, Gmat, pwy, ker, alternative = c("two.sided", "less",
-  "greater"), ntop = 3)
+select_ntop(zscore.v, Gmat, pwy, ker, alternative = c("two.sided",
+  "less", "greater"), ntop = 3)
 }
 \arguments{
-\item{score.v}{Named vector of scores of features to select high impact nodes.}
+\item{zscore.v}{Named vector of feature z-scores to select high impact nodes. These should be finite unless they 
+are \code{NA}.}
 
 \item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 
@@ -26,7 +27,7 @@ Data frame with \code{ntop} rows ordered by impact & 3 columns: \code{node} with
 \code{impact} with impact values; \code{in.pwy} with logicals if node is in \code{pwy}.
 }
 \description{
-Select \code{ntop} top drivers for a pathway by calculating impact, sorting nodes, and selecting top nodes.
+Select \code{ntop} top drivers for a pathway by calculating impact, sorting nodes with \code{alternative}, and selecting top nodes.
 }
 \details{
 Independent of the alternative, pathway significance is most affected by nodes with largest magnitude impact,

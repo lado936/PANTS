@@ -20,8 +20,9 @@ A matrix with two columns containing z-scores (larger is more significant) & p-v
 \code{nrow = length(eval.v)}.
 }
 \description{
-Estimate p-value by comparing a score to its simulations.
+Estimate p-value by comparing a score to its permutations.
 }
 \details{
-It's checked that \code{rownames(score.mat)==names(eval.v)}.
+It's checked that \code{rownames(score.mat)==names(eval.v)}. If a p-value is 1, it results in a z-score of 
+-Inf, which can produce an error in downstream analysis, so we calculate a new p-value as 1 - 10^(-6).
 }

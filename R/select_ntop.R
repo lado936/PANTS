@@ -1,6 +1,6 @@
 #' Select top drivers for a pathway
 #' 
-#' Select \code{ntop} top drivers for a pathway by calculating impact, sorting nodes, and selecting top nodes.
+#' Select \code{ntop} top drivers for a pathway by calculating impact, sorting nodes with \code{alternative}, and selecting top nodes.
 #' 
 #' @inheritParams pants
 #' @inheritParams plot_pwy
@@ -11,23 +11,24 @@
 #' @return Data frame with \code{ntop} rows ordered by impact & 3 columns: \code{node} with node names; 
 #' \code{impact} with impact values; \code{in.pwy} with logicals if node is in \code{pwy}.
 
-select_ntop <- function(score.v, Gmat, pwy, ker, alternative=c("two.sided", "less", "greater"), ntop=3){
-  stopifnot(is.na(score.v) | is.finite(score.v), !is.null(names(score.v)), length(pwy) == 1, pwy %in% colnames(Gmat), 
-            !is.null(ker), ncol(ker) == nrow(Gmat), ncol(ker) == length(score.v), 
-            colnames(ker) == names(score.v))
+select_ntop <- function(zscore.v, Gmat, pwy, ker, alternative=c("two.sided", "less", "greater"), ntop=3){
+  stopifnot(is.na(zscore.v) | is.finite(zscore.v), !is.null(names(zscore.v)), length(pwy) == 1, pwy %in% colnames(Gmat), 
+            !is.null(ker), ncol(ker) == nrow(Gmat), ncol(ker) == length(zscore.v), 
+            colnames(ker) == names(zscore.v))
   alternative <- match.arg(alternative)
   
-  if (ntop > length(score.v)) ntop <- length(score.v)
+  if (ntop > length(zscore.v)) ntop <- length(zscore.v)
   
-  #get kernel weight sums per node
+  # get kernel weight sums per node
   coeff.sc <- (ker %*% Gmat[,pwy])[,1]
   
-  #estimate impact of nodes on pwy score
-  #this includes estimation of impact.v to NA nodes, which are properly handled by order() below
-  impact.v <- stats::setNames((coeff.sc * score.v), nm=names(score.v))
-  #always want N largest in magnitude, even for 1-sided test, since these impact most, even if in wrong direction
+  # estimate impact of nodes on pwy score
+  # this includes estimation of impact.v to NA nodes, which are properly handled by order() below
+  # want Ki*Gj*zi = coeff.sc * each element of z, so can multiply elementwise
+  impact.v <- stats::setNames((coeff.sc * zscore.v), nm=names(zscore.v))
+  # always want N largest in magnitude, even for 1-sided test, since these impact most, even if in wrong direction
   impact.v <- impact.v[order(-abs(impact.v))][1:ntop]
-  #order based on alternative
+  # order based on alternative
   impact.o <- impact.v[switch(alternative, 
                               greater=order(-impact.v),
                               less=order(impact.v), 

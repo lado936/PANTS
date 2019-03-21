@@ -8,7 +8,7 @@
 #' @param score.impute Value to impute missing scores. If zero, \code{score.mat} is sparser, saving computing time.
 #' @inheritParams pants
 #' @details There must be some overlap between the rownames of \code{score.mat}, \code{ker}, & \code{Gmat}.
-#' @return A list with elements \code{score.mat}, \code{ker}, and \code{Gmat} after matching.
+#' @return List with elements \code{score.mat}, \code{ker}, and \code{Gmat} after matching.
 #' @export
 
 match_mats <- function(score.mat, ker, Gmat, score.impute=0){
@@ -18,11 +18,11 @@ match_mats <- function(score.mat, ker, Gmat, score.impute=0){
   venn.mat <- cbind(all.feats %in% rownames(score.mat), all.feats %in% rownames(ker), all.feats %in% rownames(Gmat))
   rownames(venn.mat) <- all.feats
   vm.rs <- rowSums(venn.mat)
-  #keep features in 2 of 3 mats
+  # keep features in 2 of 3 mats
   keep.feats <- names(vm.rs)[vm.rs >= 2]
   
-  #add features to scores as zero matrix at bottom
-  #don't want to reorder this since it's the most dense
+  # add features to scores as zero matrix at bottom
+  # don't want to reorder this since it's the most dense
   sc.feats <- rownames(score.mat)
   new.sc.feats <- setdiff(keep.feats, sc.feats)
   keep.sc.feats <- intersect(sc.feats, keep.feats)
@@ -33,7 +33,7 @@ match_mats <- function(score.mat, ker, Gmat, score.impute=0){
     rownames(score.mat) <- c(keep.sc.feats, new.sc.feats)
   }
   
-  #add features to ker as diagonal mat in lower right
+  # add features to ker as diagonal mat in lower right
   ker.feats <- rownames(ker)
   new.ker.feats <- setdiff(keep.feats, ker.feats)
   new.ker.n <- length(new.ker.feats)
@@ -44,7 +44,7 @@ match_mats <- function(score.mat, ker, Gmat, score.impute=0){
   }
   ker <- ker[rownames(score.mat), rownames(score.mat)]
   
-  #add features to G as zero matrix
+  # add features to G as zero matrix
   g.feats <- rownames(Gmat)
   new.g.feats <- setdiff(keep.feats, g.feats)
   new.g.n <- length(new.g.feats)

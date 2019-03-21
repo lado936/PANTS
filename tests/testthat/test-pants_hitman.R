@@ -71,7 +71,7 @@ test_that("min.nfeats", {
   expect_equal(nrow(res4$pwy.stats), 2)
 })
 
-test_that("write with feat.tab", {
+test_that("write with feat.tab & impact", {
   res <- pants_hitman(object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=5,
                name="test_eztt")
   ps.xl <- ezlimma::read_linked_xl("test_eztt_pants_hitman/test_eztt_pants_hitman.xlsx")
@@ -80,6 +80,11 @@ test_that("write with feat.tab", {
   expect_false("feat.score.avg" %in% colnames(ps.xl))
   expect_equal(nrow(pwy1), 4)
   expect_equal(pwy1$sym[1], "a")
+  
+  # impact = Ki*Gj*zi
+  zscore.v <- stats::setNames(res$feature.stats$z, nm=rownames(res$feature.stats))
+  impact.v <- (kk %*% G[,"pwy1"])[,1] * zscore.v
+  expect_equal(signif(impact.v[rownames(pwy1)], 3), setNames(pwy1$impact, nm=rownames(pwy1)))
 })
 
 teardown({

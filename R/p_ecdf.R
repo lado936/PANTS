@@ -1,12 +1,13 @@
 #' Estimate p-value from simulations
 #'
-#' Estimate p-value by comparing a score to its simulations.
+#' Estimate p-value by comparing a score to its permutations.
 #'
 #' @param eval.v A vector of values where the cumulative distribution function should be evaluated.
 #' @param alternative A character string specifying the alternative hypothesis.
 #' @inheritParams match_mats
 #' @inheritParams ezlimma::roast_contrasts
-#' @details It's checked that \code{rownames(score.mat)==names(eval.v)}.
+#' @details It's checked that \code{rownames(score.mat)==names(eval.v)}. If a p-value is 1, it results in a z-score of 
+#' -Inf, which can produce an error in downstream analysis, so we calculate a new p-value as 1 - 10^(-6).   
 #' @return A matrix with two columns containing z-scores (larger is more significant) & p-values with 
 #' \code{nrow = length(eval.v)}.
 
@@ -18,10 +19,12 @@ p_ecdf <- function(eval.v, score.mat, alternative=c("two.sided", "less", "greate
   #add one to numerator and denominator to avoid p-values of zero, which aren't correct
   if (alternative == "greater"){
     pv <- (rowSums(eval.v < score.mat) + 0.5*rowSums(eval.v == score.mat) + 1)/(nsim+1)
+    if (any(pv == 1)){ pv[pv==1] <- 1 - 10**(-6) }
     zv <- stats::qnorm(p=pv, lower.tail = FALSE)
   }
   if (alternative == "less"){
     pv <- (rowSums(eval.v > score.mat) + 0.5*rowSums(eval.v == score.mat) + 1)/(nsim+1)
+    if (any(pv == 1)){ pv[pv==1] <- 1 - 10**(-6) }
     zv <- stats::qnorm(p=pv, lower.tail = TRUE)
   }
   #https://stats.stackexchange.com/questions/140107/p-value-in-a-two-tail-test-with-asymmetric-null-distribution
@@ -31,6 +34,7 @@ p_ecdf <- function(eval.v, score.mat, alternative=c("two.sided", "less", "greate
     min.v <- apply(cbind(less, gr), MARGIN=1, FUN=min)
     #1st mult by 2, then give correction for pv=0; other way could give pv>1
     pv <- (2*min.v + 1)/(nsim + 1)
+    if (any(pv == 1)){ pv[pv==1] <- 1 - 10**(-6) }
     wm.v <- apply(cbind(less, gr), MARGIN=1, FUN=which.min)
     zv <- stats::qnorm(p=pv/2, lower.tail = wm.v-1)
   }

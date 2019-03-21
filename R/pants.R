@@ -44,9 +44,7 @@
 #' \describe{
 #'    \item{\code{pwy.stats}}{A data frame with columns 
 #'    \describe{
-#'    \item{\code{nfeatures}}{number of features in the pathway.} 
-#'    \item{\code{feat.score.avg}}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
-#'    to scores in permutations. Only included if \code{ret.null.mats==TRUE}.}
+#'    \item{\code{nfeatures}}{number of features in the pathway.}
 #'    \item{\code{z}}{pathway permutation z-score (larger is more significant)}
 #'    \item{\code{p}}{pathway permutation p-value}
 #'    \item{\code{FDR}}{pathway FDR calculated from p-values with \code{p.adjust(p, method="BH")}}
@@ -109,16 +107,20 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   # need to coerce score.mat to matrix to prevent rowSums error
   feature.stats[,c("z", "p")] <- p_ecdf(eval.v=score.v, score.mat = as.matrix(score.mat), alternative = alternative)
   feature.stats[,"FDR"] <- stats::p.adjust(feature.stats[,"p"], method="BH")
+  pants.zscore.v <- stats::setNames(feature.stats[,"z"], nm=rownames(feature.stats))
 
   # need to compare to pwys, sometimes runs out of memory
+  # use scores, not z-scores, since used to calc pwy.v/nfeats.per.pwy
   pwy.v <- (score.v %*% ker %*% Gmat)[1,]
+  # null pwy scores
   pwy.mat <- as.matrix(Matrix::t(Matrix::crossprod(score.mat, ker) %*% Gmat))
 
-  pwy.stats <- data.frame(nfeatures=nfeats.per.pwy, feat.score.avg=pwy.v/nfeats.per.pwy, z=NA, p=NA)
+  # feat.score.avg=pwy.v/nfeats.per.pwy is confusing and not helpful enough to include
+  pwy.stats <- data.frame(nfeatures=nfeats.per.pwy, z=NA, p=NA)
   rownames(pwy.stats) <- colnames(Gmat)
   pwy.stats[,c("z", "p")] <- p_ecdf(eval.v=pwy.v, score.mat=pwy.mat, alternative = alternative)
   pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method="BH")
-  pwy.stats <- pwy.stats[order(pwy.stats$p, -pwy.stats$feat.score.avg),]
+  pwy.stats <- pwy.stats[order(pwy.stats$p),]
 
   # return res
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)
@@ -132,10 +134,10 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
     res$pwy.stats <- res$pwy.stats[,setdiff(colnames(res$pwy.stats), "feat.score.avg")]
   }
   
-  # write xlsx file with links
+  # copmute impact & write xlsx file with links
   if (!is.na(name)){
     if (is.null(feat.tab)) feat.tab <- feature.stats
-    write_pants_xl(score.v=score.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, alternative=alternative, 
+    write_pants_xl(zscore.v=pants.zscore.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, alternative=alternative, 
                    name=paste0(name, "_pants"), ntop=ntop)
   }
   return(res)

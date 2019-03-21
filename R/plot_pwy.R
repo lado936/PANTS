@@ -4,7 +4,8 @@
 #' shape to pathway membership. The most impactful nodes are inferred by assuming the input here is the same as
 #' was used to calculate pathway significance in \code{\link{pants}} or \code{\link{pants_hitman}}.
 #' 
-#' @param score.v Named vector of scores of features to select high impact nodes.
+#' @param zscore.v Named vector of feature z-scores to select high impact nodes. These should be finite unless they 
+#' are \code{NA}.
 #' @param pwy Pathway, must be a column name of \code{Gmat}.
 #' @param annot.v Named vector of annotations for nodes. If \code{annot.v} is given, \code{names(annot.v)} should 
 #' have some overlap with \code{rownames(Gmat)}.
@@ -20,7 +21,7 @@
 #' circles, whereas those outside the network are drawn as squares, which is indicated by a legend when some nodes
 #' are outside the pathway.
 #' 
-#' Unmeasued nodes have \code{is.na(score.v)} and are drawn as white, which is indicated in the colorbar.
+#' Unmeasured nodes have \code{is.na(zscore.v)} and are drawn as white, which is indicated in the colorbar.
 #' 
 #' The color palette is from \code{\link[RColorBrewer]{brewer.pal}}, and depends on the \code{alternative}.
 #' 
@@ -29,19 +30,20 @@
 #'    \item{\code{gr}}{graph that gets plotted}
 #'    \item{\code{vertex.color}}{vertex colors}
 #'    \item{\code{vertex.shape}}{vertex shapes}
-#'    \item{\code{score}}{scores of the vertices of the plotted graph}
+#'    \item{\code{vertex.zscore}}{z-scores of the vertices of the plotted graph}
+#'    \item{\code{vertex.impact}}{vertex impact on pathway}
 #'    \item{\code{top.nodes}}{ntop top nodes driving pathway}
-#'    \item{\code{impact}}{impact score on pathways}
 #' }
 #' @export
 
-plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, alternative = c("two.sided", "less", "greater"), 
+plot_pwy <- function(gr, zscore.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, alternative = c("two.sided", "less", "greater"), 
                      name = NULL, plot = TRUE, signif.dig=2, seed = 0){
   if (is.null(ker)){
-    score.mat <- matrix(score.v, nrow=length(score.v), ncol=1, dimnames=list(names(score.v), "scores"))
-    ker <- diag_kernel(object=score.mat, Gmat=Gmat)
+    zscore.mat <- matrix(zscore.v, nrow=length(zscore.v), ncol=1, dimnames=list(names(zscore.v), "scores"))
+    ker <- diag_kernel(object=zscore.mat, Gmat=Gmat)
   }
-  stopifnot(pwy %in% colnames(Gmat), igraph::is_simple(gr), is.logical(plot), is.finite(score.v), !is.null(score.v))
+  stopifnot(pwy %in% colnames(Gmat), igraph::is_simple(gr), is.logical(plot), is.na(zscore.v) | is.finite(zscore.v), 
+            !is.null(zscore.v))
   if (!is.na(annot.v) && length(intersect(names(annot.v), rownames(Gmat))) == 0) {
       stop("'annot.v' must be NA or 'names(annot.v)' must overlap with 'rownames(Gmat)'.")
   }
@@ -54,21 +56,20 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
   in.shape <- "circle"
   out.shape <- "square"
   
-  # lim doesn't need to worry about score.v having NAs, since it doesn't here
-  # creates common lim using all score.v, so pwys have consistent colorbar
+  # lim doesn't need to worry about zscore.v having NAs, since it doesn't here
+  # creates common lim using all zscore.v, so pwys have consistent colorbar
   if (alternative=="two.sided"){
-    lim <- c(-max(abs(score.v)), max(abs(score.v)))
+    lim <- c(-max(abs(zscore.v)), max(abs(zscore.v)))
     #use yellow in middle to distinguish NAs, which are grey
     color.pal <- RColorBrewer::brewer.pal(n=9, name="RdYlBu")[9:1]
   } else {
-    lim <- range(score.v)
+    lim <- range(zscore.v)
     color.pal <- RColorBrewer::brewer.pal(n=9, name="Reds")
   }
   
-  sc.m <- as.matrix(data.frame(score.v))
-  # rownames(sc.m) <- names(score.v)
-  mm <- match_mats(score.mat=sc.m, ker=ker, Gmat=Gmat, score.impute = NA)
-  score.pwy.v <- stats::setNames(mm$score.mat[,1], nm=rownames(mm$score.mat)) 
+  zsc.m <- as.matrix(data.frame(zscore.v))
+  mm <- match_mats(score.mat=zsc.m, ker=ker, Gmat=Gmat, score.impute = NA)
+  zscore.v <- stats::setNames(mm$score.mat[,1], nm=rownames(mm$score.mat)) 
   ker <- mm$ker; Gmat <- mm$Gmat
   rm(mm) #to save memory
   
@@ -79,19 +80,19 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
   pwy.nodes <- rownames(Gmat)[Gmat[,pwy]>0]
   pwy.neighbors <- setdiff(neighbor_nms(gr, pwy.nodes), pwy.nodes)
 
-  top.nodes <- select_ntop(score.v=score.pwy.v, Gmat=Gmat, pwy=pwy, ker=ker, alternative=alternative, ntop=ntop)
-  top.node.nms <- top.nodes$node
+  top.nodes <- select_ntop(zscore.v=zscore.v, Gmat=Gmat, pwy=pwy, ker=ker, alternative=alternative, ntop=ntop)
+  # top.node.nms <- top.nodes$node
 
   #get neighbors
-  pwy.neighbors.ss <- intersect(pwy.neighbors, top.node.nms)
+  pwy.neighbors.ss <- intersect(pwy.neighbors, top.nodes$node)
   #get pwy nodes with large stats OR pwy nodes connected to neighbors with large stats
-  pwy.nodes.ss <- union(intersect(pwy.nodes, top.node.nms),
+  pwy.nodes.ss <- union(intersect(pwy.nodes, top.nodes$node),
                         intersect(pwy.nodes, neighbor_nms(gr, pwy.neighbors.ss)))
 
   gr.pwy <- igraph::induced_subgraph(gr, vid=which(igraph::V(gr)$name %in% c(pwy.nodes.ss, pwy.neighbors.ss)))
-  xx <- score.pwy.v[igraph::V(gr.pwy)$name]
+  zscore.ss <- zscore.v[igraph::V(gr.pwy)$name]
   # color.v node colors is NA where xx is NA
-  color.v <- stats::setNames(map2color(xx=xx, pal=color.pal, limits=lim), nm=names(xx))
+  color.v <- stats::setNames(map2color(xx=zscore.ss, pal=color.pal, limits=lim), nm=names(zscore.ss))
   shape.v <- c(out.shape, in.shape)[(igraph::V(gr.pwy)$name %in% pwy.nodes)+1]
   names(shape.v) <- igraph::V(gr.pwy)$name
 
@@ -108,15 +109,15 @@ plot_pwy <- function(gr, score.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, a
     set.seed(seed)
     graphics::par(mar=c(5.1, 4.1, 4.1, 2.5))
     graphics::plot(gr.pwy, vertex.color=color.v, vertex.shape=shape.v, vertex.label.font=2) #bold label font
-    if (any(is.na(score.pwy.v))){
+    if (any(is.na(zscore.v))){
       color_bar(cols=c(NA, color.pal), lev=lim, signif.dig=signif.dig)
     } else {
       color_bar(cols=color.pal, lev=lim, signif.dig=signif.dig)
     }
-    if (any(shape.v==out.shape)) graphics::legend(x="topright", legend=c("Inside pwy", "Outside pwy"), pch=1:0, bty="n")
+    if (any(shape.v==out.shape)) graphics::legend(x="topright", legend=c("Inside pathway", "Outside pathway"), pch=1:0, bty="n")
     if (!is.na(name)) grDevices::dev.off()
   }
-  ret <- list(gr=gr.pwy, vertex.color=color.v, vertex.shape=shape.v, score=xx, 
-              top.node.nms=top.node.nms, impact=top.nodes[top.node.nms, "impact"])
+  ret <- list(gr=gr.pwy, vertex.color=color.v, vertex.shape=shape.v, vertex.zscore=zscore.ss, 
+              vertex.impact=setNames(top.nodes[top.nodes$node, "impact"], nm=top.nodes$node), top.node.nms=top.nodes$node)
   return(invisible(ret))
 }

@@ -47,9 +47,7 @@ List of at least two data frames:
 \describe{
    \item{\code{pwy.stats}}{A data frame with columns 
    \describe{
-   \item{\code{nfeatures}}{number of features in the pathway} 
-   \item{\code{feat.score.avg}}{sum of smoothed scores of the pathway's features / \code{nfeatures}. This score is compared
-   to scores in permutations. Only included if \code{ret.null.mats==TRUE}.}
+   \item{\code{nfeatures}}{number of features in the pathway}
    \item{\code{z}}{pathway permutation z-score (larger is more significant)}
    \item{\code{p}}{pathway permutation p-value} 
    \item{\code{FDR}}{pathway FDR calculated from p-values with \code{p.adjust(p, method='BH')}}

@@ -4,11 +4,12 @@
 \alias{write_pants_xl}
 \title{Write Excel XLSX file with links to CSVs}
 \usage{
-write_pants_xl(score.v, pwy.tab, feat.tab, Gmat, ker, name,
+write_pants_xl(zscore.v, pwy.tab, feat.tab, Gmat, ker, name,
   alternative = c("two.sided", "less", "greater"), ntop = 5)
 }
 \arguments{
-\item{score.v}{Named vector of scores of features to select high impact nodes.}
+\item{zscore.v}{Named vector of feature z-scores to select high impact nodes. These should be finite unless they 
+are \code{NA}.}
 
 \item{pwy.tab}{A table of pathway results.}
 
@@ -28,6 +29,6 @@ write_pants_xl(score.v, pwy.tab, feat.tab, Gmat, ker, name,
 }
 \description{
 Create directory; write CSV files with stats from \code{feat.tab} for all features in each pathway, and the top
-3 features that impact each pathway (even if they're outside the pathway); and write an Excel XLSX file using 
+features that impact each pathway (even if they're outside the pathway); and write an Excel XLSX file using 
 \code{writexl} that links to the CSVs.
 }

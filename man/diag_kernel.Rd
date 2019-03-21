@@ -19,5 +19,5 @@ A diagonal matrix.
 Make diagonal kernel matrix to run Pants without smoothing.
 }
 \details{
-\code{rownames(object)} and \code{rownames(Gmat)} should have some overlap.
+\code{rownames(object)} and \code{rownames(Gmat)} should have some overlap. \code{object} is only used to extract \code{rownames(object)}.
 }
