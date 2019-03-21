@@ -133,7 +133,7 @@ pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker
   rownames(pwy.stats) <- colnames(Gmat)
   pwy.stats[,c("z", "p")] <- p_ecdf(eval.v=pwy.score.v, score.mat=pwy.score.mat, alternative = "greater")
   pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method="BH")
-  pwy.stats <- pwy.stats[order(pwy.stats$p),]
+  pwy.stats <- pwy.stats[order(pwy.stats$p, -pwy.stats$nfeatures),]
   
   # return res
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)

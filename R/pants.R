@@ -120,7 +120,7 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   rownames(pwy.stats) <- colnames(Gmat)
   pwy.stats[,c("z", "p")] <- p_ecdf(eval.v=pwy.v, score.mat=pwy.mat, alternative = alternative)
   pwy.stats$FDR <- stats::p.adjust(pwy.stats$p, method="BH")
-  pwy.stats <- pwy.stats[order(pwy.stats$p),]
+  pwy.stats <- pwy.stats[order(pwy.stats$p, -pwy.stats$nfeatures),]
 
   # return res
   res <- list(pwy.stats=pwy.stats, feature.stats=feature.stats)
