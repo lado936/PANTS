@@ -71,7 +71,7 @@ pwy.stats <- res.lst$pwy.stats
 ## Plot
 Draw network diagram of driving nodes for the pathway "Beta-Alanine Metabolism". We annotate select nodes we have annotation for to replace their ChEBI ID with a name.
 ```{r plot}
-score.v <- stats::setNames(res.lst$feature.stats$score, nm=rownames(res.lst$feature.stats))
+zscore.v <- stats::setNames(res.lst$feature.stats$z, nm=rownames(res.lst$feature.stats))
 annot <- c("CHEBI:15846"="NAD+")
-plot_pwy(gr=gr, ker=ker, Gmat=smpdb_gmat, pwy="Beta-Alanine Metabolism", score.v=score.v, annot.v=annot, ntop=5, name=NA)
+plot_pwy(gr=gr, ker=ker, Gmat=smpdb_gmat, pwy="Beta-Alanine Metabolism", zscore.v=zscore.v, annot.v=annot, ntop=5, name=NA)
 ```
