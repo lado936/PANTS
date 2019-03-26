@@ -19,6 +19,7 @@ library(remotes)
 remotes::install_github(repo="jdreyf/ezlimma", build_opts = c("--no-resave-data", "--no-manual"))
 remotes::install_github(repo="jdreyf/PANTS", build_opts = c("--no-resave-data", "--no-manual"))
 ```
+If you receive `Error: Dependency package(s) A, B, C not available`, you can install these packages using `install.packages()` as above.
 
 ## Usage
 The vignette presents a tutorial. To see the vignette:
