@@ -8,14 +8,13 @@ Pathway analysis via network smoothing R package.
 ## Install
 On Windows, you need to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/).
 
-Install `PANTS` from GitHub using `remotes` within R. You must install `remotes` if you haven't before. `PANTS` depends on `ezlimma`, which depends on `limma`, so you must also install these if you haven't before.
+Install `PANTS` from GitHub using `remotes` within R. You must install `remotes`, e.g. with `install.packages("remotes", repos="https://cloud.r-project.org")`, if you haven't before. `PANTS` depends on `ezlimma`, which depends on `limma`, so you must also install these if you haven't before.
 ```
 #if haven't already installed limma
 install.packages("BiocManager", repos="https://cloud.r-project.org") #if haven't already installed BiocManager
 library(BiocManager)
 BiocManager::install("limma")
 
-install.packages("remotes", repos="https://cloud.r-project.org") #if haven't already installed remotes
 library(remotes)
 remotes::install_github(repo="jdreyf/ezlimma", build_opts = c("--no-resave-data", "--no-manual"))
 remotes::install_github(repo="jdreyf/PANTS", build_opts = c("--no-resave-data", "--no-manual"))
