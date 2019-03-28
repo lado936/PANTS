@@ -12,7 +12,7 @@ Imports:
 	ezlimma,
 	igraph (>= 1.0.0),
 	knitr,
-	limma,
+	limma (>= 3.34.8),
 	Matrix,
 	parallel,
 	zeallot
