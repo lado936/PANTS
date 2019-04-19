@@ -16,7 +16,7 @@ p_ecdf <- function(eval.v, score.mat, alternative=c("two.sided", "less", "greate
   alternative <- match.arg(alternative)
   nsim <- ncol(score.mat)
   
-  #add one to numerator and denominator to avoid p-values of zero, which aren't correct
+  # add one to numerator and denominator to avoid p-values of zero, which aren't correct
   if (alternative == "greater"){
     pv <- (rowSums(eval.v < score.mat) + 0.5*rowSums(eval.v == score.mat) + 1)/(nsim+1)
     if (any(pv == 1)){ pv[pv==1] <- 1 - 10**(-6) }
@@ -27,7 +27,7 @@ p_ecdf <- function(eval.v, score.mat, alternative=c("two.sided", "less", "greate
     if (any(pv == 1)){ pv[pv==1] <- 1 - 10**(-6) }
     zv <- stats::qnorm(p=pv, lower.tail = TRUE)
   }
-  #https://stats.stackexchange.com/questions/140107/p-value-in-a-two-tail-test-with-asymmetric-null-distribution
+  # https://stats.stackexchange.com/questions/140107/p-value-in-a-two-tail-test-with-asymmetric-null-distribution
   if (alternative == "two.sided"){
     gr <- rowSums(eval.v > score.mat) + 0.5*rowSums(eval.v == score.mat)
     less <- rowSums(eval.v < score.mat) + 0.5*rowSums(eval.v == score.mat)

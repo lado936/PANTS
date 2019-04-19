@@ -21,7 +21,7 @@ range. Cannot have NAs.}
 Invibly, data frame with axis labels and positions.
 }
 \description{
-Plot colorbar. There are many functions for this in other pacakges, but they do not appear to handle NAs.
+Plot colorbar. There are many functions for this in other pacakges, but they do not appear to handle \code{NA}s.
 }
 \details{
 Modified from \url{https://aurelienmadouasse.wordpress.com/2012/01/13/legend-for-a-continuous-color-scale-in-r/}.
