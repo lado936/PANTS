@@ -1,8 +1,7 @@
 #' Pathway analysis via network smoothing (Pants) testing group contrasts
 #' 
 #' Pants algorithm to test group differences for features (i.e. analytes such as a gene, protein, or metabolite) in a 
-#' pathway or those connected to the pathway in an interaction network. A workflow is described in the vignette; 
-#' instructions to view the vignette are in the README.
+#' pathway or those connected to the pathway in an interaction network.
 #' 
 #' @param Gmat Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.
 #' @param ker Laplacian kernel matrix representing the interaction network.
@@ -65,6 +64,8 @@
 #'    \item{\code{sample.perms}}{Matrix with samples as rows and permutations as columns, where each element represents
 #'    the index of the sample simulated to represent the sample in the row in that permutation}
 #'  }
+#' @examples
+#' # A workflow is described in the vignette; instructions to view the vignette are in the README.
 #' @export
 
 pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, ntop=25, score_fcn=identity, nperm=10^4-1, 

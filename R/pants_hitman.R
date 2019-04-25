@@ -1,8 +1,7 @@
 #' Pathway Analysis via network smoothing (Pants) testing mediation with Hitman
 #' 
 #' Pants with \code{\link[ezlimma]{hitman}} to test mediation of features (i.e. an analyte such as a gene, protein, 
-#' or metabolite) in a pathway or those connected to the pathway in an interaction network. A workflow is described in
-#' the vignette; instructions to view the vignette are in the README.
+#' or metabolite) in a pathway or those connected to the pathway in an interaction network.
 #' 
 #' @param exposure A numeric vector or matrix of exposures.
 #' @param covariates Numeric vector or matrix of covariates.
@@ -65,6 +64,8 @@
 #'    \item{\code{sample.perms}}{Matrix with samples as rows and permutations as columns, where each element represents
 #'    the index of the sample simulated to represent the sample in the row in that permutation}
 #'  }
+#' @examples
+#' # A workflow is described in the vignette; instructions to view the vignette are in the README.
 #' @export
 
 pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker=NULL, feat.tab=NULL, ntop=25, nperm=10^4-1, 

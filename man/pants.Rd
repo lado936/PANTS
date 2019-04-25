@@ -76,8 +76,7 @@ List of at least two data frames:
 }
 \description{
 Pants algorithm to test group differences for features (i.e. analytes such as a gene, protein, or metabolite) in a 
-pathway or those connected to the pathway in an interaction network. A workflow is described in the vignette; 
-instructions to view the vignette are in the README.
+pathway or those connected to the pathway in an interaction network.
 }
 \details{
 Scores for features in the kernel but not in the data are assigned a z-score of zero by default for sparsity.
@@ -100,4 +99,7 @@ in \code{pants} by comparing to permutation. The feature statistics from \pkg{ez
 by the number of permutations, so they flatten near the extreme. The features with the largest magnitude impact score
 are selected and can be visualized with \code{\link[PANTS]{plot_pwy}}. Whether these features increase or decrease a 
 pathway's score depends on the \code{alternative}.
+}
+\examples{
+# A workflow is described in the vignette; instructions to view the vignette are in the README.
 }

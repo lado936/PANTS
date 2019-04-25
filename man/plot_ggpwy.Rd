@@ -6,7 +6,7 @@
 \usage{
 plot_ggpwy(gr, zscore.v, ntop = 7, Gmat, pwy, ker = NULL,
   annot.v = NA, alternative = c("two.sided", "less", "greater"),
-  name.fig = NULL, plot.net = TRUE, signif.dig = 2, seed = 0)
+  name = NULL, plot = TRUE, signif.dig = 2, seed = 0)
 }
 \arguments{
 \item{gr}{graph object of class \code{igraph}.}
@@ -28,10 +28,10 @@ have some overlap with \code{rownames(Gmat)}.}
 \item{alternative}{Alternative hypothesis; must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}. 
 \code{"greater"} corresponds to positive association, \code{"less"} to negative association.}
 
-\item{name.fig}{Name of file to plot to. If \code{NULL}, creates a filename from \code{pwy} and \code{ntop}. Set to 
+\item{name}{Name of file to plot to. If \code{NULL}, creates a filename from \code{pwy} and \code{ntop}. Set to 
 \code{NA} to plot to screen instead of to file.}
 
-\item{plot.net}{Logical; should plot be generated?}
+\item{plot}{Logical; should plot be generated?}
 
 \item{signif.dig}{Number of significant digits to use for colorbar axis labels.}
 

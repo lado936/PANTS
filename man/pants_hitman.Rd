@@ -73,8 +73,7 @@ List of at least two data frames:
 }
 \description{
 Pants with \code{\link[ezlimma]{hitman}} to test mediation of features (i.e. an analyte such as a gene, protein, 
-or metabolite) in a pathway or those connected to the pathway in an interaction network. A workflow is described in
-the vignette; instructions to view the vignette are in the README.
+or metabolite) in a pathway or those connected to the pathway in an interaction network.
 }
 \details{
 In \code{\link{pants}}, samples in \code{phenotype} are permuted, since this properly permutes the \code{object} to 
@@ -101,4 +100,7 @@ feature significances are limited by the number of permutations, so they flatten
 largest magnitude impact score are those most affecting the pathway's score, and can be visualized with 
 \code{\link[PANTS]{plot_pwy}}. Features with positive impact increase a pathway's score, whereas those with negative 
 impact decrease it.
+}
+\examples{
+# A workflow is described in the vignette; instructions to view the vignette are in the README.
 }

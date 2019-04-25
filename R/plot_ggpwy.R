@@ -9,9 +9,9 @@
 #' @param pwy Pathway, must be a column name of \code{Gmat}.
 #' @param annot.v Named vector of annotations for nodes. If \code{annot.v} is given, \code{names(annot.v)} should 
 #' have some overlap with \code{rownames(Gmat)}.
-#' @param name.fig Name of file to plot to. If \code{NULL}, creates a filename from \code{pwy} and \code{ntop}. Set to 
+#' @param name Name of file to plot to. If \code{NULL}, creates a filename from \code{pwy} and \code{ntop}. Set to 
 #' \code{NA} to plot to screen instead of to file.
-#' @param plot.net Logical; should plot be generated?
+#' @param plot Logical; should plot be generated?
 #' @param signif.dig Number of significant digits to use for colorbar axis labels.
 #' @inheritParams graph2kernel
 #' @inheritParams pants
@@ -37,12 +37,12 @@
 #' @export
 
 plot_ggpwy <- function(gr, zscore.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, alternative = c("two.sided", "less", "greater"), 
-                     name.fig = NULL, plot.net = TRUE, signif.dig=2, seed = 0){
+                     name = NULL, plot = TRUE, signif.dig=2, seed = 0){
   if (is.null(ker)){
     zscore.mat <- matrix(zscore.v, nrow=length(zscore.v), ncol=1, dimnames=list(names(zscore.v), "scores"))
     ker <- diag_kernel(object=zscore.mat, Gmat=Gmat)
   }
-  stopifnot(pwy %in% colnames(Gmat), igraph::is_simple(gr), is.logical(plot.net), is.na(zscore.v) | is.finite(zscore.v), 
+  stopifnot(pwy %in% colnames(Gmat), igraph::is_simple(gr), is.logical(plot), is.na(zscore.v) | is.finite(zscore.v), 
             !is.null(zscore.v))
   if (!is.na(annot.v) && length(intersect(names(annot.v), rownames(Gmat))) == 0) {
       stop("'annot.v' must be NA or 'names(annot.v)' must overlap with 'rownames(Gmat)'.")
@@ -51,7 +51,7 @@ plot_ggpwy <- function(gr, zscore.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA
     stop("Package 'RColorBrewer' needed since 'color.pal' is NULL. Please install it.", call. = FALSE)
   }
   alternative <- match.arg(alternative)
-  if (is.null(name.fig)) name.fig <- paste0(ezlimma::clean_filenames(pwy), "_ntop", ntop)
+  if (is.null(name)) name <- paste0(ezlimma::clean_filenames(pwy), "_ntop", ntop)
   
   # lim doesn't need to worry about zscore.v having NAs, since it doesn't here
   # creates common lim using all zscore.v, so pwys have consistent colorbar
@@ -101,15 +101,15 @@ plot_ggpwy <- function(gr, zscore.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA
   }
   
   gg.pwy <- tidygraph::as_tbl_graph(gr.pwy)
-  if (plot.net){
-    if (!is.na(name.fig)) grDevices::pdf(paste0(name.fig, ".pdf"))
+  if (plot){
+    if (!is.na(name)) grDevices::pdf(paste0(name, ".pdf"))
     set.seed(seed)
     ggg <- ggraph::ggraph(gg.pwy, layout = "nicely") + ggraph::geom_edge_link() + ggraph::theme_graph() + 
       ggraph::geom_node_point(mapping=ggplot2::aes(shape=pathway, color=z), size=6) + 
       ggraph::geom_node_text(mapping=ggplot2::aes(label=I(name))) +
       ggplot2::scale_colour_gradientn(colors = color.pal, limits=lim)
-    plot(ggg)
-    if (!is.na(name.fig)) dev.off()
+    graphics::plot(ggg)
+    if (!is.na(name)) grDevices::dev.off()
   }
   
   # ret <- list(gr=gr.pwy, vertex.color=color.v, vertex.shape=shape.v, vertex.zscore=zscore.ss, 
