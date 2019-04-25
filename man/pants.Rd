@@ -44,8 +44,7 @@ using \code{\link[parallel]{detectCores}}.}
 
 \item{name}{Name for the folder and Excel file that get written. Set to \code{NA} to avoid writing output.}
 
-\item{seed}{Integer seed to set for reproducility if \code{fun="mroast"}, since \code{mroast} uses random 
-simulations. Ignored if \code{fun="fry"}.}
+\item{seed}{Integer seed to set for reproducility.}
 }
 \value{
 List of at least two data frames:

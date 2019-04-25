@@ -15,6 +15,7 @@
 #' @param ret.null.mats If TRUE, return matrices with null distributions for features and pathwaysle
 #' @param ncores Number of cores to use for parallel computing. You can detect how many are available for your system
 #' using \code{\link[parallel]{detectCores}}.
+#' @param seed Integer seed to set for reproducility.
 #' @inheritParams ezlimma::limma_contrasts
 #' @inheritParams ezlimma::limma_cor
 #' @inheritParams ezlimma::roast_contrasts

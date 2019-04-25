@@ -35,8 +35,7 @@ have some overlap with \code{rownames(Gmat)}.}
 
 \item{signif.dig}{Number of significant digits to use for colorbar axis labels.}
 
-\item{seed}{Integer seed to set for reproducility if \code{fun="mroast"}, since \code{mroast} uses random 
-simulations. Ignored if \code{fun="fry"}.}
+\item{seed}{Integer seed to set for reproducility.}
 }
 \value{
 Invisibly, a list with components: 
