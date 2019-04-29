@@ -91,11 +91,12 @@ pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker
   cl.type <- ifelse(.Platform$OS.type=="windows", "PSOCK", "FORK")
   cl <- parallel::makeCluster(spec=ncores, type=cl.type)
   set.seed(seed)
-  perms <- lapply(seq_len(nperm), function(i) sample.int(ncol(object)))
-  hm.zscore.mat <- parallel::parSapply(cl, perms, function(perm){
+  # perms <- lapply(seq_len(nperm), function(i) sample.int(ncol(object)))
+  colnm.perms <- ezpermutations(xx=colnames(object), nperm=nperm)
+  hm.zscore.mat <- parallel::parSapply(cl, colnm.perms, function(cn.perm){
     # permute object
     # must set permuted names to NULL st limma_contrasts doesn't complain that they clash with colnames(object)
-    object.tmp <- object[,perm]
+    object.tmp <- object[,cn.perm]
     # to avoid names error in stopifnot
     colnames(object.tmp) <- colnames(object)
     # permuted hm result
@@ -141,7 +142,7 @@ pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker
   if (ret.null.mats){
     res$null.feature.mat <- as.matrix(hm.zscore.mat)
     res$null.pwy.mat <- as.matrix(pwy.score.mat)
-    res$sample.perms <- simplify2array(perms)
+    res$sample.perms <- simplify2array(colnm.perms)
     dimnames(res$sample.perms) <- list(colnames(object), dimnames(hm.zscore.mat)[[2]])
   }
   

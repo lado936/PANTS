@@ -72,7 +72,7 @@ test_that("min.nfeats", {
 })
 
 test_that("write with feat.tab & impact", {
-  res <- pants_hitman(object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=5,
+  res <- pants_hitman(object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=50, ntop=5,
                name="test_eztt")
   ps.xl <- ezlimma::read_linked_xl("test_eztt_pants_hitman/test_eztt_pants_hitman.xlsx")
   pwy1 <- read.csv("test_eztt_pants_hitman/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
