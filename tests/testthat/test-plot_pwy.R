@@ -20,7 +20,7 @@ test_that("alternative", {
   dpn.f <- function() plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", zscore.v=zscore.v, name = NA)
   expect_doppelganger(title="pwy1", dpn.f)
   
-  dpn2 <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", zscore.v=zscore.v, name = NA, alternative = "less", plot=FALSE)
+  dpn2 <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", zscore.v=zscore.v, name = NA, plot=FALSE)
   expect_equal(dpn$vertex.zscore, dpn2$vertex.zscore[names(dpn$vertex.zscore)])
   
   ppl <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", zscore.v=zscore.v, name = NA, alternative = "less", ntop=2, plot=FALSE)

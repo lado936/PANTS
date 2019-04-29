@@ -5,9 +5,9 @@
 \title{Pathway analysis via network smoothing (Pants) testing group contrasts}
 \usage{
 pants(object, phenotype, contrast.v, Gmat, ker = NULL, feat.tab = NULL,
-  ntop = 25, score_fcn = identity, nperm = 10^4 - 1,
-  ret.null.mats = FALSE, alternative = c("two.sided", "less",
-  "greater"), min.nfeats = 3, ncores = 1, name = NA, seed = 0)
+  ntop = 25, score_fcn = abs, nperm = 10^4 - 1,
+  ret.null.mats = FALSE, min.nfeats = 3, ncores = 1, name = NA,
+  seed = 0)
 }
 \arguments{
 \item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
@@ -26,16 +26,13 @@ features (e.g. genes) and columns to samples. Must have rownames that are non-du
 
 \item{ntop}{Number of top features that most impact a pathway to include.}
 
-\item{score_fcn}{A function that transforms the t-statistics from the contrasts. \code{identity} is 
-the trivial identity function returning its argument. Its input must be a vector of same 
-length as number of elements in \code{contrast.v}. Its output must be a scalar.}
+\item{score_fcn}{Function that transforms the t-statistics from the contrasts into a non-negative value. 
+Its input must be a vector of same length as number of elements in \code{contrast.v} (usually one). 
+Its output must be a non-negative scalar.}
 
 \item{nperm}{Number of sample permutations of phenotype to evaluate significance of pathways.}
 
 \item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathwaysle}
-
-\item{alternative}{Alternative hypothesis; must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}. 
-\code{"greater"} corresponds to positive association, \code{"less"} to negative association.}
 
 \item{min.nfeats}{Minimum number of features (e.g. genes) needed in a gene set for testing.}
 
@@ -74,8 +71,8 @@ List of at least two data frames:
  }
 }
 \description{
-Pants algorithm to test group differences for features (i.e. analytes such as a gene, protein, or metabolite) in a 
-pathway or those connected to the pathway in an interaction network.
+Pants algorithm to test if group differences for features (i.e. analytes such as a gene, protein, or metabolite) 
+in a pathway or those connected to the pathway in an interaction network are greater than randomized ones.
 }
 \details{
 Scores for features in the kernel but not in the data are assigned a z-score of zero by default for sparsity.

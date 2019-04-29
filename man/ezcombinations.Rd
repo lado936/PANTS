@@ -2,7 +2,7 @@
 % Please edit documentation in R/ezcombinations.R
 \name{ezcombinations}
 \alias{ezcombinations}
-\title{Combine group labels for permutation testing}
+\title{Resample group labels with replicates for permutation testing}
 \usage{
 ezcombinations(xx, nperm, freq = length(xx) - length(unique(xx)) + 1)
 }
@@ -18,7 +18,7 @@ Represents resampling without replacement if it's \code{table(xx)}. For resampli
 in each resample.}
 }
 \description{
-Combine unique group labels (unique elements of \code{xx}) into \code{nperm} matrix rows of length 
+Resample unique group labels (unique elements of \code{xx}) into \code{nperm} matrix rows of length 
 \code{length(xx)} for permutation testing. The rows are not duplicates of each other, 
 do not contain \code{xx}, and have each element of \code{unique(xx)} to appear at least once.
 Calculations are done with \pkg{arrangements}.

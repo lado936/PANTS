@@ -36,6 +36,9 @@ have some overlap with \code{rownames(Gmat)}.}
 \item{signif.dig}{Number of significant digits to use for colorbar axis labels.}
 
 \item{seed}{Integer seed to set for reproducility.}
+
+\item{alternive}{Alternative of interest for analyte z-scores. This may be \code{two.sided}, even though 
+\code{pants} tested the absolute value of scores.}
 }
 \value{
 Invisibly, a list with components: 

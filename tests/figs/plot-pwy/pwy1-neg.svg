@@ -23,9 +23,9 @@
 <line x1='552.70' y1='289.50' x2='390.57' y2='461.39' style='stroke-width: 0.75; stroke: #A9A9A9;' clip-path='url(#cpNTkuMDR8Njg0LjAwfDUwMi41Nnw1OS4wNA==)' />
 <line x1='194.84' y1='295.83' x2='370.34' y2='461.96' style='stroke-width: 0.75; stroke: #A9A9A9;' clip-path='url(#cpNTkuMDR8Njg0LjAwfDUwMi41Nnw1OS4wNA==)' />
 <circle cx='362.25' cy='89.79' r='14.33pt' style='stroke-width: 0.75; fill: #D73027;' clip-path='url(#cpNTkuMDR8Njg0LjAwfDUwMi41Nnw1OS4wNA==)' />
-<circle cx='562.53' cy='279.08' r='14.33pt' style='stroke-width: 0.75; fill: #FDAE61;' clip-path='url(#cpNTkuMDR8Njg0LjAwfDUwMi41Nnw1OS4wNA==)' />
-<rect x='166.19' y='267.95' width='28.65' height='28.65' style='stroke-width: 0.75; fill: #F46D43;' clip-path='url(#cpNTkuMDR8Njg0LjAwfDUwMi41Nnw1OS4wNA==)' />
-<circle cx='380.74' cy='471.81' r='14.33pt' style='stroke-width: 0.75; fill: #FEE090;' clip-path='url(#cpNTkuMDR8Njg0LjAwfDUwMi41Nnw1OS4wNA==)' />
+<circle cx='562.53' cy='279.08' r='14.33pt' style='stroke-width: 0.75; fill: #FEE090;' clip-path='url(#cpNTkuMDR8Njg0LjAwfDUwMi41Nnw1OS4wNA==)' />
+<rect x='166.19' y='267.95' width='28.65' height='28.65' style='stroke-width: 0.75; fill: #FDAE61;' clip-path='url(#cpNTkuMDR8Njg0LjAwfDUwMi41Nnw1OS4wNA==)' />
+<circle cx='380.74' cy='471.81' r='14.33pt' style='stroke-width: 0.75; fill: #E0F3F8;' clip-path='url(#cpNTkuMDR8Njg0LjAwfDUwMi41Nnw1OS4wNA==)' />
 <defs>
   <clipPath id='cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA='>
     <rect x='0.00' y='0.00' width='720.00' height='576.00' />
@@ -44,15 +44,15 @@
 <polygon points='684.00,206.88 684.00,157.60 690.25,157.60 690.25,206.88 ' style='stroke-width: 0.75; fill: #FDAE61;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
 <polygon points='684.00,157.60 684.00,108.32 690.25,108.32 690.25,157.60 ' style='stroke-width: 0.75; fill: #F46D43;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
 <polygon points='684.00,108.32 684.00,59.04 690.25,59.04 690.25,108.32 ' style='stroke-width: 0.75; fill: #D73027;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='486.05' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='23.81px' lengthAdjust='spacingAndGlyphs'>-0.230</text></g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='442.05' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='23.81px' lengthAdjust='spacingAndGlyphs'>-0.180</text></g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='389.26' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='23.81px' lengthAdjust='spacingAndGlyphs'>-0.120</text></g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='334.71' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='23.81px' lengthAdjust='spacingAndGlyphs'>-0.058</text></g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='492.81' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='23.81px' lengthAdjust='spacingAndGlyphs'>-0.210</text></g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='433.06' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='23.81px' lengthAdjust='spacingAndGlyphs'>-0.150</text></g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='383.27' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='23.81px' lengthAdjust='spacingAndGlyphs'>-0.100</text></g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='335.47' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='23.81px' lengthAdjust='spacingAndGlyphs'>-0.052</text></g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='283.68' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='21.02px' lengthAdjust='spacingAndGlyphs'>0.000</text></g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='232.65' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='21.02px' lengthAdjust='spacingAndGlyphs'>0.058</text></g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='178.10' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='21.02px' lengthAdjust='spacingAndGlyphs'>0.120</text></g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='125.31' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='21.02px' lengthAdjust='spacingAndGlyphs'>0.180</text></g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='81.32' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='21.02px' lengthAdjust='spacingAndGlyphs'>0.230</text></g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='231.90' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='21.02px' lengthAdjust='spacingAndGlyphs'>0.052</text></g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='184.10' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='21.02px' lengthAdjust='spacingAndGlyphs'>0.100</text></g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='134.31' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='21.02px' lengthAdjust='spacingAndGlyphs'>0.150</text></g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='698.40' y='74.56' style='font-size: 8.40px; font-family: Liberation Sans;' textLength='21.02px' lengthAdjust='spacingAndGlyphs'>0.210</text></g>
 <circle cx='578.44' cy='73.44' r='2.70pt' style='stroke-width: 0.75;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
 <rect x='575.74' y='85.14' width='5.40' height='5.40' style='stroke-width: 0.75;' clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)' />
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8NTc2LjAwfDAuMDA=)'><text x='589.24' y='77.57' style='font-size: 12.00px; font-family: Liberation Sans;' textLength='80.03px' lengthAdjust='spacingAndGlyphs'>Inside pathway</text></g>

@@ -26,9 +26,6 @@ test_that("kernel & parallel", {
   expect_equal(length(unique(npm[2,])), n.unique.perm)
   expect_equal(length(unique(nfm[1,])), n.unique.perm)
   expect_equal(length(unique(nfm[2,])), n.unique.perm)
-  
-  pwy1.p <- p_ecdf(eval.v=3*res2$pwy.stats["pwy1", 2], score.mat=t(as.matrix(npm["pwy1",])))
-  expect_equal(pwy1.p[1, "p"], setNames(res2$pwy.stats["pwy1", "p"], nm="p"))
 })
 
 test_that("no kernel", {
@@ -48,12 +45,11 @@ test_that("write with feat.tab & test impact", {
   res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=5,
                name="test_eztt")
   pwy1 <- read.csv("test_eztt_pants/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
-
   expect_equal(nrow(pwy1), 4)
   expect_lt(pwy1["a", "trt1.p"], res$feature.stats["a", "p"])
   
   res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=noker, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=2,
-               name="test_eztt", alternative = "greater")
+               name="test_eztt")
   pwy1 <- read.csv("test_eztt_pants/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
   expect_equal(nrow(pwy1), 2)
   

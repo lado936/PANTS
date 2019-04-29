@@ -14,9 +14,9 @@ features (e.g. genes) and columns to samples. Must have rownames that are non-du
 
 \item{contrast.v}{Named vector of contrasts, passed to \code{\link[limma]{makeContrasts}}.}
 
-\item{score_fcn}{A function that transforms the t-statistics from the contrasts. \code{identity} is 
-the trivial identity function returning its argument. Its input must be a vector of same 
-length as number of elements in \code{contrast.v}. Its output must be a scalar.}
+\item{score_fcn}{Function that transforms the t-statistics from the contrasts into a non-negative value. 
+Its input must be a vector of same length as number of elements in \code{contrast.v} (usually one). 
+Its output must be a non-negative scalar.}
 }
 \value{
 Vector of feature scores.

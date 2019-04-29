@@ -40,7 +40,7 @@ pheno.num <- as.numeric(pheno == "trt1")
 names(pheno.num) <- colnames(M)
 nperm <- 100
 
-ff <- function(v) v[2]-v[1]
+ff <- function(v) abs(v[1]-v[2])
 
 # d? plot network
 dpn <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", zscore.v=zscore.v, name = NA, plot=FALSE, annot.v = NA, 

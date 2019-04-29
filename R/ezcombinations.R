@@ -1,6 +1,6 @@
-#' Combine group labels for permutation testing
+#' Resample group labels with replicates for permutation testing
 #' 
-#' Combine unique group labels (unique elements of \code{xx}) into \code{nperm} matrix rows of length 
+#' Resample unique group labels (unique elements of \code{xx}) into \code{nperm} matrix rows of length 
 #' \code{length(xx)} for permutation testing. The rows are not duplicates of each other, 
 #' do not contain \code{xx}, and have each element of \code{unique(xx)} to appear at least once.
 #' Calculations are done with \pkg{arrangements}.
@@ -16,7 +16,7 @@
 
 # freq is independent of actual n.per.grp with bootstrapping
 # freq can represent replace, so don't need replace
-# this isn't right: doesn't account for symmetry = f(xx, contr.v, alternative)
+# assume alternative is one-sided, as in pants, so only rm perms w/ missing groups
 ezcombinations <- function(xx, nperm, freq=length(xx)-length(unique(xx))+1){
   len <- length(xx)
   ta <- table(xx)
@@ -28,15 +28,28 @@ ezcombinations <- function(xx, nperm, freq=length(xx)-length(unique(xx))+1){
     freq
   }
   
-  nc <- arrangements::ncombinations(k = len, v = names(ta), freq=freq.v)
-  nsamp <- min(ifelse(alt.type=="two.sided", 4*nperm, 2*nperm), nc)
-  pm <- arrangements::permutations(k = len, v = names(ta), freq=freq.v, nsample = nsamp)
-  rej.ind <- which(apply(pm, MARGIN=1, FUN=function(v){
+  np <- arrangements::npermutations(k = len, v = names(ta), replace=TRUE, freq=freq.v)
+  # iff give nsample, get duplicates!
+  ns1 <- min(np, 10**4)
+  round2 <-  ifelse(ns1 == np, FALSE, TRUE)
+  p1 <- arrangements::permutations(k = len, v = names(ta), replace=TRUE, freq=freq.v, nsample = ns1)
+  rej <- apply(p1, MARGIN=1, FUN=function(v){
       all(v == xx) ||  length(unique(v)) < length(ta)
-  }))
-  if (length(rej.ind) > 0){ pm <- pm[-rej.ind,] }
-  if (nrow(pm) > nperm){
-    pm <- pm[sample(1:nrow(pm), size = nperm)]
+  })
+
+  if (!round2){
+    p1 <- p1[!rej,]
+    if (nrow(p1) > nperm) p1 <- p1[sample.int(1:nrow(p1), size = nperm),]
+    return(p1)
+  } else {
+    prob.nonrej <- sum(!rej)/ns1
+    # X~binom(N=ns2, p=prob.nonrej); P(X>nperm)<1% --> P(ns2*p-3*sqrt(ns2*p*q>nperm))<1%
+    ns2 <- ceiling( (nperm/(8*prob.nonrej*sqrt(prob.nonrej * (1-prob.nonrej))))^(2/3) )
+    p2 <- arrangements::permutations(k = len, v = names(ta), replace=TRUE, freq=freq.v, nsample = ns2)
+    rej <- apply(p2, MARGIN=1, FUN=function(v){
+      all(v == xx) ||  length(unique(v)) < length(ta)
+    })
+    p2 <- p2[!rej,]
+    return(p2)
   }
-  pm
 }

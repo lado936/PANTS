@@ -1,13 +1,13 @@
 #' Pathway analysis via network smoothing (Pants) testing group contrasts
 #' 
-#' Pants algorithm to test group differences for features (i.e. analytes such as a gene, protein, or metabolite) in a 
-#' pathway or those connected to the pathway in an interaction network.
+#' Pants algorithm to test if group differences for features (i.e. analytes such as a gene, protein, or metabolite) 
+#' in a pathway or those connected to the pathway in an interaction network are greater than randomized ones.
 #' 
 #' @param Gmat Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.
 #' @param ker Laplacian kernel matrix representing the interaction network.
-#' @param score_fcn A function that transforms the t-statistics from the contrasts. \code{identity} is 
-#' the trivial identity function returning its argument. Its input must be a vector of same 
-#' length as number of elements in \code{contrast.v}. Its output must be a scalar.
+#' @param score_fcn Function that transforms the t-statistics from the contrasts into a non-negative value. 
+#' Its input must be a vector of same length as number of elements in \code{contrast.v} (usually one). 
+#' Its output must be a non-negative scalar.
 #' @param feat.tab Table of feature (e.g. gene) statistics and annotation that the Excel table can link to. If 
 #' \code{NULL}, statistics from permutation testing are used.
 #' @param ntop Number of top features that most impact a pathway to include.
@@ -69,19 +69,20 @@
 #' # A workflow is described in the vignette; instructions to view the vignette are in the README.
 #' @export
 
-pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, ntop=25, score_fcn=identity, nperm=10^4-1, 
-                  ret.null.mats=FALSE, alternative=c("two.sided", "less", "greater"), min.nfeats=3, ncores=1, 
-                  name=NA, seed=0){
+pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, ntop=25, score_fcn=abs, nperm=10^4-1, 
+                  ret.null.mats=FALSE, min.nfeats=3, ncores=1, name=NA, seed=0){
+  alternative <- "greater"
   if (is.null(ker)){
     ker <- diag_kernel(object=object, Gmat=Gmat)
   }
   stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)), 
             colnames(object)==names(phenotype), is.null(feat.tab) || rownames(object) %in% rownames(feat.tab))
-  alternative <- match.arg(alternative)
   
   zeallot::`%<-%`(c(Gmat, nfeats.per.pwy), subset_gmat(object=object, Gmat=Gmat, min.nfeats=min.nfeats))
 
   score.v <- score_features(object=object, phenotype=phenotype, contrast.v=contrast.v, score_fcn=score_fcn)
+  if (any(score.v < 0)) stop("Calculated scores must be >= 0, but ", rownames(object)[which(score.v < 0)][1], 
+                             " is not.")
   
   # feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
   cl.type <- ifelse(.Platform$OS.type=="windows", "PSOCK", "FORK")
@@ -96,6 +97,7 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   })
   dimnames(score.mat) <- list(rownames(object), paste0("perm", 1:nperm))
   parallel::stopCluster(cl=cl)
+  if (any(score.mat < 0)) stop("Calculated scores from permuted labels must be >= 0, but some are not.")
   
   # could use zeallot, but would still need temporary score.mat.comb
   mm <- match_mats(score.mat = cbind(v=score.v, score.mat), ker=ker, Gmat=Gmat)
@@ -136,7 +138,7 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
     res$pwy.stats <- res$pwy.stats[,setdiff(colnames(res$pwy.stats), "feat.score.avg")]
   }
   
-  # copmute impact & write xlsx file with links
+  # compute impact & write xlsx file with links
   if (!is.na(name)){
     if (is.null(feat.tab)) feat.tab <- feature.stats
     write_pants_xl(zscore.v=pants.zscore.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, alternative=alternative, 

@@ -9,6 +9,8 @@
 #' @param pwy Pathway, must be a column name of \code{Gmat}.
 #' @param annot.v Named vector of annotations for nodes. If \code{annot.v} is given, \code{names(annot.v)} should 
 #' have some overlap with \code{rownames(Gmat)}.
+#' @param alternive Alternative of interest for analyte z-scores. This may be \code{two.sided}, even though 
+#' \code{pants} tested the absolute value of scores. 
 #' @param name Name of file to plot to. If \code{NULL}, creates a filename from \code{pwy} and \code{ntop}. Set to 
 #' \code{NA} to plot to screen instead of to file.
 #' @param plot Logical; should plot be generated?
