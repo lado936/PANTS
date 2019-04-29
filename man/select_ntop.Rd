@@ -17,8 +17,8 @@ are \code{NA}.}
 
 \item{ker}{Laplacian kernel matrix representing the interaction network.}
 
-\item{alternative}{Alternative hypothesis; must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}. 
-\code{"greater"} corresponds to positive association, \code{"less"} to negative association.}
+\item{alternative}{Alternative of interest for analyte z-scores. This may be \code{two.sided}, even though 
+\code{pants} tested the absolute value of scores.}
 
 \item{ntop}{Number of top features that most impact a pathway to include.}
 }

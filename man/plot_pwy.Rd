@@ -25,8 +25,8 @@ are \code{NA}.}
 \item{annot.v}{Named vector of annotations for nodes. If \code{annot.v} is given, \code{names(annot.v)} should 
 have some overlap with \code{rownames(Gmat)}.}
 
-\item{alternative}{Alternative hypothesis; must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}. 
-\code{"greater"} corresponds to positive association, \code{"less"} to negative association.}
+\item{alternative}{Alternative of interest for analyte z-scores. This may be \code{two.sided}, even though 
+\code{pants} tested the absolute value of scores.}
 
 \item{name}{Name of file to plot to. If \code{NULL}, creates a filename from \code{pwy} and \code{ntop}. Set to 
 \code{NA} to plot to screen instead of to file.}
@@ -36,9 +36,6 @@ have some overlap with \code{rownames(Gmat)}.}
 \item{signif.dig}{Number of significant digits to use for colorbar axis labels.}
 
 \item{seed}{Integer seed to set for reproducility.}
-
-\item{alternive}{Alternative of interest for analyte z-scores. This may be \code{two.sided}, even though 
-\code{pants} tested the absolute value of scores.}
 }
 \value{
 Invisibly, a list with components: 

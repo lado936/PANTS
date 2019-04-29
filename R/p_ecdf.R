@@ -18,19 +18,19 @@ p_ecdf <- function(eval.v, score.mat, alternative=c("two.sided", "less", "greate
   
   # add one to numerator and denominator to avoid p-values of zero, which aren't correct
   if (alternative == "greater"){
-    pv <- (rowSums(eval.v < score.mat) + 0.5*rowSums(eval.v == score.mat) + 1)/(nsim+1)
+    pv <- (rowSums(score.mat >= eval.v) + 1)/(nsim+1)
     if (any(pv == 1)){ pv[pv==1] <- 1 - 10**(-6) }
     zv <- stats::qnorm(p=pv, lower.tail = FALSE)
   }
   if (alternative == "less"){
-    pv <- (rowSums(eval.v > score.mat) + 0.5*rowSums(eval.v == score.mat) + 1)/(nsim+1)
+    pv <- (rowSums(score.mat <= eval.v) + 1)/(nsim+1)
     if (any(pv == 1)){ pv[pv==1] <- 1 - 10**(-6) }
     zv <- stats::qnorm(p=pv, lower.tail = TRUE)
   }
   # https://stats.stackexchange.com/questions/140107/p-value-in-a-two-tail-test-with-asymmetric-null-distribution
   if (alternative == "two.sided"){
-    gr <- rowSums(eval.v > score.mat) + 0.5*rowSums(eval.v == score.mat)
-    less <- rowSums(eval.v < score.mat) + 0.5*rowSums(eval.v == score.mat)
+    gr <- rowSums(score.mat <= eval.v)
+    less <- rowSums(score.mat >= eval.v)
     min.v <- apply(cbind(less, gr), MARGIN=1, FUN=min)
     #1st mult by 2, then give correction for pv=0; other way could give pv>1
     pv <- (2*min.v + 1)/(nsim + 1)
