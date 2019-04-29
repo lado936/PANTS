@@ -2,21 +2,30 @@
 % Please edit documentation in R/ezpermutations.R
 \name{ezpermutations}
 \alias{ezpermutations}
-\title{Permute labels or indices for permutation testing}
+\title{Resample group labels with replicates for permutation testing}
 \usage{
-ezpermutations(xx, nperm, freq = length(xx) - 2)
+ezpermutations(xx, nperm, freq = length(xx) - length(unique(xx)) + 1)
 }
 \arguments{
-\item{xx}{Vector of unique labels or indices to permute. Must be of length at least 3.}
+\item{xx}{Vector of labels or indices to resample. Must be of length at least 2.}
 
 \item{nperm}{Number of resamples to return.}
 
-\item{freq}{Integer number of times to repeat any element of \code{xx} within each permutation. \code{freq=1}
-implies sampling without replacement; \code{freq>1} implies sampling with replacement (bootstrapping). Must be
-\code{<length(xx)}, so that a permutation is not composed of repetitions of only 1 element.}
+\item{freq}{Integer number of times to repeat each element of \code{names(table(xx))} within each resample.
+Can be a vector where \code{length(freq)==length(table(xx))} or of length 1, which is recycled into a vector.
+Represents resampling without replacement if it's \code{table(xx)}. For resampling with replacement (bootstrapping),
+\code{length(xx)-length(table(xx))+1} allows each element of \code{unique(xx)} to appear at least once 
+in each resample.}
+}
+\value{
+List
 }
 \description{
-Permute sample labels or indices (\code{xx}) into \code{nperm} matrix rows of length 
+Resample unique sample or group labels (unique elements of \code{xx}) into \code{nperm} matrix rows of length 
 \code{length(xx)} for permutation testing. The rows are not duplicates of each other, 
-and do not contain \code{xx}. Calculations are done with \pkg{arrangements}.
+do not contain \code{xx}, and have each element of \code{unique(xx)} to appear at least once.
+Calculations are done with \pkg{arrangements}.
+}
+\details{
+Number of returned resamples may be less than \code{nperm} if not enough unique resamples are available.
 }

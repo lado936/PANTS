@@ -89,11 +89,12 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   cl <- parallel::makeCluster(spec=ncores, type=cl.type)
   # PSOCK works without parallel::clusterExport
   set.seed(seed)
-  perms <- lapply(seq_len(nperm), function(i) sample.int(length(phenotype)))
-  score.mat <- parallel::parSapply(cl=cl, X=perms, function(perm){
+  # perms <- lapply(seq_len(nperm), function(i) sample.int(length(phenotype)))
+  pheno.perms <- ezpermutations(xx=phenotype, nperm=nperm)
+  score.mat <- parallel::parSapply(cl=cl, X=pheno.perms, function(ph.perm){
     # must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
-    pheno.tmp <- stats::setNames(phenotype[perm], nm=NULL)
-    score_features(object=object, phenotype=pheno.tmp, contrast.v=contrast.v, score_fcn=score_fcn)
+    # pheno.tmp <- stats::setNames(ph.perm, nm=NULL)
+    score_features(object=object, phenotype=ph.perm, contrast.v=contrast.v, score_fcn=score_fcn)
   })
   dimnames(score.mat) <- list(rownames(object), paste0("perm", 1:nperm))
   parallel::stopCluster(cl=cl)
@@ -131,7 +132,7 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   if (ret.null.mats){
     res$null.feature.mat <- as.matrix(score.mat)
     res$null.pwy.mat <- as.matrix(pwy.mat)
-    res$sample.perms <- simplify2array(perms)
+    res$sample.perms <- simplify2array(pheno.perms)
     dimnames(res$sample.perms) <- list(colnames(object), dimnames(score.mat)[[2]])
   } else {
     # only include "feat.score.avg" if ret.null.mats
