@@ -76,7 +76,7 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
     ker <- diag_kernel(object=object, Gmat=Gmat)
   }
   stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)), 
-            colnames(object)==names(phenotype), is.null(feat.tab) || rownames(object) %in% rownames(feat.tab))
+            colnames(object)==names(phenotype), is.null(feat.tab) || all(rownames(object) %in% rownames(feat.tab)))
   
   zeallot::`%<-%`(c(Gmat, nfeats.per.pwy), subset_gmat(object=object, Gmat=Gmat, min.nfeats=min.nfeats))
 
