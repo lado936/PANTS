@@ -46,7 +46,7 @@ plot_pwy <- function(gr, zscore.v, ntop = 7, Gmat, pwy, ker=NULL, annot.v = NA, 
   }
   stopifnot(pwy %in% colnames(Gmat), igraph::is_simple(gr), is.logical(plot), all(is.na(zscore.v) | is.finite(zscore.v)), 
             !is.null(zscore.v))
-  if (!is.na(annot.v) && length(intersect(names(annot.v), rownames(Gmat))) == 0) {
+  if (!all(is.na(annot.v)) && length(intersect(names(annot.v), rownames(Gmat))) == 0) {
       stop("'annot.v' must be NA or 'names(annot.v)' must overlap with 'rownames(Gmat)'.")
   }
   if (!requireNamespace("RColorBrewer", quietly = TRUE)){
