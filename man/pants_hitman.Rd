@@ -6,8 +6,8 @@
 \usage{
 pants_hitman(object, exposure, phenotype, Gmat, covariates = NULL,
   ker = NULL, feat.tab = NULL, ntop = 25, nperm = 10^4 - 1,
-  ret.null.mats = FALSE, min.nfeats = 3, ncores = 1, name = NA,
-  seed = 0)
+  ret.pwy.dfs = FALSE, ret.null.mats = FALSE, min.nfeats = 3,
+  ncores = 1, name = NA, seed = 0)
 }
 \arguments{
 \item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
@@ -30,7 +30,9 @@ features (e.g. genes) and columns to samples. Must have rownames that are non-du
 
 \item{nperm}{Number of sample permutations of \code{object} to evaluate significance of pathways.}
 
-\item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathwaysle}
+\item{ret.pwy.dfs}{Logical; return list of data frames written out to CSVs?}
+
+\item{ret.null.mats}{Logical; return matrices with null distributions for features and pathways?}
 
 \item{min.nfeats}{Minimum number of features (e.g. genes) needed in a gene set for testing.}
 
@@ -97,7 +99,7 @@ calculated in \code{pants_hitman} by comparing to permutation. The feature stati
 and those from \code{pants_hitman} are nearly identical, though; the main difference is that \code{pants_hitman} 
 feature significances are limited by the number of permutations, so they flatten near the extreme. The features with the
 largest magnitude impact score are those most affecting the pathway's score, and can be visualized with 
-\code{\link[PANTS]{plot_pwy}}. Features with positive impact increase a pathway's score, whereas those with negative 
+\code{ezlimmaplot::plot_pwy}. Features with positive impact increase a pathway's score, whereas those with negative 
 impact decrease it.
 }
 \examples{

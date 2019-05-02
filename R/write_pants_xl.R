@@ -4,15 +4,18 @@
 #' features that impact each pathway (even if they're outside the pathway); and write an Excel XLSX file using 
 #' \code{writexl} that links to the CSVs.
 #' 
-#' @inheritParams select_ntop
 #' @inheritParams pants
-#' @inheritParams plot_pwy
+#' @inheritParams select_ntop
 #' @inheritParams ezlimma::write_linked_xl
+#' @return Invisibly, a list with two components:
+#' \describe{
+#'    \item{\code{pwys.xl}}{Data frame representing written Excel file}
+#'    \item{\code{pwy.csvs}}{List of data frames representing each written pathway CSV file}
+#'  }
 
 # req kernel: ok, since fcn not exported
 # feat.tab may have score column if spit out from pants/pants_hitman, but need not
-write_pants_xl <- function(zscore.v, pwy.tab, feat.tab, Gmat, ker, name, alternative=c("two.sided", "less", "greater"),
-                           ntop=5){
+write_pants_xl <- function(zscore.v, pwy.tab, feat.tab, Gmat, ker, name, ntop=5){
   stopifnot(!is.null(names(zscore.v)), is.finite(zscore.v), nrow(pwy.tab) > 0, nrow(feat.tab) > 0, 
             !is.null(ker), ncol(ker) == nrow(Gmat), ncol(ker) == length(zscore.v), colnames(ker) == names(zscore.v), 
             !is.null(name), rownames(ker)==colnames(ker))
@@ -26,24 +29,29 @@ write_pants_xl <- function(zscore.v, pwy.tab, feat.tab, Gmat, ker, name, alterna
   
   # should provide ordered nodes
   feat.lst <- lapply(rownames(xp), FUN=function(pwy){
-    select_ntop(zscore.v=zscore.v, Gmat=Gmat, pwy=pwy, ker=ker, alternative=alternative, ntop=ntop)
+    select_ntop(zscore.v=zscore.v, Gmat=Gmat, pwy=pwy, ker=ker, ntop=ntop)
   })
   names(feat.lst) <- rownames(xp)
   
-  if (file.exists(name)) unlink(name, recursive = TRUE)
-  dir.create(name)
-  dir.create(paste0(name, "/pathways"))
+  if (!is.na(name)){
+    if (file.exists(name)) unlink(name, recursive = TRUE)
+    dir.create(name)
+    dir.create(paste0(name, "/pathways"))
+  }
   names(feat.lst) <- ezlimma::clean_filenames(names(feat.lst))
+  csv.lst <- list()
   for(pwy in rownames(xp)){
     fl.tmp <- feat.lst[[pwy]]
     ft <- data.frame(in_pwy=fl.tmp$in.pwy, impact=fl.tmp$impact, feat.tab[fl.tmp$node,], stringsAsFactors = FALSE)
     ft[,setdiff(colnames(ft), "in_pwy")] <- ezlimma::df_signif(tab=ft[,setdiff(colnames(ft), "in_pwy")], digits=3)
-    utils::write.csv(ft, paste0(name, "/pathways/", pwy, ".csv"))
+    if (!is.na(name)) utils::write.csv(ft, paste0(name, "/pathways/", pwy, ".csv"))
+    csv.lst[[pwy]] <- ft
   }
   
   xp.out <- xp
   xp.out[,-1] <- signif(x=xp.out[,-1], digits=3)
-  writexl::write_xlsx(x=xp.out, path = paste0(name, "/", name, ".xlsx"))
+  if (!is.na(name))writexl::write_xlsx(x=xp.out, path = paste0(name, "/", name, ".xlsx"))
   
-  return(invisible(xp))
+  ret <- list(pwys.xl=xp, pwy.csvs=csv.lst)
+  return(invisible(ret))
 }

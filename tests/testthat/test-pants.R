@@ -1,13 +1,13 @@
 context("pants")
 
 test_that("helper_pants", {
-  #res is from helper_pants.R
-  expect_equal(res$pwy.stats$nfeatures, c(3,3))
+  # from helper_pants.R
+  expect_equal(pwy.stats$nfeatures, c(3,3))
   #allow for =, since only 10 perm
-  expect_gte(res$pwy.stats["pwy1", 2], res$pwy.stats["pwy2", 2])
-  expect_equal(res$pwy.stats["pwy1", 1], 3)
-  expect_equal(res$pwy.stats["pwy2", 1], 3)
-  expect_gt(res$feature.stats["a", 1], max(res$feature.stats[setdiff(rownames(kk), "a"), 1]))
+  expect_gte(pwy.stats["pwy1", 2], pwy.stats["pwy2", 2])
+  expect_equal(pwy.stats["pwy1", 1], 3)
+  expect_equal(pwy.stats["pwy2", 1], 3)
+  expect_gt(feature.stats["a", 1], max(feature.stats[setdiff(rownames(kk), "a"), 1]))
 })
 
 test_that("kernel & parallel", {

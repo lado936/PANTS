@@ -1,21 +1,22 @@
 #' Select top drivers for a pathway
 #' 
-#' Select \code{ntop} top drivers for a pathway by calculating impact, sorting nodes with \code{alternative}, and selecting top nodes.
+#' Select \code{ntop} top drivers for a pathway by calculating impact, sorting nodes with \code{alternative}, 
+#' and selecting top nodes.
 #' 
+#' @param zscore.v Named vector of feature z-scores to select high impact nodes. Non-\code{NA} values should be finite.
+#' @param pwy Pathway, must be a column name of \code{Gmat}.
 #' @inheritParams pants
-#' @inheritParams plot_pwy
 #' @inheritParams ezlimma::roast_contrasts
 #' @details Independent of the alternative, pathway significance is most affected by nodes with largest magnitude impact,
-#' however these nodes are sorted in the output dependent on the alternative. Nodes outside the pathway with no impact, 
-#' which may arise when the kernel is diagonal, are removed.
+#' however these nodes are sorted in the output according to alternative="greater". 
+#' Nodes outside the pathway with no impact, which may arise when the kernel is diagonal, are removed.
 #' @return Data frame with \code{ntop} rows ordered by impact & 3 columns: \code{node} with node names; 
 #' \code{impact} with impact values; \code{in.pwy} with logicals if node is in \code{pwy}.
 
-select_ntop <- function(zscore.v, Gmat, pwy, ker, alternative=c("two.sided", "less", "greater"), ntop=3){
+select_ntop <- function(zscore.v, Gmat, pwy, ker, ntop=3){
   stopifnot(is.na(zscore.v) | is.finite(zscore.v), !is.null(names(zscore.v)), length(pwy) == 1, pwy %in% colnames(Gmat), 
             !is.null(ker), ncol(ker) == nrow(Gmat), ncol(ker) == length(zscore.v), 
             colnames(ker) == names(zscore.v))
-  alternative <- match.arg(alternative)
   
   if (ntop > length(zscore.v)) ntop <- length(zscore.v)
   
@@ -28,11 +29,8 @@ select_ntop <- function(zscore.v, Gmat, pwy, ker, alternative=c("two.sided", "le
   impact.v <- stats::setNames((coeff.sc * zscore.v), nm=names(zscore.v))
   # always want N largest in magnitude, even for 1-sided test, since these impact most, even if in wrong direction
   impact.v <- impact.v[order(-abs(impact.v))][1:ntop]
-  # order based on alternative
-  impact.o <- impact.v[switch(alternative, 
-                              greater=order(-impact.v),
-                              less=order(impact.v), 
-                              two.sided=order(-abs(impact.v)))]
+  # order based on alternative="greater"
+  impact.o <- impact.v[order(-impact.v)]
   top.node.nms <- names(impact.o)
   
   in.pwy <- Gmat[top.node.nms, pwy] != 0

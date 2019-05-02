@@ -4,12 +4,10 @@
 \alias{write_pants_xl}
 \title{Write Excel XLSX file with links to CSVs}
 \usage{
-write_pants_xl(zscore.v, pwy.tab, feat.tab, Gmat, ker, name,
-  alternative = c("two.sided", "less", "greater"), ntop = 5)
+write_pants_xl(zscore.v, pwy.tab, feat.tab, Gmat, ker, name, ntop = 5)
 }
 \arguments{
-\item{zscore.v}{Named vector of feature z-scores to select high impact nodes. These should be finite unless they 
-are \code{NA}.}
+\item{zscore.v}{Named vector of feature z-scores to select high impact nodes. Non-\code{NA} values should be finite.}
 
 \item{pwy.tab}{A table of pathway results.}
 
@@ -22,10 +20,14 @@ are \code{NA}.}
 
 \item{name}{Name for the folder and Excel file that get written. Set to \code{NA} to avoid writing output.}
 
-\item{alternative}{Alternative of interest for analyte z-scores. This may be \code{two.sided}, even though 
-\code{pants} tested the absolute value of scores.}
-
 \item{ntop}{Number of top features that most impact a pathway to include.}
+}
+\value{
+Invisibly, a list with two components:
+\describe{
+   \item{\code{pwys.xl}}{Data frame representing written Excel file}
+   \item{\code{pwy.csvs}}{List of data frames representing each written pathway CSV file}
+ }
 }
 \description{
 Create directory; write CSV files with stats from \code{feat.tab} for all features in each pathway, and the top

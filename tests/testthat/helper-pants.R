@@ -1,6 +1,8 @@
 library(testthat)
 library(vdiffr)
 
+# many objects used in other tests
+
 #sq w/ all nodes connected except a <-> c; a <-> d repeated, as in sif
 el <- rbind(t(combn(letters[1:4], 2))[-2,], c("a", "d"))
 gr <- igraph::graph_from_edgelist(el, directed = FALSE)
@@ -19,13 +21,14 @@ gr <- edgelist2graph(el)
 kk0 <- graph2kernel(gr)
 kk <- kk0[rownames(G), rownames(G)]
 
-noker <- diag_kernel(object=M, Gmat=G)
+noker <- diag_kernel(object.rownames=rownames(M), Gmat.rownames=rownames(G))
 
 contrast.v <- c(trt1="trt1-ctrl", trt2="trt2-ctrl")
-res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, nperm=50)
-score.v <- stats::setNames(res$feature.stats$score, nm=rownames(res$feature.stats))
-# feature z-score from permutations
-zscore.v <- stats::setNames(res$feature.stats$z, nm=rownames(res$feature.stats))
+zeallot::`%<-%`(c(pwy.stats, feature.stats, csv.lst),
+                pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, nperm=50, ret.pwy.dfs = TRUE))
+feat.tab <- data.frame(z=feature.stats[, "z", drop=FALSE], annot=NA)
+zscore.v <- stats::setNames(feature.stats[, "z"], nm=rownames(feature.stats))
+score.v <- stats::setNames(feature.stats[, "score"], nm=rownames(feature.stats))
 
 res.noker <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], Gmat=G, nperm=10)
 score.noker <- stats::setNames(res.noker$feature.stats$score, nm=rownames(res.noker$feature.stats))
@@ -40,8 +43,4 @@ pheno.num <- as.numeric(pheno == "trt1")
 names(pheno.num) <- colnames(M)
 nperm <- 100
 
-ff <- function(v) abs(v[1]-v[2])
-
-# d? plot network
-dpn <- plot_pwy(gr=gr, ker=kk, Gmat=G, pwy="pwy1", zscore.v=zscore.v, name = NA, plot=FALSE, annot.v = NA, 
-                alternative = "two.sided", signif.dig=2, seed = 0, ntop=7)
+ff <- function(v) abs(v[2]-v[1])

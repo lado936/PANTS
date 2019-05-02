@@ -6,8 +6,8 @@
 \usage{
 pants(object, phenotype, contrast.v, Gmat, ker = NULL, feat.tab = NULL,
   ntop = 25, score_fcn = abs, nperm = 10^4 - 1,
-  ret.null.mats = FALSE, min.nfeats = 3, ncores = 1, name = NA,
-  seed = 0)
+  ret.pwy.dfs = FALSE, ret.null.mats = FALSE, min.nfeats = 3,
+  ncores = 1, name = NA, seed = 0)
 }
 \arguments{
 \item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
@@ -32,7 +32,9 @@ Its output must be a non-negative scalar.}
 
 \item{nperm}{Number of sample permutations of phenotype to evaluate significance of pathways.}
 
-\item{ret.null.mats}{If TRUE, return matrices with null distributions for features and pathwaysle}
+\item{ret.pwy.dfs}{Logical; return list of data frames written out to CSVs?}
+
+\item{ret.null.mats}{Logical; return matrices with null distributions for features and pathways?}
 
 \item{min.nfeats}{Minimum number of features (e.g. genes) needed in a gene set for testing.}
 
@@ -55,12 +57,14 @@ List of at least two data frames:
    }}
    \item{\code{feature.stats}}{A data frame with columns
    \describe{
-   \item{\code{score}}{feature's score from applying \code{score_fcn} in \code{\link{score_features}}}
-   \item{\code{z}}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
-   (without smoothing)} 
+   \item{\code{score}}{feature's score from applying \code{score_fcn} to moderated t-statistics}
+   \item{\code{z}}{feature z-score (larger is more significant) from comparing \code{score} vs. 
+   this feature's scores in permutation (before smoothing)} 
    \item{\code{p}}{feature's permutation p-value}
    \item{\code{FDR}}{feature's FDR from permutation \code{p}}
    }}
+   if \code{ret.pwy.dfs} is \code{TRUE}:
+   \item{\code{pwy.dfs}}{List of data frames written out to CSVs}
    And if \code{ret.null.mats} is \code{TRUE}:
    \item{\code{null.feature.mat}}{Matrix with features as rows and permutations as columns, where each element represents
    the score of that feature in that permutation}
@@ -93,7 +97,7 @@ score. Since a pathway's score is calculated in \code{pants}, \code{impact} uses
 in \code{pants} by comparing to permutation. The feature statistics from \pkg{ezlimma} and those from 
 \code{pants} are nearly identical, though; the main difference is that \code{pants} feature significances are limited 
 by the number of permutations, so they flatten near the extreme. The features with the largest magnitude impact score
-are selected and can be visualized with \code{\link[PANTS]{plot_pwy}}. Whether these features increase or decrease a 
+are selected and can be visualized with \code{ezlimmaplot::plot_pwy}. Whether these features increase or decrease a 
 pathway's score depends on the \code{alternative}.
 }
 \examples{

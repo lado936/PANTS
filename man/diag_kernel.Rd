@@ -4,13 +4,12 @@
 \alias{diag_kernel}
 \title{Make diagonal kernel matrix}
 \usage{
-diag_kernel(object, Gmat)
+diag_kernel(object.rownames, Gmat.rownames)
 }
 \arguments{
-\item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
-features (e.g. genes) and columns to samples. Must have rownames that are non-duplicated and non-empty.}
+\item{object.rownames}{Rownames of \code{object}. Must be non-duplicated and non-empty.}
 
-\item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
+\item{Gmat.rownames}{Rownames of \code{Gmat}. Must be non-duplicated and non-empty.}
 }
 \value{
 A diagonal matrix.
@@ -19,5 +18,5 @@ A diagonal matrix.
 Make diagonal kernel matrix to run Pants without smoothing.
 }
 \details{
-\code{rownames(object)} and \code{rownames(Gmat)} should have some overlap. \code{object} is only used to extract \code{rownames(object)}.
+\code{object.rownames} and \code{Gmat.rownames} should have some overlap.
 }

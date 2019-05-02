@@ -34,7 +34,7 @@
 #' and those from \code{pants_hitman} are nearly identical, though; the main difference is that \code{pants_hitman} 
 #' feature significances are limited by the number of permutations, so they flatten near the extreme. The features with the
 #' largest magnitude impact score are those most affecting the pathway's score, and can be visualized with 
-#' \code{\link[PANTS]{plot_pwy}}. Features with positive impact increase a pathway's score, whereas those with negative 
+#' \code{ezlimmaplot::plot_pwy}. Features with positive impact increase a pathway's score, whereas those with negative 
 #' impact decrease it.
 #' 
 #' @return List of at least two data frames:
@@ -69,9 +69,9 @@
 #' @export
 
 pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker=NULL, feat.tab=NULL, ntop=25, nperm=10^4-1, 
-                         ret.null.mats=FALSE, min.nfeats=3, ncores=1, name=NA, seed=0){
+                         ret.pwy.dfs=FALSE, ret.null.mats=FALSE, min.nfeats=3, ncores=1, name=NA, seed=0){
   if (is.null(ker)){
-    ker <- diag_kernel(object=object, Gmat=Gmat)
+    ker <- diag_kernel(object.rownames = rownames(object), Gmat.rownames = rownames(Gmat))
   }
   stopifnot(length(intersect(rownames(ker), rownames(object))) > 0, any(rownames(Gmat) %in% colnames(ker)), 
             ncol(object)==length(phenotype), ncol(object)==nrow(as.matrix(exposure)), colnames(object)==names(phenotype))
@@ -146,12 +146,11 @@ pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker
     dimnames(res$sample.perms) <- list(colnames(object), dimnames(hm.zscore.mat)[[2]])
   }
   
-  # write xlsx file with links
-  if (!is.na(name)){
-    if (is.null(feat.tab)){ feat.tab <- feature.stats }
-    stopifnot(is.finite(ph.zscore.v))
-    write_pants_xl(zscore.v=ph.zscore.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, alternative="greater", 
-                   name=paste0(name, "_pants_hitman"), ntop=ntop)
-  }
+  # compute impact & write xlsx file with links
+  if (is.null(feat.tab)) feat.tab <- feature.stats
+  if (!is.na(name)) name <- paste0(name, "_pants_hitman")
+  wpx <- write_pants_xl(zscore.v=ph.zscore.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, 
+                        name=name, ntop=ntop)
+  if (ret.pwy.dfs) res <- c(res, pwy.dfs=list(wpx$pwy.csvs))
   return(res)
 }

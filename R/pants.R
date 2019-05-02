@@ -12,7 +12,8 @@
 #' \code{NULL}, statistics from permutation testing are used.
 #' @param ntop Number of top features that most impact a pathway to include.
 #' @param nperm Number of sample permutations of phenotype to evaluate significance of pathways.
-#' @param ret.null.mats If TRUE, return matrices with null distributions for features and pathwaysle
+#' @param ret.pwy.dfs Logical; return list of data frames written out to CSVs? 
+#' @param ret.null.mats Logical; return matrices with null distributions for features and pathways?
 #' @param ncores Number of cores to use for parallel computing. You can detect how many are available for your system
 #' using \code{\link[parallel]{detectCores}}.
 #' @param seed Integer seed to set for reproducility.
@@ -37,7 +38,7 @@
 #' in \code{pants} by comparing to permutation. The feature statistics from \pkg{ezlimma} and those from 
 #' \code{pants} are nearly identical, though; the main difference is that \code{pants} feature significances are limited 
 #' by the number of permutations, so they flatten near the extreme. The features with the largest magnitude impact score
-#' are selected and can be visualized with \code{\link[PANTS]{plot_pwy}}. Whether these features increase or decrease a 
+#' are selected and can be visualized with \code{ezlimmaplot::plot_pwy}. Whether these features increase or decrease a 
 #' pathway's score depends on the \code{alternative}.
 #' 
 #' @return List of at least two data frames:
@@ -51,12 +52,14 @@
 #'    }}
 #'    \item{\code{feature.stats}}{A data frame with columns
 #'    \describe{
-#'    \item{\code{score}}{feature's score from applying \code{score_fcn} in \code{\link{score_features}}}
-#'    \item{\code{z}}{feature z-score (larger is more significant) relative to this feature's scores in permutation 
-#'    (without smoothing)} 
+#'    \item{\code{score}}{feature's score from applying \code{score_fcn} to moderated t-statistics}
+#'    \item{\code{z}}{feature z-score (larger is more significant) from comparing \code{score} vs. 
+#'    this feature's scores in permutation (before smoothing)} 
 #'    \item{\code{p}}{feature's permutation p-value}
 #'    \item{\code{FDR}}{feature's FDR from permutation \code{p}}
 #'    }}
+#'    if \code{ret.pwy.dfs} is \code{TRUE}:
+#'    \item{\code{pwy.dfs}}{List of data frames written out to CSVs}
 #'    And if \code{ret.null.mats} is \code{TRUE}:
 #'    \item{\code{null.feature.mat}}{Matrix with features as rows and permutations as columns, where each element represents
 #'    the score of that feature in that permutation}
@@ -70,10 +73,10 @@
 #' @export
 
 pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, ntop=25, score_fcn=abs, nperm=10^4-1, 
-                  ret.null.mats=FALSE, min.nfeats=3, ncores=1, name=NA, seed=0){
+                  ret.pwy.dfs=FALSE, ret.null.mats=FALSE, min.nfeats=3, ncores=1, name=NA, seed=0){
   alternative <- "greater"
   if (is.null(ker)){
-    ker <- diag_kernel(object=object, Gmat=Gmat)
+    ker <- diag_kernel(object.rownames = rownames(object), Gmat.rownames = rownames(Gmat))
   }
   stopifnot(length(intersect(rownames(ker), rownames(object)))>0, any(rownames(Gmat) %in% colnames(ker)), 
             colnames(object)==names(phenotype), is.null(feat.tab) || all(rownames(object) %in% rownames(feat.tab)))
@@ -107,8 +110,8 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   
   # feature p-values (for plotting)
   # features in object & in kernel
-  feature.stats <- data.frame(score = score.v, matrix(NA, nrow=length(score.v), ncol=3, 
-                                                      dimnames=list(rownames(score.mat), c("z", "p", "FDR"))))
+  feature.stats <- data.frame(score = score.v, 
+    matrix(NA, nrow=length(score.v), ncol=3, dimnames=list(rownames(score.mat), c("z", "p", "FDR"))))
   # need to coerce score.mat to matrix to prevent rowSums error
   feature.stats[,c("z", "p")] <- p_ecdf(eval.v=score.v, score.mat = as.matrix(score.mat), alternative = alternative)
   feature.stats[,"FDR"] <- stats::p.adjust(feature.stats[,"p"], method="BH")
@@ -140,10 +143,10 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   }
   
   # compute impact & write xlsx file with links
-  if (!is.na(name)){
-    if (is.null(feat.tab)) feat.tab <- feature.stats
-    write_pants_xl(zscore.v=pants.zscore.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, alternative=alternative, 
-                   name=paste0(name, "_pants"), ntop=ntop)
-  }
+  if (is.null(feat.tab)) feat.tab <- feature.stats
+  if (!is.na(name)) name <- paste0(name, "_pants")
+  wpx <- write_pants_xl(zscore.v=pants.zscore.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, 
+                          name=name, ntop=ntop)
+  if (ret.pwy.dfs) res <- c(res, pwy.dfs=list(wpx$pwy.csvs))
   return(res)
 }
