@@ -4,10 +4,11 @@
 \alias{write_pants_xl}
 \title{Write Excel XLSX file with links to CSVs}
 \usage{
-write_pants_xl(zscore.v, pwy.tab, feat.tab, Gmat, ker, name, ntop = 5)
+write_pants_xl(zscores, pwy.tab, feat.tab, Gmat, ker, name, ntop = 5)
 }
 \arguments{
-\item{zscore.v}{Named vector of feature z-scores to select high impact nodes. Non-\code{NA} values should be finite.}
+\item{zscores}{Matrix with rownames as feature names, and 1st column with z-scores to select high impact nodes. 
+Non-\code{NA} values should be finite.}
 
 \item{pwy.tab}{A table of pathway results.}
 

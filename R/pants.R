@@ -115,7 +115,6 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   # need to coerce score.mat to matrix to prevent rowSums error
   feature.stats[,c("z", "p")] <- p_ecdf(eval.v=score.v, score.mat = as.matrix(score.mat), alternative = alternative)
   feature.stats[,"FDR"] <- stats::p.adjust(feature.stats[,"p"], method="BH")
-  pants.zscore.v <- stats::setNames(feature.stats[,"z"], nm=rownames(feature.stats))
 
   # need to compare to pwys, sometimes runs out of memory
   # use scores, not z-scores, since used to calc pwy.v/nfeats.per.pwy
@@ -145,8 +144,8 @@ pants <- function(object, phenotype, contrast.v, Gmat, ker=NULL, feat.tab=NULL, 
   # compute impact & write xlsx file with links
   if (is.null(feat.tab)) feat.tab <- feature.stats
   if (!is.na(name)) name <- paste0(name, "_pants")
-  wpx <- write_pants_xl(zscore.v=pants.zscore.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, 
-                          name=name, ntop=ntop)
+  wpx <- write_pants_xl(zscores=feature.stats[, "z", drop=FALSE], pwy.tab=res$pwy.stats, feat.tab=feat.tab, 
+                        Gmat=Gmat, ker=ker, name=name, ntop=ntop)
   if (ret.pwy.dfs) res <- c(res, pwy.dfs=list(wpx$pwy.csvs))
   return(res)
 }

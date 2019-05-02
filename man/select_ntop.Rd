@@ -4,10 +4,11 @@
 \alias{select_ntop}
 \title{Select top drivers for a pathway}
 \usage{
-select_ntop(zscore.v, Gmat, pwy, ker, ntop = 3)
+select_ntop(zscores, Gmat, pwy, ker, ntop = 3)
 }
 \arguments{
-\item{zscore.v}{Named vector of feature z-scores to select high impact nodes. Non-\code{NA} values should be finite.}
+\item{zscores}{Matrix with rownames as feature names, and 1st column with z-scores to select high impact nodes. 
+Non-\code{NA} values should be finite.}
 
 \item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
 

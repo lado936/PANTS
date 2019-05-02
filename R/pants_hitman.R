@@ -124,7 +124,7 @@ pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker
   feature.stats[,c("z", "p")] <- p_ecdf(eval.v=hm.zscore.v, score.mat = as.matrix(hm.zscore.mat), alternative = "greater")
   feature.stats[,"FDR"] <- stats::p.adjust(feature.stats[,"p"], method="BH")
   # ph=pants hitman; scores from permutations
-  ph.zscore.v <- stats::setNames(feature.stats[,"z"], nm=rownames(feature.stats))
+  # ph.zscore.v <- stats::setNames(feature.stats[,"z"], nm=rownames(feature.stats))
   
   # need to compare pwys to permutations, sometimes runs out of memory
   pwy.score.v <- (hm.zscore.v %*% ker %*% Gmat)[1,]
@@ -149,8 +149,8 @@ pants_hitman <- function(object, exposure, phenotype, Gmat, covariates=NULL, ker
   # compute impact & write xlsx file with links
   if (is.null(feat.tab)) feat.tab <- feature.stats
   if (!is.na(name)) name <- paste0(name, "_pants_hitman")
-  wpx <- write_pants_xl(zscore.v=ph.zscore.v, pwy.tab=res$pwy.stats, feat.tab=feat.tab, Gmat=Gmat, ker=ker, 
-                        name=name, ntop=ntop)
+  wpx <- write_pants_xl(zscores=feature.stats[, "z", drop=FALSE], pwy.tab=res$pwy.stats, feat.tab=feat.tab, 
+                        Gmat=Gmat, ker=ker, name=name, ntop=ntop)
   if (ret.pwy.dfs) res <- c(res, pwy.dfs=list(wpx$pwy.csvs))
   return(res)
 }

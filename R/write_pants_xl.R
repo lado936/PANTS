@@ -15,10 +15,9 @@
 
 # req kernel: ok, since fcn not exported
 # feat.tab may have score column if spit out from pants/pants_hitman, but need not
-write_pants_xl <- function(zscore.v, pwy.tab, feat.tab, Gmat, ker, name, ntop=5){
-  stopifnot(!is.null(names(zscore.v)), is.finite(zscore.v), nrow(pwy.tab) > 0, nrow(feat.tab) > 0, 
-            !is.null(ker), ncol(ker) == nrow(Gmat), ncol(ker) == length(zscore.v), colnames(ker) == names(zscore.v), 
-            !is.null(name), rownames(ker)==colnames(ker))
+write_pants_xl <- function(zscores, pwy.tab, feat.tab, Gmat, ker, name, ntop=5){
+  stopifnot(row(pwy.tab) > 0, nrow(feat.tab) > 0, ncol(ker) == nrow(zscores), colnames(ker) == rownames(zscores),
+            !is.null(ker), ncol(ker) == nrow(Gmat), rownames(ker)==colnames(ker), !is.null(name))
   if (!requireNamespace("writexl", quietly = TRUE)){
     stop("Install 'writexl' package.", call. = FALSE)
   }
@@ -29,7 +28,7 @@ write_pants_xl <- function(zscore.v, pwy.tab, feat.tab, Gmat, ker, name, ntop=5)
   
   # should provide ordered nodes
   feat.lst <- lapply(rownames(xp), FUN=function(pwy){
-    select_ntop(zscore.v=zscore.v, Gmat=Gmat, pwy=pwy, ker=ker, ntop=ntop)
+    select_ntop(zscores=zscores, Gmat=Gmat, pwy=pwy, ker=ker, ntop=ntop)
   })
   names(feat.lst) <- rownames(xp)
   
@@ -50,7 +49,7 @@ write_pants_xl <- function(zscore.v, pwy.tab, feat.tab, Gmat, ker, name, ntop=5)
   
   xp.out <- xp
   xp.out[,-1] <- signif(x=xp.out[,-1], digits=3)
-  if (!is.na(name))writexl::write_xlsx(x=xp.out, path = paste0(name, "/", name, ".xlsx"))
+  if (!is.na(name)) writexl::write_xlsx(x=xp.out, path = paste0(name, "/", name, ".xlsx"))
   
   ret <- list(pwys.xl=xp, pwy.csvs=csv.lst)
   return(invisible(ret))

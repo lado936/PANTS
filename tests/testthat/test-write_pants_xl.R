@@ -1,18 +1,18 @@
 context("write pants xl")
 
 test_that("w/o ker", {
-  zv <- setNames(res.noker$feature.stats$z, nm=rownames(res.noker$feature.stats))
-  wpx <- write_pants_xl(zscore.v=zv, pwy.tab=res.noker$pwy.stats, feat.tab=res.noker$feature.stats, Gmat=G, 
+  zv <- res.noker$feature.stats[,"z",drop=FALSE]
+  wpx <- write_pants_xl(zscores=zv, pwy.tab=res.noker$pwy.stats, feat.tab=res.noker$feature.stats, Gmat=G, 
                                 ker=noker, name="test_wpx")[[1]]
   expect_equal(grep("=HYPERLINK(", wpx[,1], fixed = TRUE), 1:nrow(wpx))
   expect_equal(wpx[,-1], res.noker$pwy.stats)
 })
 
 test_that("w ker", {
-  zv <- setNames(feature.stats$z, nm=rownames(feature.stats))
+  zv <- feature.stats[,"z",drop=FALSE]
   pwy.tab <- pwy.stats
   rownames(pwy.tab)[2] <- colnames(G)[2] <- "pwy2."
-  wpx <- write_pants_xl(zscore.v=zv, pwy.tab=pwy.tab, feat.tab=feature.stats, Gmat=G, ker=kk, 
+  wpx <- write_pants_xl(zscores=zv, pwy.tab=pwy.tab, feat.tab=feature.stats, Gmat=G, ker=kk, 
                         name="test_wpx")[[1]]
   expect_equal(grep("=HYPERLINK(", wpx[,1], fixed = TRUE), 1:nrow(wpx))
   

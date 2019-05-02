@@ -3,7 +3,8 @@
 #' Select \code{ntop} top drivers for a pathway by calculating impact, sorting nodes with \code{alternative}, 
 #' and selecting top nodes.
 #' 
-#' @param zscore.v Named vector of feature z-scores to select high impact nodes. Non-\code{NA} values should be finite.
+#' @param zscores Matrix with rownames as feature names, and 1st column with z-scores to select high impact nodes. 
+#' Non-\code{NA} values should be finite.
 #' @param pwy Pathway, must be a column name of \code{Gmat}.
 #' @inheritParams pants
 #' @inheritParams ezlimma::roast_contrasts
@@ -13,10 +14,10 @@
 #' @return Data frame with \code{ntop} rows ordered by impact & 3 columns: \code{node} with node names; 
 #' \code{impact} with impact values; \code{in.pwy} with logicals if node is in \code{pwy}.
 
-select_ntop <- function(zscore.v, Gmat, pwy, ker, ntop=3){
+select_ntop <- function(zscores, Gmat, pwy, ker, ntop=3){
+  zscore.v <- stats::setNames(zscores[,1], nm=rownames(zscores))
   stopifnot(is.na(zscore.v) | is.finite(zscore.v), !is.null(names(zscore.v)), length(pwy) == 1, pwy %in% colnames(Gmat), 
-            !is.null(ker), ncol(ker) == nrow(Gmat), ncol(ker) == length(zscore.v), 
-            colnames(ker) == names(zscore.v))
+            !is.null(ker), ncol(ker) == nrow(Gmat), ncol(ker) == length(zscore.v), colnames(ker) == names(zscore.v))
   
   if (ntop > length(zscore.v)) ntop <- length(zscore.v)
   
