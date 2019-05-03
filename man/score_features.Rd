@@ -4,15 +4,24 @@
 \alias{score_features}
 \title{Score features using ezlimma and score_fcn}
 \usage{
-score_features(object, phenotype, contrast.v, score_fcn = identity)
+score_features(object, phenotype = NULL, type = c("contrasts",
+  "correlation"), contrast.v = NULL, design = NULL, score_fcn = abs)
 }
 \arguments{
 \item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
 features (e.g. genes) and columns to samples. Must have rownames that are non-duplicated and non-empty.}
 
-\item{phenotype}{Vector of phenotypes of the samples. Should be same length as \code{ncol(object)}.}
+\item{phenotype}{Vector of sample characteristics (correlation: numeric; contrasts: character). 
+Should be same length as \code{ncol(object)}.}
+
+\item{type}{Type of \pkg{ezlimma} analysis per feauture; must be one of"contrasts" 
+(\code{\link[ezlimma]{limma_contrasts}}), "correlation" (\code{\link[ezlimma]{limma_cor}}), 
+or "mediation" (\code{\link[ezlimma]{hitman}}). You can specify just the initial letter.}
 
 \item{contrast.v}{Named vector of contrasts, passed to \code{\link[limma]{makeContrasts}}.}
+
+\item{design}{Design matrix of the experiment, with rows corresponding to samples and columns to coefficients to be 
+estimated.}
 
 \item{score_fcn}{Function that transforms the t-statistics from the contrasts into a non-negative value. 
 Its input must be a vector of same length as number of elements in \code{contrast.v} (usually one). 
@@ -22,5 +31,6 @@ Its output must be a non-negative scalar. Ignored if \code{hitman} is \code{TRUE
 Vector of feature scores.
 }
 \description{
-Score features using ezlimma::limma_contrasts and score_fcn
+Score features using \code{\link[ezlimma]{limma_contrasts}} or \code{\link[ezlimma]{limma_cor}} and 
+then applying \code{score_fcn} to moderated t-statistics. Does not currently accept \code{type=="mediation"}.
 }

@@ -1,7 +1,7 @@
 context("pants_hitman")
 
 test_that("kernel", {
-  res <- pants(mediation=TRUE, object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, nperm=nperm, 
+  res <- pants(type="mediation", object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, nperm=nperm, 
                          ret.null.mats=TRUE)
   pwy.stats <- res$pwy.stats
   f.stats <- res$feature.stats
@@ -29,7 +29,7 @@ test_that("kernel", {
 
 test_that("univariate exposure", {
   pheno.v <- setNames(as.numeric(pheno==pheno[1]), nm=names(pheno))
-  res <- pants(mediation=TRUE, object=M, exposure = pheno.v, phenotype = M["a",], ker=kk, Gmat=G, nperm=nperm)
+  res <- pants(type="mediation", object=M, exposure = pheno.v, phenotype = M["a",], ker=kk, Gmat=G, nperm=nperm)
   pwy.stats <- res$pwy.stats
   
   expect_lte(pwy.stats["pwy1", "p"], pwy.stats["pwy2", "p"])
@@ -37,7 +37,7 @@ test_that("univariate exposure", {
 })
 
 test_that("permutations stats not duplicated in parallization", {
-  res2 <- pants(mediation=TRUE, object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, nperm=nperm, 
+  res2 <- pants(type="mediation", object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, nperm=nperm, 
                       ret.null.mats=TRUE)
   # independent perms not corrupted by parallelization
   npm <- res2$null.pwy.mat
@@ -49,7 +49,7 @@ test_that("permutations stats not duplicated in parallization", {
 })
 
 test_that("no kernel & ret null mats", {
-  res <- pants(mediation=TRUE, object=M, exposure = pheno.num, phenotype = M["a",], ker=NULL, Gmat=G, nperm=nperm, ret.null.mats = TRUE)
+  res <- pants(type="mediation", object=M, exposure = pheno.num, phenotype = M["a",], ker=NULL, Gmat=G, nperm=nperm, ret.null.mats = TRUE)
   pwy.stats <- res$pwy.stats
   f.stats <- res$feature.stats
   expect_false("feat.score.avg" %in% colnames(pwy.stats))
@@ -68,15 +68,15 @@ test_that("no kernel & ret null mats", {
 })
 
 test_that("min.nfeats", {
-  expect_error(pants(mediation=TRUE, object=M, exposure = pheno.num, phenotype = M["a",], ker=NULL, Gmat=G, nperm=10, min.nfeats=4))
-  res3 <- pants(mediation=TRUE, object=M, exposure = pheno.num, phenotype = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.nfeats=3)
+  expect_error(pants(type="mediation", object=M, exposure = pheno.num, phenotype = M["a",], ker=NULL, Gmat=G, nperm=10, min.nfeats=4))
+  res3 <- pants(type="mediation", object=M, exposure = pheno.num, phenotype = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.nfeats=3)
   expect_equal(nrow(res3$pwy.stats), 1)
-  res4 <- pants(mediation=TRUE, object=M, exposure = pheno.num, phenotype = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.nfeats=0)
+  res4 <- pants(type="mediation", object=M, exposure = pheno.num, phenotype = M["a",], ker=NULL, Gmat=G[1:3,], nperm=10, min.nfeats=0)
   expect_equal(nrow(res4$pwy.stats), 2)
 })
 
 test_that("write with feat.tab & impact", {
-  res <- pants(mediation=TRUE, object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=50, ntop=5,
+  res <- pants(type="mediation", object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=50, ntop=5,
                name="test_eztt")
   ps.xl <- ezlimma::read_linked_xl("test_eztt_pants_hitman/test_eztt_pants_hitman.xlsx")
   pwy1 <- read.csv("test_eztt_pants_hitman/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)

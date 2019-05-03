@@ -10,8 +10,11 @@
 #' -Inf, which can produce an error in downstream analysis, so we calculate a new p-value as 1 - 10^(-6).   
 #' @return A matrix with two columns containing z-scores (larger is more significant) & p-values with 
 #' \code{nrow = length(eval.v)}.
+#' @references Phipson B, Smyth GK. Permutation P-values should never be zero: calculating exact P-values when 
+#' permutations are randomly drawn. Stat Appl Genet Mol Biol. 2010;9:Article39. doi: 10.2202/1544-6115.1585.
 
-p_ecdf <- function(eval.v, score.mat, alternative=c("two.sided", "less", "greater")){
+# (b+1)/(m+1) is conservative, so I previously used 0.5*(eval.v==score.mat)
+p_ecdf <- function(eval.v, score.mat, alternative=c("greater", "two.sided", "less")){
   stopifnot(length(eval.v)==nrow(score.mat), names(eval.v)==rownames(score.mat), ncol(score.mat) > 1)
   alternative <- match.arg(alternative)
   nsim <- ncol(score.mat)

@@ -2,11 +2,12 @@
 % Please edit documentation in R/pants.R
 \name{pants}
 \alias{pants}
-\title{Pathway analysis via network smoothing (Pants) testing group contrasts}
+\title{Pathway analysis via network smoothing (Pants)}
 \usage{
-pants(object, phenotype, contrast.v = NULL, mediation = FALSE,
-  exposure = NULL, Gmat, covariates = NULL, ker = NULL,
-  feat.tab = NULL, ntop = 25, score_fcn = abs, nperm = 10^4 - 1,
+pants(object, Gmat, phenotype = NULL, type = c("contrasts",
+  "correlation", "mediation"), contrast.v = NULL, design = NULL,
+  exposure = NULL, covariates = NULL, ker = NULL, feat.tab = NULL,
+  ntop = 25, score_fcn = abs, nperm = 10^4 - 1,
   ret.pwy.dfs = FALSE, ret.null.mats = FALSE, min.nfeats = 3,
   ncores = 1, name = NA, seed = 0)
 }
@@ -14,15 +15,21 @@ pants(object, phenotype, contrast.v = NULL, mediation = FALSE,
 \item{object}{Matrix-like data object containing log-ratios or log-expression values, with rows corresponding to 
 features (e.g. genes) and columns to samples. Must have rownames that are non-duplicated and non-empty.}
 
-\item{phenotype}{Vector of phenotypes of the samples. Should be same length as \code{ncol(object)}.}
+\item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
+
+\item{phenotype}{Vector of sample characteristics (correlation: numeric; contrasts: character). 
+Should be same length as \code{ncol(object)}.}
+
+\item{type}{Type of \pkg{ezlimma} analysis per feauture; must be one of"contrasts" 
+(\code{\link[ezlimma]{limma_contrasts}}), "correlation" (\code{\link[ezlimma]{limma_cor}}), 
+or "mediation" (\code{\link[ezlimma]{hitman}}). You can specify just the initial letter.}
 
 \item{contrast.v}{Named vector of contrasts, passed to \code{\link[limma]{makeContrasts}}.}
 
-\item{mediation}{Logical; should \code{\link[ezlimma]{hitman}} be applied?}
+\item{design}{Design matrix of the experiment, with rows corresponding to samples and columns to coefficients to be 
+estimated.}
 
-\item{exposure}{A numeric vector or matrix of exposures. Ignored if \code{hitman} is \code{FALSE}.}
-
-\item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
+\item{exposure}{Numeric vector or matrix of exposures. Ignored if \code{type!="mediation"}.}
 
 \item{covariates}{Numeric vector with one element per sample or matrix-like object with rows corresponding 
 to samples and columns to covariates to be adjusted for.}
@@ -89,8 +96,11 @@ List of at least two data frames:
  }
 }
 \description{
-Pants algorithm to test if group differences for features (i.e. analytes such as a gene, protein, or metabolite) 
+Pants algorithm to test if scores of features (i.e. analytes such as a gene, protein, or metabolite)
 in a pathway or those connected to the pathway in an interaction network are greater than randomized ones.
+Allows for testing group differences (\code{\link[ezlimma]{limma_contrasts}}) with \code{contrast.v} & \code{design};
+correlation (\code{\link[ezlimma]{limma_cor}}) with \code{design}; or 
+mediation (\code{\link[ezlimma]{hitman}}) with \code{exposure} & \code{covariates}.
 }
 \details{
 Without \code{mediation}, \code{phenotype}'s are permuted, since this properly permutes the \code{object} to 

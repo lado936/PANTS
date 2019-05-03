@@ -4,8 +4,8 @@
 \alias{p_ecdf}
 \title{Estimate p-value from simulations}
 \usage{
-p_ecdf(eval.v, score.mat, alternative = c("two.sided", "less",
-  "greater"))
+p_ecdf(eval.v, score.mat, alternative = c("greater", "two.sided",
+  "less"))
 }
 \arguments{
 \item{eval.v}{A vector of values where the cumulative distribution function should be evaluated.}
@@ -25,4 +25,8 @@ Estimate p-value by comparing a score to its permutations.
 \details{
 It's checked that \code{rownames(score.mat)==names(eval.v)}. If a p-value is 1, it results in a z-score of 
 -Inf, which can produce an error in downstream analysis, so we calculate a new p-value as 1 - 10^(-6).
+}
+\references{
+Phipson B, Smyth GK. Permutation P-values should never be zero: calculating exact P-values when 
+permutations are randomly drawn. Stat Appl Genet Mol Biol. 2010;9:Article39. doi: 10.2202/1544-6115.1585.
 }

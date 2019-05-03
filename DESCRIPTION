@@ -1,7 +1,7 @@
 Package: PANTS
 Type: Package
 Title: Pathway analysis via network smoothing
-Version: 0.0.4.9012
+Version: 0.0.4.9013
 Authors@R: c(person("Jonathan", "Dreyfuss", role = c("aut", "cre"), email = "jdreyf@bu.edu"),
              person("Hui", "Pan", role = "ctb"),
 			 person("Grace", "Daher", role = "ctb"))

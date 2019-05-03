@@ -67,6 +67,24 @@ test_that("write with feat.tab & test impact", {
   expect_equal(signif(impact.v[rownames(pwy1)], 3), setNames(pwy1$impact, nm=rownames(pwy1)))
 })
 
+test_that("size & power", {
+  set.seed(1)
+  ngenes <- 100
+  gene.nms <- paste0("g", 1:ngenes)
+  gmt <- apply(as.matrix(1:ngenes), 1, FUN=function(x){
+    pwy.nm <- paste0("pwy", x)
+    ret <- list(name=pwy.nm, description=pwy.nm, genes=sample(gene.nms, size=5))
+  })
+  G <- gmt2Gmat(gmt)
+  el <- t(combn(rownames(G), 2))
+  el <- el[-sample(nrow(el), size=floor(nrow(el)/2)),]
+  gr <- edgelist2graph(el)
+  ker <- graph2kernel(gr)
+  phenotype = setNames(pheno, paste0("s", 1:length(pheno)))
+  sp <- sim_pants(Gmat=G, phenotype = phenotype, nsim=10, nperm=10, effect.v = c(0, 0.2), ker=ker)
+  expect_lte(sp[1, 1], 0.05)
+})
+
 teardown({
   tep2.dir <- test_path("test_eztt2_pants")
   unlink(tep2.dir, recursive = TRUE, force=TRUE)

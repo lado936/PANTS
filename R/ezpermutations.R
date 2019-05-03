@@ -31,12 +31,14 @@ ezpermutations <- function(xx, nperm, freq=length(xx)-length(unique(xx))+1){
   }
   
   # need replace=FALSE (default) so it respects freq
-  # R's max int is 2B
-  np <- min(arrangements::npermutations(k = length(xx), v = names(ta), freq=freq.v), 10**9)
-  
+  # R's max int is 2B, so use try() for integer overflow errors
+  np <- 10**9
+  try(np <- min(arrangements::npermutations(k = length(xx), v = names(ta), freq=freq.v), 10**9), silent=TRUE)
+  if (np==0) stop("No such permutations available.", call. = FALSE)
+    
   ns1 <- min(np, 10**4)
   round2 <-  ifelse(ns1 == np, FALSE, TRUE)
-  # nsample --> duplicates!
+  # nsample argument --> duplicates!
   ind1 <- sample.int(n=np, size=ns1)
   p1 <- arrangements::permutations(k = length(xx), v = names(ta), freq=freq.v, index = ind1, layout = "list")
   rej <- sapply(p1, FUN=function(v){

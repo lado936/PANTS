@@ -9,8 +9,9 @@
 #' @inheritParams pants
 #' @details There must be some overlap between the rownames of \code{score.mat}, \code{ker}, & \code{Gmat}.
 #' @return List with elements \code{score.mat}, \code{ker}, and \code{Gmat} after matching.
-#' @export
+#' @export 
 
+# export for calling with {parallel}
 match_mats <- function(score.mat, ker, Gmat, score.impute=0){
   stopifnot(length(intersect(rownames(score.mat), rownames(ker))) > 0, 
             length(intersect(rownames(score.mat), rownames(Gmat))) > 0)

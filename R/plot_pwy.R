@@ -86,28 +86,29 @@ plot_pwy <- function(feat.tab, impact.tab, Gmat.pwy, gr, ntop = 7, name = NULL, 
   
   if (plot){
     if (!is.na(name)) grDevices::pdf(paste0(name, ".pdf"))
-    set.seed(seed)
-    # need to set font fam to avoid "font fam not found" errors
-    # geom_label() draws a rectangle behind the text
-    # repel repels labels from node centers?
-    ggg <- ggraph::ggraph(gg.pwy, layout = "nicely") + ggraph::geom_edge_link() +
-      ggraph::theme_graph(base_family = "sans") + 
-      ggplot2::guides(shape = ggplot2::guide_legend(override.aes = list(size=4))) +
-      ggraph::geom_node_point(mapping=ggplot2::aes(shape=Pathway, color = !!rlang::ensym(stat.nm)), size=12) + 
-      ggraph::geom_node_text(mapping=ggplot2::aes(label=I(name)), repel = FALSE)
-    
-    # creates common lim using all feat.tab[,1], so pwys have consistent colorbar
-    if (min(feat.tab[,1])<0 && max(feat.tab[,1])>0){
-      # use yellow in middle to distinguish NAs, which are grey
-      ggg <- ggg + ggplot2::scale_colour_distiller(type="div", palette = "RdYlBu", direction = -1,
-                                                   limits=c(-max(abs(feat.tab[,1])), max(abs(feat.tab[,1]))))
-    } else {
-      ggg <- ggg + ggplot2::scale_colour_distiller(type="seq", palette = "Reds", direction = 1, 
-                                                 limits=range(feat.tab[,1]))
-    }
-    graphics::plot(ggg)
+    try({
+      set.seed(seed)
+      # need to set font fam to avoid "font fam not found" errors
+      # geom_label() draws a rectangle behind the text
+      # repel repels labels from node centers?
+      ggg <- ggraph::ggraph(gg.pwy, layout = "nicely") + ggraph::geom_edge_link() +
+        ggraph::theme_graph(base_family = "sans") + 
+        ggplot2::guides(shape = ggplot2::guide_legend(override.aes = list(size=4))) +
+        ggraph::geom_node_point(mapping=ggplot2::aes(shape=Pathway, color = !!rlang::ensym(stat.nm)), size=12) + 
+        ggraph::geom_node_text(mapping=ggplot2::aes(label=I(name)), repel = FALSE)
+      
+      # creates common lim using all feat.tab[,1], so pwys have consistent colorbar
+      if (min(feat.tab[,1])<0 && max(feat.tab[,1])>0){
+        # use yellow in middle to distinguish NAs, which are grey
+        ggg <- ggg + ggplot2::scale_colour_distiller(type="div", palette = "RdYlBu", direction = -1,
+                                                     limits=c(-max(abs(feat.tab[,1])), max(abs(feat.tab[,1]))))
+      } else {
+        ggg <- ggg + ggplot2::scale_colour_distiller(type="seq", palette = "Reds", direction = 1, 
+                                                   limits=range(feat.tab[,1]))
+      }
+      graphics::plot(ggg)
+    })
     if (!is.na(name)) grDevices::dev.off()
   }
-
   return(invisible(gg.pwy))
 }

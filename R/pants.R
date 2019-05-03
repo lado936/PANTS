@@ -1,11 +1,18 @@
-#' Pathway analysis via network smoothing (Pants) testing group contrasts
+#' Pathway analysis via network smoothing (Pants)
 #' 
-#' Pants algorithm to test if group differences for features (i.e. analytes such as a gene, protein, or metabolite) 
+#' Pants algorithm to test if scores of features (i.e. analytes such as a gene, protein, or metabolite)
 #' in a pathway or those connected to the pathway in an interaction network are greater than randomized ones.
+#' Allows for testing group differences (\code{\link[ezlimma]{limma_contrasts}}) with \code{contrast.v} & \code{design};
+#' correlation (\code{\link[ezlimma]{limma_cor}}) with \code{design}; or 
+#' mediation (\code{\link[ezlimma]{hitman}}) with \code{exposure} & \code{covariates}.
 #' 
 #' @param Gmat Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.
-#' @param mediation Logical; should \code{\link[ezlimma]{hitman}} be applied?
-#' @param exposure A numeric vector or matrix of exposures. Ignored if \code{hitman} is \code{FALSE}.
+#' @param phenotype Vector of sample characteristics (correlation: numeric; contrasts: character). 
+#' Should be same length as \code{ncol(object)}.
+#' @param type Type of \pkg{ezlimma} analysis per feauture; must be one of"contrasts" 
+#' (\code{\link[ezlimma]{limma_contrasts}}), "correlation" (\code{\link[ezlimma]{limma_cor}}), 
+#' or "mediation" (\code{\link[ezlimma]{hitman}}). You can specify just the initial letter.
+#' @param exposure Numeric vector or matrix of exposures. Ignored if \code{type!="mediation"}.
 #' @param ker Laplacian kernel matrix representing the interaction network.
 #' @param score_fcn Function that transforms the t-statistics from the contrasts into a non-negative value. 
 #' Its input must be a vector of same length as number of elements in \code{contrast.v} (usually one). 
@@ -87,9 +94,11 @@
 #' @importFrom zeallot %<-%
 #' @export
 
-pants <- function(object, phenotype, contrast.v=NULL, mediation=FALSE, exposure=NULL, Gmat, covariates=NULL, 
+pants <- function(object, Gmat, phenotype=NULL, type=c("contrasts", "correlation", "mediation"),
+                  contrast.v=NULL, design=NULL, exposure=NULL, covariates=NULL, 
                   ker=NULL, feat.tab=NULL, ntop=25, score_fcn=abs, nperm=10^4-1, 
                   ret.pwy.dfs=FALSE, ret.null.mats=FALSE, min.nfeats=3, ncores=1, name=NA, seed=0){
+  type <- match.arg(type)
   if (is.null(ker)){
     ker <- diag_kernel(object.rownames = rownames(object), Gmat.rownames = rownames(Gmat))
   }
@@ -97,20 +106,19 @@ pants <- function(object, phenotype, contrast.v=NULL, mediation=FALSE, exposure=
             colnames(object)==names(phenotype), is.null(feat.tab) || all(rownames(object) %in% rownames(feat.tab)))
   c(Gmat, nfeats.per.pwy) %<-% subset_gmat(object=object, Gmat=Gmat, min.nfeats=min.nfeats)
 
-  if (mediation){
+  if (type=="mediation"){
     if (ncol(as.matrix(exposure))==1){
       stopifnot(colnames(object)==names(exposure))
     } else {
       stopifnot(colnames(object)==rownames(exposure))
     }
-    
     hm <- ezlimma::hitman(E=exposure, M=object, Y=phenotype, covariates=covariates)
     # transform to one-sided z-score
     score.v <- stats::qnorm(p=hm[rownames(object), "EMY.p"], lower.tail = FALSE)
   } else {
-    score.v <- score_features(object=object, phenotype=phenotype, contrast.v=contrast.v, score_fcn=score_fcn)
-    if (any(score.v < 0))
-      stop("Calculated scores must be >= 0, but ", rownames(object)[which(score.v < 0)][1], " is not.")
+    score.v <- score_features(object=object, phenotype=phenotype, type=type, contrast.v=contrast.v,
+                              design=design, score_fcn=score_fcn)
+    # if (any(score.v < 0)) stop("Calculated scores must be >= 0, but ", rownames(object)[which(score.v < 0)][1], " is not.")
   }
   
   # feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
@@ -118,30 +126,33 @@ pants <- function(object, phenotype, contrast.v=NULL, mediation=FALSE, exposure=
   cl <- parallel::makeCluster(spec=ncores, type=cl.type)
   # PSOCK works without parallel::clusterExport
   set.seed(seed)
-  if (mediation){
-    sample.perms <- ezpermutations(xx=colnames(object), nperm=nperm)
-    score.mat <- parallel::parSapply(cl, sample.perms, function(cn.perm){
-      # permute object
-      # must set permuted names to NULL st limma_contrasts doesn't complain that they clash with colnames(object)
-      object.tmp <- object[,cn.perm]
-      # to avoid names error in stopifnot
-      colnames(object.tmp) <- colnames(object)
-      # permuted hm result
-      hm.tmp <- ezlimma::hitman(E=exposure, M=object.tmp, Y=phenotype, covariates=covariates)
-      # return z-scores from permuted object
-      stats::qnorm(p=hm.tmp[rownames(object), "EMY.p"], lower.tail = FALSE)
-    })
-  } else {
-    # perms <- lapply(seq_len(nperm), function(i) sample.int(length(phenotype)))
-    # only 61 perms if 3 vs 3 :-/
-    sample.perms <- ezpermutations(xx=phenotype, nperm=nperm)
-    score.mat <- parallel::parSapply(cl=cl, X=sample.perms, function(ph.perm){
-      # must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
-      # pheno.tmp <- stats::setNames(ph.perm, nm=NULL)
-      score_features(object=object, phenotype=ph.perm, contrast.v=contrast.v, score_fcn=score_fcn)
-    })
-    if (any(score.mat < 0)) stop("Calculated scores from permuted labels must be >= 0, but some are not.")
-  }
+  try({
+    if (type=="mediation"){
+      sample.perms <- ezpermutations(xx=colnames(object), nperm=nperm)
+      score.mat <- parallel::parSapply(cl, sample.perms, function(cn.perm){
+        # permute object
+        # must set permuted names to NULL st limma_contrasts doesn't complain that they clash with colnames(object)
+        object.tmp <- object[,cn.perm]
+        # to avoid names error in stopifnot
+        colnames(object.tmp) <- colnames(object)
+        # permuted hm result
+        hm.tmp <- ezlimma::hitman(E=exposure, M=object.tmp, Y=phenotype, covariates=covariates)
+        # return z-scores from permuted object
+        stats::qnorm(p=hm.tmp[rownames(object), "EMY.p"], lower.tail = FALSE)
+      })
+    } else {
+      # perms <- lapply(seq_len(nperm), function(i) sample.int(length(phenotype)))
+      # only 61 perms if 3 vs 3 :-/
+      sample.perms <- ezpermutations(xx=phenotype, nperm=nperm)
+      score.mat <- parallel::parSapply(cl=cl, X=sample.perms, function(ph.perm){
+        # must set permuted names to NULL st limma_contrasts doesn't complain thay they clash with colnames(object)
+        # pheno.tmp <- stats::setNames(ph.perm, nm=NULL)
+        score_features(object=object, phenotype=ph.perm,  type=type, contrast.v=contrast.v, 
+                       design=design, score_fcn=score_fcn)
+      })
+      # if (any(score.mat < 0)) stop("Calculated scores from permuted labels must be >= 0, but some are not.")
+    }
+  }) # end try
   parallel::stopCluster(cl=cl)
   dimnames(score.mat) <- list(rownames(object), paste0("perm", 1:nperm))
   
@@ -189,7 +200,7 @@ pants <- function(object, phenotype, contrast.v=NULL, mediation=FALSE, exposure=
   # compute impact & write xlsx file with links
   if (is.null(feat.tab)) feat.tab <- feature.stats
   if (!is.na(name)){
-    if (mediation) name <- paste0(name, "_pants_hitman") else name <- paste0(name, "_pants")
+    if (type=="mediation") name <- paste0(name, "_pants_hitman") else name <- paste0(name, "_pants")
   }
   wpx <- write_pants_xl(zscores=feature.stats[, "z", drop=FALSE], pwy.tab=res$pwy.stats, feat.tab=feat.tab, 
                         Gmat=Gmat, ker=ker, name=name, ntop=ntop)

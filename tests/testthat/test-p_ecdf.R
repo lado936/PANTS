@@ -20,7 +20,7 @@ test_that("alternatives", {
   expect_lte(pe2[3, "p"], 0.7)
   expect_gte(pe2[3, "p"], 0.3)
   
-  pe3 <- p_ecdf(eval.v, score.mat)
+  pe3 <- p_ecdf(eval.v, score.mat, alternative = "two.sided")
   expect_lte(pe3[1, "p"], 0.01)
   expect_lte(pe3[2, "p"], 0.01)
   expect_gte(pe3[3, "p"], 0.9)
