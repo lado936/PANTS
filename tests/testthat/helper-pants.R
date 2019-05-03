@@ -1,3 +1,4 @@
+library(igraph)
 library(testthat)
 library(vdiffr)
 
@@ -27,8 +28,6 @@ contrast.v <- c(trt1="trt1-ctrl", trt2="trt2-ctrl")
 zeallot::`%<-%`(c(pwy.stats, feature.stats, csv.lst),
                 pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=kk, Gmat=G, nperm=50, ret.pwy.dfs = TRUE))
 feat.tab <- data.frame(z=feature.stats[, "z", drop=FALSE], annot=NA)
-# zscore.v <- stats::setNames(feature.stats[, "z"], nm=rownames(feature.stats))
-# score.v <- stats::setNames(feature.stats[, "score"], nm=rownames(feature.stats))
 
 res.noker <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], Gmat=G, nperm=10)
 score.noker <- stats::setNames(res.noker$feature.stats$score, nm=rownames(res.noker$feature.stats))
@@ -44,3 +43,8 @@ names(pheno.num) <- colnames(M)
 nperm <- 100
 
 ff <- function(v) abs(v[2]-v[1])
+
+# plot_pwy
+zscore.v <- setNames(feature.stats[,"z"], nm=rownames(feature.stats))
+pp <- plot_pwy(feat.tab = feat.tab, impact.tab = csv.lst[[1]], gr=gr, Gmat.pwy = G[,"pwy1",drop=F], name = NA,
+               ntop = 7, seed = 0, plot = FALSE)

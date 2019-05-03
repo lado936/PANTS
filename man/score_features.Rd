@@ -16,7 +16,7 @@ features (e.g. genes) and columns to samples. Must have rownames that are non-du
 
 \item{score_fcn}{Function that transforms the t-statistics from the contrasts into a non-negative value. 
 Its input must be a vector of same length as number of elements in \code{contrast.v} (usually one). 
-Its output must be a non-negative scalar.}
+Its output must be a non-negative scalar. Ignored if \code{hitman} is \code{TRUE}.}
 }
 \value{
 Vector of feature scores.

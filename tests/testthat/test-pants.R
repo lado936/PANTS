@@ -14,9 +14,10 @@ test_that("kernel & parallel", {
   #contr of length 2
   expect_error(pants(object=M, phenotypes.v=pheno, contrast.v=contrast.v, ker=kk, Gmat=G, nperm=10))
   res2 <- pants(object=M, phenotype=pheno, contrast.v=contrast.v, ker=kk, Gmat=G, nperm=10, score_fcn = ff, 
-                ret.null.mats = TRUE, ncores=2)
+                ncores=2, ret.null.mats = TRUE)
   expect_equal(nrow(res2$pwy.stats), 2)
   expect_equal(res2$pwy.stats$nfeatures, c(3,3))
+  
   # independent perms not corrupted by parallelization
   npm <- res2$null.pwy.mat
   nfm <- res2$null.feature.mat
@@ -28,9 +29,12 @@ test_that("kernel & parallel", {
   expect_equal(length(unique(nfm[2,])), n.unique.perm)
 })
 
-test_that("no kernel", {
-  res2 <- pants(object=M, phenotype=pheno, contrast.v=contrast.v, ker=NULL, Gmat=G, nperm=10, score_fcn = ff)
+test_that("no kernel & ret null", {
+  res2 <- pants(object=M, phenotype=pheno, contrast.v=contrast.v, ker=NULL, Gmat=G, nperm=10, score_fcn = ff, ret.null.mats = TRUE)
   expect_equal(res2$pwy.stats$nfeatures, c(3,3))
+  # ret null
+  expect_equal(p_ecdf(res2$pwy.stats$score, res2$null.pwy.mat, alternative = "greater"),
+               data.matrix(res2$pwy.stats[, c("z", "p")]))
 })
 
 test_that("min.nfeats", {
@@ -48,9 +52,13 @@ test_that("write with feat.tab & test impact", {
   expect_equal(nrow(pwy1), 4)
   expect_lt(pwy1["a", "trt1.p"], res$feature.stats["a", "p"])
   
+  # prevent testthat warning
+  tep.dir <- test_path("test_eztt_pants")
+  unlink(tep.dir, recursive = TRUE, force=TRUE)
+
   res <- pants(object=M, phenotype=pheno, contrast.v=contrast.v[1], ker=noker, Gmat=G, feat.tab = eztt.df, nperm=10, ntop=2,
-               name="test_eztt")
-  pwy1 <- read.csv("test_eztt_pants/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
+               name="test_eztt2")
+  pwy1 <- read.csv("test_eztt2_pants/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)
   expect_equal(nrow(pwy1), 2)
   
   # impact = Ki*Gj*zi
@@ -60,6 +68,6 @@ test_that("write with feat.tab & test impact", {
 })
 
 teardown({
-  unlink("test_eztt_pants", recursive = TRUE, force=TRUE)
-  unlink("tests/testthat/test_eztt_pants", recursive = TRUE, force=TRUE)
+  tep2.dir <- test_path("test_eztt2_pants")
+  unlink(tep2.dir, recursive = TRUE, force=TRUE)
 })
