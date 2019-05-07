@@ -36,4 +36,10 @@ test_that("ezpermutations", {
   ezc21 <- ezpermutations(xx=xx, nperm=11000, freq=1)
   expect_false(any(duplicated( data.frame(Reduce(rbind, c(ezc21, list(xx=xx)))) )))
   expect_equal(length(ezc21), 11000)
+  
+  # maintain type: num
+  ezc30 <- ezpermutations(xx=1:9, nperm=12, freq=1)
+  ret.num <- all(sapply(ezc30, FUN=is.numeric))
+  expect_true(ret.num)
 })
+  

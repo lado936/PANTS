@@ -29,7 +29,7 @@ sim_pants <- function(Gmat, phenotype, type=c("contrasts", "correlation", "media
         if (type=="contrasts"){
           obj.test[, phenotype == unique(phenotype)[2]] <- obj.test[, phenotype == unique(phenotype)[2]] + ev
         } else {
-          obj.test <- obj.test + ev*phenotype
+          obj.test <- obj.test + ev*matrix(phenotype, nrow=nrow(obj.test), ncol=ncol(obj.test), byrow = TRUE)
         }
       }
       res <- pants(object=obj.test, Gmat=Gmat, phenotype=phenotype, type=type, score_fcn=identity,

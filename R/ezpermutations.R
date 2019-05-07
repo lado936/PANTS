@@ -14,7 +14,7 @@
 #' in each resample.
 #' @inheritParams arrangements::permutations
 #' @details Number of returned resamples may be less than \code{nperm} if not enough unique resamples are available.
-#' @return List
+#' @return List whose elements are same type as \code{xx}
 
 # freq is independent of actual n.per.grp with bootstrapping
 # freq can represent replace, so don't need replace
@@ -22,7 +22,9 @@
 ezpermutations <- function(xx, nperm, freq=length(xx)-length(unique(xx))+1){
   stopifnot(length(xx) >= 2, is.numeric(nperm), nperm >= 1, is.numeric(freq), freq>0, freq<length(xx),
             length(freq)==1 || length(freq)==length(unique(xx)))
+  xx.type <- typeof(xx)
   ta <- table(xx)
+  ta.nms <- as(names(ta), Class = xx.type)
   
   freq.v <- if (length(freq)==1){
     rep(x=freq, times=length(ta))
@@ -33,14 +35,14 @@ ezpermutations <- function(xx, nperm, freq=length(xx)-length(unique(xx))+1){
   # need replace=FALSE (default) so it respects freq
   # R's max int is 2B, so use try() for integer overflow errors
   np <- 10**9
-  try(np <- min(arrangements::npermutations(k = length(xx), v = names(ta), freq=freq.v), 10**9), silent=TRUE)
+  try(np <- min(arrangements::npermutations(k = length(xx), v = ta.nms, freq=freq.v), 10**9), silent=TRUE)
   if (np==0) stop("No such permutations available.", call. = FALSE)
     
   ns1 <- min(np, 10**4)
   round2 <-  ifelse(ns1 == np, FALSE, TRUE)
   # nsample argument --> duplicates!
   ind1 <- sample.int(n=np, size=ns1)
-  p1 <- arrangements::permutations(k = length(xx), v = names(ta), freq=freq.v, index = ind1, layout = "list")
+  p1 <- arrangements::permutations(k = length(xx), v = ta.nms, freq=freq.v, index = ind1, layout = "list")
   rej <- sapply(p1, FUN=function(v){
       all(v == xx) ||  length(unique(v)) < length(ta)
   })
@@ -54,7 +56,7 @@ ezpermutations <- function(xx, nperm, freq=length(xx)-length(unique(xx))+1){
     # n to select, then sample from successes
     ns2 <- opt_binom_n(p=prob.nonrej, nperm = nperm)
     ind2 <- sample.int(n=np, size=ns2)
-    p2 <- arrangements::permutations(k = length(xx), v = names(ta), freq=freq.v, index = ind2, layout = "list")
+    p2 <- arrangements::permutations(k = length(xx), v = ta.nms, freq=freq.v, index = ind2, layout = "list")
     rej <- sapply(p2, FUN=function(v){
       all(v == xx) ||  length(unique(v)) < length(ta)
     })

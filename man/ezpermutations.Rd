@@ -18,7 +18,7 @@ Represents resampling without replacement if it's \code{table(xx)}. For resampli
 in each resample.}
 }
 \value{
-List
+List whose elements are same type as \code{xx}
 }
 \description{
 Resample unique sample or group labels (unique elements of \code{xx}) into \code{nperm} matrix rows of length 
