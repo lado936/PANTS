@@ -118,7 +118,6 @@ pants <- function(object, Gmat, phenotype=NULL, type=c("contrasts", "correlation
   } else {
     score.v <- score_features(object=object, phenotype=phenotype, type=type, contrast.v=contrast.v,
                               design=design, score_fcn=score_fcn)
-    # if (any(score.v < 0)) stop("Calculated scores must be >= 0, but ", rownames(object)[which(score.v < 0)][1], " is not.")
   }
   
   # feature scores in permutations, 74% dense but later combine with a sparse (empty) matrix
@@ -150,7 +149,6 @@ pants <- function(object, Gmat, phenotype=NULL, type=c("contrasts", "correlation
         score_features(object=object, phenotype=ph.perm,  type=type, contrast.v=contrast.v, 
                        design=design, score_fcn=score_fcn)
       })
-      # if (any(score.mat < 0)) stop("Calculated scores from permuted labels must be >= 0, but some are not.")
     }
   }) # end try
   parallel::stopCluster(cl=cl)

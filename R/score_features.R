@@ -6,7 +6,7 @@
 #' @inheritParams pants
 #' @inheritParams ezlimma::limma_contrasts
 #' @inheritParams ezlimma::limma_cor
-#' @return Vector of feature scores.
+#' @return Named vector of feature scores.
 #' @export
 
 score_features <- function(object, phenotype=NULL, type=c("contrasts", "correlation"), 
@@ -15,13 +15,13 @@ score_features <- function(object, phenotype=NULL, type=c("contrasts", "correlat
   if (type=="mediation") stop("Mediation not currently supported.", call. = FALSE)
   if (type=="contrasts"){
     toptab <- ezlimma::limma_contrasts(object=object, grp=phenotype, contrast.v=contrast.v, design=design, 
-                                       cols='t', add.means = FALSE)
+                                       cols="t", add.means = FALSE)
   } else {
-    toptab <- ezlimma::limma_cor(object=object, phenotype = phenotype, design=design, cols='t')
+    toptab <- ezlimma::limma_cor(object=object, phenotype = phenotype, design=design, cols="t")
   }
   toptab <- data.matrix(toptab[rownames(object),, drop=FALSE])
   rownames(toptab) <- rownames(object)
-  #need to coerce toptab to matrix & name score.v in case it has only one column
+  # need to coerce toptab to matrix & name score.v in case it has only one column
   score.v <- apply(as.matrix(toptab), MARGIN=1, FUN=score_fcn)
   if (!is.null(dim(score.v))){
     stop("Your score_fcn output is of length ", nrow(score.v), " but must be of length 1.", call. = FALSE)

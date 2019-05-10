@@ -18,7 +18,11 @@ sim_pants <- function(Gmat, phenotype, type=c("contrasts", "correlation", "media
   
   prop.sig.mat <- matrix(NA, nrow=nsim, ncol=length(effect.v), 
                          dimnames=list(paste0("sim", 1:nsim), paste0("eff_", effect.v)))
-  contrast.v <- c(vs=paste(unique(phenotype)[2], unique(phenotype)[1], sep="-"))
+  if (type=="contrasts"){
+    contrast.v <- c(vs=paste(unique(phenotype)[2], unique(phenotype)[1], sep="-"))
+  } else {
+    contrast.v <- NULL
+  }
   
   set.seed(seed)
   for (sim in 1:nsim){

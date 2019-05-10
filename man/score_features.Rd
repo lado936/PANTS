@@ -28,7 +28,7 @@ Its input must be a vector of same length as number of elements in \code{contras
 Its output must be a non-negative scalar. Ignored if \code{hitman} is \code{TRUE}.}
 }
 \value{
-Vector of feature scores.
+Named vector of feature scores.
 }
 \description{
 Score features using \code{\link[ezlimma]{limma_contrasts}} or \code{\link[ezlimma]{limma_cor}} and 

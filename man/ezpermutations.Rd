@@ -2,7 +2,7 @@
 % Please edit documentation in R/ezpermutations.R
 \name{ezpermutations}
 \alias{ezpermutations}
-\title{Resample group labels with replicates for permutation testing}
+\title{Resample sample labels for permutation testing}
 \usage{
 ezpermutations(xx, nperm, freq = length(xx) - length(unique(xx)) + 1)
 }
@@ -18,13 +18,13 @@ Represents resampling without replacement if it's \code{table(xx)}. For resampli
 in each resample.}
 }
 \value{
-List whose elements are same type as \code{xx}
+Data frame whose columns are same type as \code{xx}
 }
 \description{
-Resample unique sample or group labels (unique elements of \code{xx}) into \code{nperm} matrix rows of length 
-\code{length(xx)} for permutation testing. The rows are not duplicates of each other, 
+Resample unique sample or group labels (unique elements of \code{xx}) into \code{nperm} data frame columns of length
+\code{length(xx)} for permutation testing. The columns are not duplicates of each other, 
 do not contain \code{xx}, and have each element of \code{unique(xx)} to appear at least once.
-Calculations are done with \pkg{arrangements}.
+Calculations are done with \pkg{RcppAlgos}.
 }
 \details{
 Number of returned resamples may be less than \code{nperm} if not enough unique resamples are available.
