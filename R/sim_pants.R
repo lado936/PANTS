@@ -27,7 +27,7 @@ sim_pants <- function(Gmat, phenotype, type=c("contrasts", "correlation", "media
   set.seed(seed)
   for (sim in 1:nsim){
     for (ev in effect.v){
-      obj.test <- matrix(rnorm(n=nrow(Gmat)*length(phenotype)), ncol=length(phenotype), 
+      obj.test <- matrix(stats::rnorm(n=nrow(Gmat)*length(phenotype)), ncol=length(phenotype), 
                          dimnames=list(rownames(Gmat), names(phenotype)))
       if (ev > 0){
         if (type=="contrasts"){

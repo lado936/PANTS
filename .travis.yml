@@ -8,6 +8,7 @@ r_github_packages: jdreyf/ezlimma
 bioc_packages: limma
 before_install:
   - Rscript -e 'update.packages(ask = FALSE)'
+script: ./travis-config.sh
 output:
      pdf_document:
          latex_engine: xelatex

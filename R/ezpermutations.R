@@ -23,7 +23,7 @@ ezpermutations <- function(xx, nperm, freq=length(xx)-length(unique(xx))+1){
             length(freq)==1 || length(freq)==length(unique(xx)))
   xx.type <- typeof(xx)
   ta <- table(xx)
-  ta.nms <- as(names(ta), Class = xx.type)
+  ta.nms <- methods::as(names(ta), Class = xx.type)
   
   freq.v <- if (length(freq)==1){
     rep(x=freq, times=length(ta))
