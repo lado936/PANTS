@@ -36,7 +36,7 @@ simulations. Ignored if \code{fun="fry"}.}
 }
 \value{
 Invisibly, a \code{\link[tidygraph]{tbl_graph}}, a subclass of 
-\code{\link[igraph]{igraph}} so every \pkg{igraph} method will work as expected.
+\pkg{igraph} so every \pkg{igraph} method will work as expected.
 }
 \description{
 Plot nodes most impacting a pathway as a network diagram with node color corresponding to z-score and

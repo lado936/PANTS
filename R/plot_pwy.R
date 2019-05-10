@@ -27,7 +27,7 @@
 #' Unmeasured nodes have stat of \code{NA} and are drawn gray.
 #'
 #' @return Invisibly, a \code{\link[tidygraph]{tbl_graph}}, a subclass of 
-#' \code{\link[igraph]{igraph}} so every \pkg{igraph} method will work as expected.
+#' \pkg{igraph} so every \pkg{igraph} method will work as expected.
 #' 
 #' @importFrom magrittr %>%
 #' @importFrom rlang !!
