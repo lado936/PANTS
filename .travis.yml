@@ -1,10 +1,10 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: r
+script: ./travis-config.bash
 sudo: false
 warnings_are_errors: false
 cache: packages
-script: ./travis-config.sh
 r_github_packages: jdreyf/ezlimma
 bioc_packages: limma
 before_install:
