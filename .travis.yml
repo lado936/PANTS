@@ -8,16 +8,19 @@ cache: packages
 r_github_packages: jdreyf/ezlimma
 bioc_packages: limma
 # https://thecoatlessprofessor.com/programming/selecting-an-alternative-compiler-for-r-package-testing-on-travis-ci/
+# makevars: https://github.com/stan-dev/rstan/issues/569
 before_install:
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6
   - Rscript -e 'update.packages(ask = FALSE)'
+  - mkdir -p ~/.R
+  - echo "CXX14FLAGS=-O3 -mtune=native -march=native -Wno-unused-variable -Wno-unused-function  -Wno-macro-redefined" >> ~/.R/Makevars
+  - echo "CXX14=g++ -std=c++1y -fPIC" >> ~/.R/Makevars
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
       - g++-6
-# makevars: from https://github.com/stan-dev/rstan/issues/569
 output:
     pdf_document:
         latex_engine: xelatex
