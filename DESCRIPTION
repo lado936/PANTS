@@ -22,7 +22,6 @@ Imports:
 	Rcpp (>= 1.0.1),
 	RcppAlgos,
 	rlang,
-	statmod,
 	tidygraph,
 	zeallot
 License: MIT + file LICENSE
