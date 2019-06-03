@@ -4,9 +4,9 @@
 \alias{sim_pants}
 \title{Simulate \code{pants} to estimate size & power}
 \usage{
-sim_pants(Gmat, phenotype, type = c("contrasts", "correlation",
-  "mediation"), effect.v = c(0, 0.2), alpha = 0.05, nsim = 10^3,
-  nperm = 10^3, seed = 1, verbose = TRUE, ker = NULL, ncores = 1)
+sim_pants(Gmat, phenotype, type = c("contrasts", "correlation"),
+  effect.v = c(0, 0.2), alpha = 0.05, nsim = 10^3, nperm = 10^3,
+  seed = 1, verbose = TRUE, ker = NULL, ncores = 1)
 }
 \arguments{
 \item{Gmat}{Binary feature (e.g. gene) by pathway inclusion matrix, indicating which features are in which pathways.}
@@ -37,5 +37,8 @@ using \code{\link[parallel]{detectCores}}.}
 }
 \description{
 Simulate \code{pants} to estimate size (effect=0) & power (effect>0) with \code{score_fcn=identity} vs. 
-H1: "greater". Does not currently support \code{type=="mediation"}.
+H1: "greater". Does not support \code{type=="mediation"}.
+}
+\seealso{
+\code{\link{sim_pants_mediation}}
 }

@@ -1,4 +1,4 @@
-context("pants_hitman")
+context("pants-mediation")
 
 test_that("kernel", {
   res <- pants(type="mediation", object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, nperm=nperm, 
@@ -89,6 +89,24 @@ test_that("write with feat.tab & impact", {
   zscore.v <- stats::setNames(res$feature.stats$z, nm=rownames(res$feature.stats))
   impact.v <- (kk %*% G[,"pwy1"])[,1] * zscore.v
   expect_equal(signif(impact.v[rownames(pwy1)], 3), setNames(pwy1$impact, nm=rownames(pwy1)))
+})
+
+test_that("size & power", {
+  set.seed(1)
+  ngenes <- 100
+  gene.nms <- paste0("g", 1:ngenes)
+  gmt <- apply(as.matrix(1:ngenes), 1, FUN=function(x){
+    pwy.nm <- paste0("pwy", x)
+    ret <- list(name=pwy.nm, description=pwy.nm, genes=sample(gene.nms, size=5))
+  })
+  G <- gmt2Gmat(gmt)
+  el <- t(combn(rownames(G), 2))
+  el <- el[-sample(nrow(el), size=floor(nrow(el)/2)),]
+  gr <- edgelist2graph(el)
+  ker <- graph2kernel(gr)
+  sp <- sim_pants_mediation(Gmat=G, exposure = pheno.num, nsim=7, nperm=25, effect.v = c(0, 0.5), ker=ker)
+  expect_lte(sp[1, 1], 0.06)
+  expect_gte(sp[1, 2], 0.3)
 })
 
 teardown({

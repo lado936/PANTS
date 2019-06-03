@@ -1,19 +1,19 @@
 #' Simulate \code{pants} to estimate size & power
 #' 
 #' Simulate \code{pants} to estimate size (effect=0) & power (effect>0) with \code{score_fcn=identity} vs. 
-#' H1: "greater". Does not currently support \code{type=="mediation"}.
+#' H1: "greater". Does not support \code{type=="mediation"}.
 #' 
 #' @param effect.v Numeric vector of log fold-changes or percent of phentotypes to add.
 #' @inheritParams ezlimma::sim_barfield
 #' @inheritParams pants
+#' @seealso \code{\link{sim_pants_mediation}}
 
 # contr
 # test mult pwys for efficiency
-sim_pants <- function(Gmat, phenotype, type=c("contrasts", "correlation", "mediation"), 
+sim_pants <- function(Gmat, phenotype, type=c("contrasts", "correlation"), 
                       effect.v=c(0, 0.2), alpha=0.05, nsim=10**3,
                       nperm=10**3, seed=1, verbose=TRUE, ker=NULL, ncores=1){
   type <- match.arg(type)
-  if (type=="mediation") stop("Mediation not currently supported.", call. = FALSE)
   stopifnot(!is.null(names(phenotype)))
   
   prop.sig.mat <- matrix(NA, nrow=nsim, ncol=length(effect.v), 
