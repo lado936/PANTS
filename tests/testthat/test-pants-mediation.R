@@ -104,7 +104,7 @@ test_that("size & power", {
   el <- el[-sample(nrow(el), size=floor(nrow(el)/2)),]
   gr <- edgelist2graph(el)
   ker <- graph2kernel(gr)
-  sp <- sim_pants_mediation(Gmat=G, exposure = pheno.num, nsim=7, nperm=25, effect.v = c(0, 0.5), ker=ker)
+  sp <- sim_pants_mediation(Gmat=G, exposure = pheno.num, nsim=5, nperm=25, effect.v = c(0, 0.5), ker=ker)
   expect_lte(sp[1, 1], 0.06)
   expect_gte(sp[1, 2], 0.3)
 })

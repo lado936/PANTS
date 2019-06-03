@@ -13,7 +13,7 @@ sim_pants_mediation <- function(Gmat, exposure, effect.v=c(0, 0.2), alpha=0.05, 
                       nperm=10**3, seed=1, verbose=TRUE, ker=NULL, ncores=1){
   prop.sig.mat <- matrix(NA, nrow=nsim, ncol=length(effect.v), 
                          dimnames=list(paste0("sim", 1:nsim), paste0("eff_", effect.v)))
-  phenotype <- exposure + rnorm(n=length(exposure), sd=sd(exposure)/2)
+  phenotype <- exposure + stats::rnorm(n=length(exposure), sd=stats::sd(exposure)/2)
   
   set.seed(seed)
   for (sim in 1:nsim){
