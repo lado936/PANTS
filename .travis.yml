@@ -9,8 +9,10 @@ r_github_packages: jdreyf/ezlimma
 bioc_packages: limma
 # https://thecoatlessprofessor.com/programming/selecting-an-alternative-compiler-for-r-package-testing-on-travis-ci/
 # makevars: https://github.com/stan-dev/rstan/issues/569
+# error: /usr/bin/x86_64-linux-gnu-ld: cannot find -lgfortran
 before_install:
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6
+  - sudo ln -s /usr/lib/x86_64-linux-gnu/libgfortran.so.3 /usr/lib/libgfortran.so
   - Rscript -e 'update.packages(ask = FALSE)'
   - mkdir -p ~/.R
   - echo "CXX14FLAGS=-O3 -mtune=native -march=native -Wno-unused-variable -Wno-unused-function  -Wno-macro-redefined" >> ~/.R/Makevars
