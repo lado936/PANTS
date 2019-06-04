@@ -9,10 +9,9 @@ r_github_packages: jdreyf/ezlimma
 bioc_packages: limma
 # https://thecoatlessprofessor.com/programming/selecting-an-alternative-compiler-for-r-package-testing-on-travis-ci/
 # makevars: https://github.com/stan-dev/rstan/issues/569
-# https://stackoverflow.com/questions/6302209/building-r-package-and-error-ld-cannot-find-lgfortran
 before_install:
-  - sudo apt-get install r-base-dev
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6
+  - sudo update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-6 60
   - Rscript -e 'update.packages(ask = FALSE)'
   - mkdir -p ~/.R
   - echo "CXX14FLAGS=-O3 -mtune=native -march=native -Wno-unused-variable -Wno-unused-function  -Wno-macro-redefined" >> ~/.R/Makevars
