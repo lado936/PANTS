@@ -17,7 +17,9 @@ before_install:
   - echo "CXX14FLAGS=-O3 -fopenmp -mtune=native -march=native  -Wno-misleading-indentation -Wno-unused -Wno-ignored-attributes -Wno-deprecated-declarations" >> ~/.R/Makevars
   - echo "CXX14=g++ -std=c++1y -fPIC" >> ~/.R/Makevars
   - Rscript -e 'install.packages(c("Rcpp"))'
-  - Rscript -e 'install.packages(c("RcppEigen","ggplot2","ggforce","httpuv","later"), quiet=TRUE)' 
+  - Rscript -e 'install.packages(c("RcppEigen"), quiet=TRUE)'
+  - Rscript -e 'install.packages(c("ggplot2","ggforce"), quiet=TRUE)'
+  - Rscript -e 'install.packages(c("httpuv","later"), quiet=TRUE)'
 addons:
   apt:
     sources:
