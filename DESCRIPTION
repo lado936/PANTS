@@ -9,6 +9,8 @@ Description: Pathway analysis via network smoothing provides network-based multi
 Depends:
 	R (>= 3.0.0)
 Imports:
+	Rcpp (>= 1.0.1),
+	RcppAlgos,
 	dplyr,
 	ezlimma,
 	ggplot2,
@@ -19,8 +21,6 @@ Imports:
 	magrittr,
 	Matrix,
 	parallel,
-	Rcpp (>= 1.0.1),
-	RcppAlgos,
 	rlang,
 	tidygraph,
 	zeallot
