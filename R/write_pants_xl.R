@@ -4,8 +4,9 @@
 #' features that impact each pathway (even if they're outside the pathway); and write an Excel XLSX file using 
 #' \code{writexl} that links to the CSVs.
 #' 
+#' @param feat.tab Table of feature (e.g. gene) statistics and annotation.
 #' @inheritParams pants
-#' @inheritParams select_ntop
+#' @inheritParams select_ntop_per_pwy
 #' @inheritParams ezlimma::write_linked_xl
 #' @return Invisibly, a list with two components:
 #' \describe{
@@ -17,7 +18,8 @@
 # feat.tab may have score column if spit out from pants/pants_hitman, but need not
 write_pants_xl <- function(zscores, pwy.tab, feat.tab, Gmat, ker, name, ntop=5){
   stopifnot(row(pwy.tab) > 0, nrow(feat.tab) > 0, ncol(ker) == nrow(zscores), colnames(ker) == rownames(zscores),
-            !is.null(ker), ncol(ker) == nrow(Gmat), rownames(ker)==colnames(ker), !is.null(name))
+            all(rownames(zscores) %in% rownames(feat.tab)), !is.null(ker), ncol(ker) == nrow(Gmat), 
+            rownames(ker)==colnames(ker), !is.null(name))
   if (!requireNamespace("writexl", quietly = TRUE)){
     stop("Install 'writexl' package.", call. = FALSE)
   }
@@ -28,7 +30,7 @@ write_pants_xl <- function(zscores, pwy.tab, feat.tab, Gmat, ker, name, ntop=5){
   
   # should provide ordered nodes
   feat.lst <- lapply(rownames(xp), FUN=function(pwy){
-    select_ntop(zscores=zscores, Gmat=Gmat, pwy=pwy, ker=ker, ntop=ntop)
+    select_ntop_per_pwy(zscores=zscores, Gmat=Gmat, pwy=pwy, ker=ker, ntop=ntop)
   })
   names(feat.lst) <- rownames(xp)
   
@@ -39,7 +41,7 @@ write_pants_xl <- function(zscores, pwy.tab, feat.tab, Gmat, ker, name, ntop=5){
   }
   names(feat.lst) <- ezlimma::clean_filenames(names(feat.lst))
   csv.lst <- list()
-  for(pwy in rownames(xp)){
+  for (pwy in rownames(xp)){
     fl.tmp <- feat.lst[[pwy]]
     ft <- data.frame(in_pwy=fl.tmp$in.pwy, impact=fl.tmp$impact, feat.tab[fl.tmp$node,], stringsAsFactors = FALSE)
     ft[,setdiff(colnames(ft), "in_pwy")] <- ezlimma::df_signif(tab=ft[,setdiff(colnames(ft), "in_pwy")], digits=3)

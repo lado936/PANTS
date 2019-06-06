@@ -44,14 +44,14 @@ plot_pwy <- function(feat.tab, impact.tab, Gmat.pwy, gr, ntop = 7, name = NULL, 
             !is.null(colnames(impact.tab)), !is.null(colnames(Gmat.pwy)), igraph::is_simple(gr), is.numeric(ntop),
             is.logical(plot), is.numeric(seed))
   stat.nm <- colnames(feat.tab)[1]
-  if (any(!is.na(feat.tab[,2])) && length(intersect(names(feat.tab[,2]), rownames(Gmat.pwy))) == 0) {
+  if (any(!is.na(feat.tab[,2])) && length(intersect(rownames(feat.tab), rownames(Gmat.pwy))) == 0) {
       stop("'feat.tab[,2]' must be NA or 'rownames(feat.tab[,2])' must overlap with 'rownames(Gmat.pwy)'.")
   }
   impact.colnm <- grep("impact", colnames(impact.tab), value = TRUE, ignore.case = TRUE)
   if (length(impact.colnm)==0) stop("'impact.tab' has not column named 'impact'.") else impact.colnm <- impact.colnm[1]
   pwy.nm <- colnames(Gmat.pwy)[1]
   if (ntop > nrow(impact.tab)) ntop <- nrow(impact.tab)
-  if (is.null(name)) name <- paste0(ezlimma::clean_filenames(pwy), "_ntop", ntop)
+  if (is.null(name)) name <- paste0(ezlimma::clean_filenames(pwy.nm), "_ntop", ntop)
 
   # expand graph to include all features, even if they are isolated
   new.v <- setdiff(rownames(Gmat.pwy), igraph::V(gr)$name)

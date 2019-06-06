@@ -75,8 +75,8 @@ test_that("min.nfeats", {
   expect_equal(nrow(res4$pwy.stats), 2)
 })
 
-test_that("write with feat.tab & impact", {
-  res <- pants(type="mediation", object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, feat.tab = eztt.df, nperm=50, ntop=5,
+test_that("write with annot.df & impact", {
+  res <- pants(type="mediation", object=M, exposure = pheno.num, phenotype = M["a",], ker=kk, Gmat=G, annot.df = eztt.df, nperm=50, ntop=5,
                name="test_eztt")
   ps.xl <- ezlimma::read_linked_xl("test_eztt_pants_hitman/test_eztt_pants_hitman.xlsx")
   pwy1 <- read.csv("test_eztt_pants_hitman/pathways/pwy1.csv", row.names = 1, stringsAsFactors = FALSE)

@@ -14,7 +14,7 @@
 #' @return Data frame with \code{ntop} rows ordered by impact & 3 columns: \code{node} with node names; 
 #' \code{impact} with impact values; \code{in.pwy} with logicals if node is in \code{pwy}.
 
-select_ntop <- function(zscores, Gmat, pwy, ker, ntop=3){
+select_ntop_per_pwy <- function(zscores, Gmat, pwy, ker, ntop=3){
   zscore.v <- stats::setNames(zscores[,1], nm=rownames(zscores))
   stopifnot(is.na(zscore.v) | is.finite(zscore.v), !is.null(names(zscore.v)), length(pwy) == 1, pwy %in% colnames(Gmat), 
             !is.null(ker), ncol(ker) == nrow(Gmat), ncol(ker) == length(zscore.v), colnames(ker) == names(zscore.v))
