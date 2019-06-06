@@ -3,6 +3,7 @@
 language: r
 sudo: required
 warnings_are_errors: false
+cache: packages
 fortran: true
 r_github_packages: jdreyf/ezlimma
 bioc_packages: limma
